@@ -20,7 +20,6 @@ const options = commandLineArgs([
         type: String,
     },
 ]);
-console.log(options.env);
 // **** Set the env file **** //
 
 const result2 = dotenv.config({
