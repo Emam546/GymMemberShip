@@ -7,7 +7,18 @@ export interface UserTokenInfo extends Omit<DataBase.Models.User, "data"> {
   _id: string;
 }
 const schema = new mongoose.Schema<DataBase.Models.User>(
-  {},
+  {
+    age: Number,
+    email: String,
+    sex: String,
+    tall: Number,
+    weight: Number,
+    name: String,
+    phone: String,
+    signedIn: Number,
+    details: Object,
+    signedInBy: String,
+  },
   { minimize: false }
 );
 schema.index({ provider_id: 1, provider_type: 1 });

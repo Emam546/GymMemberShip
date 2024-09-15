@@ -1,17 +1,31 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { IncomingMessage } from "http";
-import { Response } from "express";
-IncomingMessage.prototype.sendData = function (...a) {
-  return (this as unknown as Response).json(...a);
+import express, { Response as ExpressResponse } from "express";
+express.response.sendSuccess = function (data, msg = "Success") {
+  return this.json({
+    status: true,
+    msg: msg,
+    data: data,
+  });
 };
-declare module "express" {
-  interface Response {
-    sendData(...a: Parameters<Response["json"]>): ReturnType<Response["json"]>;
-  }
-}
-declare module "http" {
-  interface IncomingMessage {
-    sendData(...a: Parameters<Response["json"]>): ReturnType<Response["json"]>;
+express.response.SendFailed = function (msg, err) {
+  return this.json({
+    status: false,
+    msg: msg,
+    err,
+  });
+};
+
+declare global {
+  namespace Express {
+    interface Response {
+      sendSuccess<T>(
+        data: T,
+        msg?: string
+      ): ReturnType<ExpressResponse["json"]>;
+      SendFailed(
+        msg: string,
+        err?: unknown
+      ): ReturnType<ExpressResponse["json"]>;
+    }
   }
 }
