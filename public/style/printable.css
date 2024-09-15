@@ -1,0 +1,46 @@
+:root{
+
+}
+
+@page {
+    size: A4;
+    margin: 2rem 1.2rem;
+    @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+    }
+    @top-left{
+         content: string(top-left);
+    }
+    @top-right{
+         content: string(top-right);
+    }
+    @top-center{
+         content: string(top-center);
+         text-align: center;
+    }
+
+    @bottom-left{
+         content: string(bottom-left);
+    }
+    /* @bottom-right{
+         content: string(bottom-right);
+    } */
+    @bottom-center{
+         content: string(bottom-center);
+         text-align: center;
+
+    }
+    border: 2px solid black;
+    padding: 0;
+}
+.set-margins{
+    string-set:top-left attr(data-top-left);
+    string-set:top-right attr(data-top-right);
+    string-set:top-center attr(data-top-center);
+    string-set:bottom-left attr(data-bottom-left);
+    string-set:bottom-right attr(data-bottom-right);
+    string-set:bottom-center attr(data-bottom-center);
+}
+
+
+

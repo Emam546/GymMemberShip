@@ -1,0 +1,26 @@
+{
+    "extends": "./tsconfig.server.json",
+    "compilerOptions": {
+        "paths": {
+            "@serv/*": [
+                "./server/src/*"
+            ],
+            "@src/*": [
+                "./src/*"
+            ],
+            "@app/*": [
+                "./app/*"
+            ],
+            "@utils/*": [
+                "./utils/*"
+            ],
+            "@shared/renderer/*": [
+                "./app/renderer/shared/*"
+            ],
+        }
+    },
+    "include": [
+        "server/spec",
+        "utils"
+    ]
+}

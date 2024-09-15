@@ -1,0 +1,46 @@
+[
+    {
+        "name": "US Dollars",
+        "code": "USD"
+    },
+    {
+        "name": "Euro",
+        "code": "EUR"
+    },
+    {
+        "name": "British Pound Sterling",
+        "code": "GBP"
+    },
+    {
+        "name": "Canadian Dollars",
+        "code": "CAD"
+    },
+    {
+        "name": "Australian Dollars",
+        "code": "AUD"
+    },
+    {
+        "name": "Japanese Yen",
+        "code": "JPY"
+    },
+    {
+        "name": "Swiss Franc",
+        "code": "CHF"
+    },
+    {
+        "name": "Chinese Yuan Renminbi",
+        "code": "CNY"
+    },
+    {
+        "name": "South Korean Won",
+        "code": "KRW"
+    },
+    {
+        "name": "Indian Rupee",
+        "code": "INR"
+    },
+    {
+        "name": "Egyptian Pound",
+        "code": "EGP"
+    }
+]

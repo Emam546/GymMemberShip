@@ -1,0 +1,22 @@
+.loading-bar {
+    div {
+        position: absolute;
+        top: 0;
+        width: 0;
+        background-image: linear-gradient(270deg, #9be5fc 1%, #3586f0 28.33%);
+        animation-duration: 2s;
+        animation-delay: 1s;
+        animation-name: loading-bar-anim;
+        animation-iteration-count: infinite;
+        @keyframes loading-bar-anim {
+            0% {
+                width: 260px;
+                left: 0;
+            }
+            100% {
+                width: 260px;
+                left: 100%;
+            }
+        }
+    }
+}

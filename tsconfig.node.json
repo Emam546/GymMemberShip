@@ -1,0 +1,26 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
+
+  "compilerOptions": {
+    "rootDir": "./",
+    "composite": true,
+    "types": ["electron-vite/node"],
+    "baseUrl": ".",
+    "skipLibCheck": false,
+    "paths": {
+      "@app/*": ["./app/*"],
+      "@shared/*": ["./shared/*"],
+      "@shared/renderer/*": ["./app/renderer/shared/*"],
+      "@serv/*": ["./server/src/*"],
+      "@utils/*": ["./utils/*"],
+      "@src/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "./app/main/**/*",
+    "./app/preload/**/*",
+    "./server/src/command.ts",
+    "utils",
+    "./package.json"
+  ]
+}

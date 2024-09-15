@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+#__next {
+    @apply tw-flex tw-min-h-screen tw-w-full tw-items-stretch tw-justify-stretch tw-flex-col;
+}
+

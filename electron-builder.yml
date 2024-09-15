@@ -1,0 +1,43 @@
+---
+appId: com.gym-membership.app
+appImage:
+  artifactName: ${name}-${version}.${ext}
+asarUnpack:
+  - resources/**
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**/*
+  - build/**/*
+icon: build\icon.ico
+linux:
+  category: Utility
+  maintainer: electronjs.org
+  target:
+    - AppImage
+    - snap
+    - deb
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+npmRebuild: false
+
+productName: gym-membership
+win:
+  target:
+    - nsis
+nsis:
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  artifactName: temp.${ext}
+  createDesktopShortcut: always
+  oneClick: false  # Set to true if you want one-click installation
+  perMachine: true  # Choose per-machine installation mode
+  createStartMenuShortcut: true  # Creates a start menu shortcut
+  shortcutName: ${productName}

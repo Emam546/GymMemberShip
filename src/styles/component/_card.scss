@@ -1,0 +1,23 @@
+// ----------------------------------------------
+// Card Style
+// ----------------------------------------------
+
+.card-title {
+    font-size: 1.125rem;
+}
+
+.card-subtitle {
+    font-size: 0.875rem;
+}
+
+.card {
+    margin-bottom: 1.875rem;
+}
+
+.card-hover {
+    transition: 0.2s ease-in;
+
+    &:hover {
+        transform: translate3d(0px, -5px, 0px);
+    }
+}
