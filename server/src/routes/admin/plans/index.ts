@@ -23,14 +23,8 @@ const registerValidator = new Validator({
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
-  result.data;
+    return res.status(400).SendFailed("invalid Data", result.errors);
   const plan = new Plans({
-    createdAt: Date.now(),
     ...result.data,
   } as DataBase.Models.Plans);
   const SavedPlan = await plan.save();

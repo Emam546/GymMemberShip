@@ -15,19 +15,16 @@ const registerValidator = new Validator({
   },
   tall: ["integer", { min: 0 }],
   weight: ["integer", { min: 0 }],
+  ".": ["required"],
 });
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);;
   result.data;
   const user = new Users({
     ...result.data,
-    createdAt: Date.now(),
+
     createdBy: "admin",
   } as DataBase.Models.User);
   const savedUser = await user.save();
@@ -42,6 +39,7 @@ const registerQuery = new Validator({
   weightMax: ["numeric"],
   skip: ["numeric"],
   limit: ["numeric"],
+  ".": ["required"],
 });
 interface Query {
   ageMin?: string;
@@ -56,11 +54,7 @@ interface Query {
 router.get("/", async (req, res) => {
   const result = registerQuery.passes(req.query);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);;
   const {
     ageMax,
     ageMin,

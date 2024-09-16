@@ -31,11 +31,7 @@ router.post("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);
 
   const newUser = await Users.findOneAndUpdate(
     user._id,
@@ -51,11 +47,7 @@ router.delete("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
   const result = registerUpdate.passes(req.query);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);
   const newUser = await Users.findByIdAndDelete(user._id);
   res.status(200).sendSuccess(newUser);
 });

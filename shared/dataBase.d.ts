@@ -8,7 +8,7 @@ declare global {
     type PlansType = "day" | "year" | "month";
     namespace Models {
       interface User {
-        createdAt: number;
+        createdAt: Date;
         createdBy: "admin";
         name?: string;
         age?: number;
@@ -25,19 +25,20 @@ declare global {
       }
       interface Plans {
         name: string;
-        createdAt: number;
+        createdAt: Date;
         prices: Partial<Record<PlansType, Price>>;
         details: {
           desc?: string;
         };
       }
-      interface Transaction {
+      interface Payments {
         planId: string;
         userId: string;
         separated: boolean;
         plan: { type: PlansType; num: number };
-        createdAt: number;
+        createdAt: Date;
         createdBy: { type: "Admin" };
+        paid: Price;
       }
     }
   }

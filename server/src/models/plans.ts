@@ -5,10 +5,10 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema<DataBase.Models.Plans>(
   {
-    createdAt: Number,
-    details: Object,
+    createdAt: { type: Date, default: Date.now, immutable: true },
+    details: { type: Object, required: true },
     name: String,
-    prices: Object,
+    prices: { type: Object, required: true },
   },
   { minimize: false }
 );

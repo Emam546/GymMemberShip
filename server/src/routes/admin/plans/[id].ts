@@ -32,11 +32,7 @@ router.post("/:id", async (req, res) => {
   const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);
   const newPlan = await Plans.findOneAndUpdate(
     plan._id,
     {
@@ -51,11 +47,7 @@ router.delete("/:id", async (req, res) => {
   const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const result = registerUpdate.passes(req.query);
   if (!result.state)
-    return res.status(400).json({
-      success: false,
-      msg: "invalid Data",
-      err: result.errors,
-    });
+    return res.status(400).SendFailed("invalid Data", result.errors);
   const newPlan = await Plans.findByIdAndDelete(plan._id);
   res.status(200).sendSuccess(newPlan);
 });

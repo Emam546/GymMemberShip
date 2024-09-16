@@ -12,9 +12,8 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
     weight: Number,
     name: String,
     phone: String,
-    createdAt: Number,
-    details: Object,
-    createdBy: String,
+    details: { type: Object, required: true },
+    createdAt: { type: Date, default: Date.now, immutable: true },
   },
   { minimize: false }
 );
