@@ -8,12 +8,12 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
     separated: { type: Boolean, default: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User.name,
+      ref: User.modelName,
       required: true,
     } as never,
     planId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Plans.name,
+      ref: Plans.modelName,
       required: true,
     } as never,
     plan: { type: Object, required: true },

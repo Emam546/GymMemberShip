@@ -23,8 +23,8 @@ export function createPayment(
     userId,
   };
 }
-let user: DataBase.WithId<DataBase.Models.User>;
-let plan: DataBase.WithId<DataBase.Models.Plans>;
+export let user: DataBase.WithId<DataBase.Models.User>;
+export let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
   const res = await agent
     .post("/api/admin/user")
@@ -41,7 +41,6 @@ describe("POST", () => {
   test("success", async () => {
     const payment = createPayment(plan._id, user._id);
     const res = await agent.post("/api/admin/payments").send(payment);
-    console.log(JSON.stringify(res.body, undefined, 2));
     const resPayment = res.body.data;
     expect(resPayment._id).not.eq(undefined);
     expect(resPayment).deep.includes(payment);
@@ -49,21 +48,20 @@ describe("POST", () => {
   describe("Wrong", () => {
     test("Wrong Paid Type", async () => {
       const payment: any = createPayment(user._id, plan._id);
-      payment.paid = null;
+      payment.paid = undefined;
       const res = await agent
         .post("/api/admin/payments")
         .send(payment)
         .expect(400);
       expect(res.body.err).has.property("paid");
     });
-    test("Wrong userId Type", async () => {
+    test("Wrong UserId Type", async () => {
       const payment = createPayment(user._id, plan._id);
       payment.userId = "wrongId";
       const res = await agent
         .post("/api/admin/payments")
         .send(payment)
         .expect(400);
-      console.log(res.body);
       expect(res.body.err).has.property("userId");
     });
   });
@@ -75,13 +73,11 @@ describe("GET", () => {
   });
   test("Success", async () => {
     const res = await agent.get("/api/admin/payments");
-    console.log(res.body);
     expect(res.body.data).instanceOf(Array);
     expect(res.body.data.length).gt(0);
   });
   test("Test limit", async () => {
     const res = await agent.get("/api/admin/payments").query({ limit: 5 });
-    console.log(res.body);
     expect(res.body.data).instanceOf(Array);
     expect(res.body.data.length).lte(5);
   });
@@ -102,5 +98,106 @@ describe("GET", () => {
       .query({ skip: 0 })
       .expect(200);
     expect(res.body.data).deep.eq(res2.body.data);
+  });
+});
+describe("User Methods", () => {
+  let user: DataBase.WithId<DataBase.Models.User>;
+  let payment: DataBase.WithId<DataBase.Models.User>;
+  beforeEach(async () => {
+    const res = await agent
+      .post("/api/admin/user")
+      .send(createUserData())
+      .expect(200);
+    user = res.body.data;
+    const res2 = await agent
+      .post("/api/admin/payments")
+      .send(createPayment(plan._id, user._id))
+      .expect(200);
+    payment = res2.body.data;
+  });
+  describe("GET", () => {
+    test("Success", async () => {
+      const res = await agent
+        .get(`/api/admin/user/${user._id}/payments`)
+        .expect(200);
+      expect(res.body.data).deep.includes(payment);
+    });
+    test("Use limit", async () => {
+      const limit = 5;
+      const res = await agent
+        .get(`/api/admin/user/${user._id}/payments`)
+        .query({ limit })
+        .expect(200);
+      expect(res.body.data.length).lte(limit);
+    });
+  });
+
+  test("no payments", async () => {
+    const res = await agent
+      .post("/api/admin/user")
+      .send(createUserData())
+      .expect(200);
+    const user = res.body.data;
+    const res2 = await agent
+      .get(`/api/admin/user/${user._id}/payments`)
+      .expect(200);
+    expect(res2.body.data.length).eq(0);
+  });
+  test("payments deleted with user", async () => {
+    await agent.delete(`/api/admin/user/${user._id}`).expect(200);
+    await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
+  });
+  test("unrelated payments will not be deleted", async () => {
+    const res = await agent
+      .post("/api/admin/user")
+      .send(createUserData())
+      .expect(200);
+    const user2 = res.body.data;
+    const res2 = await agent
+      .post("/api/admin/payments")
+      .send(createPayment(plan._id, user2._id))
+      .expect(200);
+    const payment2 = res2.body.data;
+    await agent.delete(`/api/admin/user/${user._id}`).expect(200);
+    await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
+    await agent.get(`/api/admin/payments/${payment2._id}`).expect(200);
+  });
+});
+describe("Plan method", () => {
+  describe("GET", () => {
+    let payment: DataBase.WithId<DataBase.Models.User>;
+    beforeAll(async () => {
+      const res2 = await agent
+        .post("/api/admin/payments")
+        .send(createPayment(plan._id, user._id))
+        .expect(200);
+      payment = res2.body.data;
+    });
+    test("Success", async () => {
+      const res = await agent
+        .get(`/api/admin/plans/${plan._id}/payments`)
+        .expect(200);
+      expect(res.body.data).deep.includes(payment);
+    });
+    test("Use limit", async () => {
+      const limit = 5;
+      const res = await agent
+        .get(`/api/admin/plans/${plan._id}/payments`)
+        .query({ limit })
+        .expect(200);
+      expect(res.body.data.length).lte(limit);
+    });
+  });
+
+  test("no payments", async () => {
+    const res = await agent
+      .post("/api/admin/plans")
+      .send(createPlanData())
+      .expect(200);
+    const plan = res.body.data;
+    const res2 = await agent
+      .get(`/api/admin/plans/${plan._id}/payments`)
+      .expect(200);
+    expect(res2.body.data.length).eq(0);
   });
 });

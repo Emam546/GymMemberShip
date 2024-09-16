@@ -34,5 +34,6 @@ router.get("/", async (req, res) => {
   const plans = await Plans.find({});
   res.status(200).sendSuccess(plans);
 });
+
 router.use(IdRouter);
 export default router;

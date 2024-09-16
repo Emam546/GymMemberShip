@@ -31,6 +31,13 @@ declare global {
           desc?: string;
         };
       }
+      interface Logs {
+        createdAt: Date;
+        userId: string;
+        paymentId: string;
+        planId: string;
+        createdBy: { type: "Admin" };
+      }
       interface Payments {
         planId: string;
         userId: string;
