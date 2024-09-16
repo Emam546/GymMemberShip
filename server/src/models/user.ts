@@ -3,9 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import mongoose from "mongoose";
 
-export interface UserTokenInfo extends Omit<DataBase.Models.User, "data"> {
-  _id: string;
-}
 const schema = new mongoose.Schema<DataBase.Models.User>(
   {
     age: Number,
@@ -15,9 +12,9 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
     weight: Number,
     name: String,
     phone: String,
-    signedIn: Number,
+    createdAt: Number,
     details: Object,
-    signedInBy: String,
+    createdBy: String,
   },
   { minimize: false }
 );

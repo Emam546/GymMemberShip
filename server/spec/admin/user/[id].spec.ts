@@ -33,7 +33,7 @@ describe("POST", () => {
   test("WrongId", async () => {
     const newUser = createUserData();
     const res = await agent
-      .post(`/api/admin/user/${user._id}`)
+      .post(`/api/admin/user/WrongId`)
       .send({ ...newUser });
     expect(res.statusCode).eq(404);
     expect(res.body.status).false;

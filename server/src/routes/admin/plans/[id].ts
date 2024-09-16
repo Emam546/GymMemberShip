@@ -1,34 +1,35 @@
 import { Router, Response } from "express";
 import mongoose, { Document } from "mongoose";
-import Users from "@serv/models/user";
+import Plans from "@serv/models/plans";
 import Validator from "validator-checker-js";
 const router = Router();
 
 router.use("/:id", async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
-    return res.status(404).SendFailed("The user id is not valid");
-  const user = await Users.findById(req.params.id);
-  if (!user) return res.status(404).SendFailed("The user is not found");
-  res.locals.user = user;
+    return res.status(404).SendFailed("The plan is not valid");
+  const plan = await Plans.findById(req.params.id);
+  if (!plan) return res.status(404).SendFailed("The plan is not found");
+  res.locals.plan = plan;
   next();
 });
 router.get("/:id", (req, res) => {
-  res.status(200).sendSuccess(res.locals.user);
+  res.status(200).sendSuccess(res.locals.plan);
 });
 const registerUpdate = new Validator({
   name: ["string"],
-  age: ["integer", { min: 0 }],
-  sex: ["string", { in: ["male", "female"] }],
-  email: ["email"],
-  phone: ["string"],
+  prices: [
+    {
+      type: ["string", "required"],
+      num: ["integer", "required"],
+    },
+    "object",
+  ],
   details: {
-    whyDidYouCame: ["string"],
+    desc: ["string"],
   },
-  tall: ["integer", { min: 0 }],
-  weight: ["integer", { min: 0 }],
 });
 router.post("/:id", async (req, res) => {
-  const user = res.locals.user as Document<DataBase.Models.User>;
+  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
     return res.status(400).json({
@@ -36,19 +37,18 @@ router.post("/:id", async (req, res) => {
       msg: "invalid Data",
       err: result.errors,
     });
-
-  const newUser = await Users.findOneAndUpdate(
-    user._id,
+  const newPlan = await Plans.findOneAndUpdate(
+    plan._id,
     {
       $set: { ...result.data },
     },
     { new: true }
   );
 
-  res.status(200).sendSuccess(newUser);
+  res.status(200).sendSuccess(newPlan);
 });
 router.delete("/:id", async (req, res) => {
-  const user = res.locals.user as Document<DataBase.Models.User>;
+  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const result = registerUpdate.passes(req.query);
   if (!result.state)
     return res.status(400).json({
@@ -56,7 +56,7 @@ router.delete("/:id", async (req, res) => {
       msg: "invalid Data",
       err: result.errors,
     });
-  const newUser = await Users.findByIdAndDelete(user._id);
-  res.status(200).sendSuccess(newUser);
+  const newPlan = await Plans.findByIdAndDelete(plan._id);
+  res.status(200).sendSuccess(newPlan);
 });
 export default router;

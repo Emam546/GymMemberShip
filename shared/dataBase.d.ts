@@ -8,8 +8,8 @@ declare global {
     type PlansType = "day" | "year" | "month";
     namespace Models {
       interface User {
-        signedIn: number;
-        signedInBy: "admin";
+        createdAt: number;
+        createdBy: "admin";
         name?: string;
         age?: number;
         tall?: number;
@@ -25,14 +25,18 @@ declare global {
       }
       interface Plans {
         name: string;
-        desc: string;
-        price: Record<PlansType, DataBase.PlansType>;
+        createdAt: number;
+        prices: Partial<Record<PlansType, Price>>;
+        details: {
+          desc?: string;
+        };
       }
       interface Transaction {
         planId: string;
         userId: string;
+        separated: boolean;
         plan: { type: PlansType; num: number };
-        signedIn: number;
+        createdAt: number;
         createdBy: { type: "Admin" };
       }
     }
