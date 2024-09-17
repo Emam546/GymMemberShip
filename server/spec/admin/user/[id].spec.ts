@@ -46,6 +46,13 @@ describe("POST", () => {
       .expect(200);
     expect(res.body.data.email).eq(email);
   });
+  test("update blocked type", async () => {
+    const res = await agent
+      .post(`/api/admin/user/${user._id}`)
+      .send({ blocked: true })
+      .expect(200);
+    expect(res.body.data.blocked).eq(true);
+  });
   describe("WrongData", () => {});
 });
 describe("DELETE", () => {

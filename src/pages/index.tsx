@@ -1,8 +1,27 @@
 import { BigCard } from "@src/components/card";
-
+import { GetServerSideProps } from "next";
+import Payments from "@serv/models/payments";
 import Head from "next/head";
-
-export default function Page() {
+import {
+  YearsAndMonthEarnings,
+  RecentPayments,
+  YearsAndMonthEarningsProps,
+  RecentPaymentsProps,
+} from "@src/components/common/dashboard";
+import mongoose from "mongoose";
+import EnvVars from "@serv/declarations/major/EnvVars";
+import connect from "@serv/db/connect";
+import UsersTable, {
+  Props as UserTabelProps,
+} from "@src/components/pages/users/table";
+import Users from "@serv/models/user";
+import Plans from "@serv/models/plans";
+export interface Props {
+  earnings: YearsAndMonthEarningsProps;
+  payments: RecentPaymentsProps;
+  users: UserTabelProps["users"];
+}
+export default function Page({ earnings, payments, users }: Props) {
   return (
     <>
       <Head>
@@ -32,182 +51,30 @@ export default function Page() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4">
-              <div className="row">
-                <div className="col-lg-12">
-                  {/* Yearly Breakup */}
-                  <div className="overflow-hidden card">
-                    <div className="p-4 card-body">
-                      <h5 className="card-title mb-9 fw-semibold">
-                        Yearly Breakup
-                      </h5>
-                      <div className="row align-items-center">
-                        <div className="col-8">
-                          <h4 className="mb-3 fw-semibold">$36,358</h4>
-                          <div className="mb-3 d-flex align-items-center">
-                            <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                              <i className="ti ti-arrow-up-left text-success" />
-                            </span>
-                            <p className="mb-0 text-dark me-1 fs-3">+9%</p>
-                            <p className="mb-0 fs-3">last year</p>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <div className="me-4">
-                              <span className="round-8 bg-primary rounded-circle me-2 d-inline-block" />
-                              <span className="fs-2">2023</span>
-                            </div>
-                            <div>
-                              <span className="round-8 bg-light-primary rounded-circle me-2 d-inline-block" />
-                              <span className="fs-2">2023</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-4">
-                          <div className="d-flex justify-content-center">
-                            <div id="breakup" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-12">
-                  {/* Monthly Earnings */}
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row alig n-items-start">
-                        <div className="col-8">
-                          <h5 className="card-title mb-9 fw-semibold">
-                            {" "}
-                            Monthly Earnings{" "}
-                          </h5>
-                          <h4 className="mb-3 fw-semibold">$6,820</h4>
-                          <div className="pb-1 d-flex align-items-center">
-                            <span className="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                              <i className="ti ti-arrow-down-right text-danger" />
-                            </span>
-                            <p className="mb-0 text-dark me-1 fs-3">+9%</p>
-                            <p className="mb-0 fs-3">last year</p>
-                          </div>
-                        </div>
-                        <div className="col-4">
-                          <div className="d-flex justify-content-end">
-                            <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
-                              <i className="ti ti-currency-dollar fs-6" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="earning" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <YearsAndMonthEarnings {...earnings} />
           </div>
           <div className="row">
-            <div className="col-lg-4 d-flex align-items-stretch">
-              <div className="card w-100">
-                <div className="p-4 card-body">
-                  <div className="mb-4">
-                    <h5 className="card-title fw-semibold">
-                      Recent Transactions
-                    </h5>
-                  </div>
-                  <ul className="mb-0 timeline-widget position-relative mb-n5">
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        09:30
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-primary" />
-                        <span className="flex-shrink-0 timeline-badge-border d-block" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1">
-                        Payment received from John Doe of $385.90
-                      </div>
-                    </li>
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        10:00 am
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-info" />
-                        <span className="flex-shrink-0 timeline-badge-border d-block" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New sale recorded{" "}
-                        <a
-                          href="javascript:void(0)"
-                          className="text-primary d-block fw-normal"
-                        >
-                          #ML-3467
-                        </a>
-                      </div>
-                    </li>
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        12:00 am
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-success" />
-                        <span className="flex-shrink-0 timeline-badge-border d-block" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1">
-                        Payment was made of $64.95 to Michael
-                      </div>
-                    </li>
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        09:30 am
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-warning" />
-                        <span className="flex-shrink-0 timeline-badge-border d-block" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New sale recorded{" "}
-                        <a
-                          href="javascript:void(0)"
-                          className="text-primary d-block fw-normal"
-                        >
-                          #ML-3467
-                        </a>
-                      </div>
-                    </li>
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        09:30 am
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-danger" />
-                        <span className="flex-shrink-0 timeline-badge-border d-block" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                        New arrival recorded
-                      </div>
-                    </li>
-                    <li className="overflow-hidden timeline-item d-flex position-relative">
-                      <div className="flex-shrink-0 timeline-time text-dark text-end">
-                        12:00 am
-                      </div>
-                      <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                        <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-success" />
-                      </div>
-                      <div className="timeline-desc fs-3 text-dark mt-n1">
-                        Payment Done
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <RecentPayments {...payments} />
             <div className="col-lg-8 d-flex align-items-stretch">
               <div className="card w-100">
                 <div className="p-4 card-body">
                   <h5 className="mb-4 card-title fw-semibold">
                     Recent Students
                   </h5>
+                  <UsersTable
+                    page={0}
+                    setPage={() => {}}
+                    totalUsers={users.length}
+                    users={users}
+                    headKeys={[
+                      "createdAt",
+                      "name",
+                      "blocked",
+                      "age/tall/weight",
+                      "plan",
+                      "order",
+                    ]}
+                  />
                 </div>
               </div>
             </div>
@@ -217,3 +84,78 @@ export default function Page() {
     </>
   );
 }
+export async function getLastUsers() {
+  console.log(mongoose.connection.readyState);
+  const results = await Users.find({}).hint({ createdAt: -1 }).limit(5);
+
+  return await Promise.all(
+    results.map<Promise<UserTabelProps["users"][0]>>(async (doc, i) => {
+      const payment = await Payments.findOne({ userId: doc._id }).hint({
+        userId: 1,
+        createdAt: -1,
+      });
+      if (!payment)
+        return {
+          order: i + 1,
+          user: JSON.parse(JSON.stringify(doc)),
+        };
+      const plan = await Plans.findById(payment.planId);
+      console.log(plan);
+      return {
+        order: i + 1,
+        user: JSON.parse(JSON.stringify(doc)),
+        lastPlan: JSON.parse(JSON.stringify(plan)),
+      };
+    })
+  );
+}
+export async function getPaymentsTotal(startData: Date): Promise<number> {
+  console.log(mongoose.connection.readyState);
+  const results = await Payments.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: startData,
+        },
+      },
+    },
+    {
+      $group: { _id: "$paid.type", totalPrice: { $sum: "$paid.num" } },
+    },
+  ])
+    .hint({ createdAt: -1 })
+    .sort({ createdAT: -1 })
+    .limit(5);
+  if (results.length > 0) {
+    return results[0].totalPrice;
+  } else {
+    return 0; // If no documents, return 0
+  }
+}
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  console.log(EnvVars.mongo.url);
+  await connect(EnvVars.mongo.url);
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const yearsEarnings = await getPaymentsTotal(new Date(year - 1, 0, 1));
+  const monthEarnings = await getPaymentsTotal(
+    new Date(year, currentDate.getMonth() - 1, 1)
+  );
+  const users = await getLastUsers();
+  const lastTransactions = await Payments.find({})
+    .sort({ createdAt: -1 })
+    .hint({ createdAt: -1 })
+    .limit(5)
+    .populate("userId");
+  return {
+    props: {
+      earnings: { yearsEarnings, monthEarnings },
+      payments: {
+        payments: lastTransactions.map((val) =>
+          JSON.parse(JSON.stringify(val))
+        ) as unknown as RecentPaymentsProps["payments"],
+      },
+      users,
+    },
+  };
+};

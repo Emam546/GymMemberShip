@@ -6,7 +6,7 @@
     "owner": "Emam546",
     "provider": "github",
     "releaseType": "release",
-    "repo": "gymMemberShipAdmin"
+    "repo": "GymMemberShipAdmin"
   },
   "scripts": {
     "build:server": "ts-node build.ts",

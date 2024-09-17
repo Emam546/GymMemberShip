@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import User from "./user";
 import Plans from "./plans";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
@@ -21,6 +21,11 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
   },
   { minimize: false }
 );
-schema.index({ userId: 1, createdAt: 1 });
-schema.index({ planId: 1, createdAt: 1 });
-export default mongoose.model("payments", schema);
+schema.index({ userId: 1, createdAt: -1 });
+schema.index({ planId: 1, createdAt: -1 });
+schema.index({ createdAt: -1 });
+export default ((mongoose.models && mongoose.models.payments) ||
+  mongoose.model(
+    "payments",
+    schema
+  )) as mongoose.Model<DataBase.Models.Payments>;

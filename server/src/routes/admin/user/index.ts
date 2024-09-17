@@ -16,6 +16,7 @@ const registerValidator = new Validator({
   tall: ["integer", { min: 0 }],
   weight: ["integer", { min: 0 }],
   ".": ["required"],
+  blocked: ["boolean"],
 });
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);

@@ -65,7 +65,7 @@ router.get("/:id/payments", async (req, res) => {
   const payments = await Payments.find({ planId: plan._id })
     .hint({
       planId: 1,
-      createdAt: 1,
+      createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);
@@ -81,7 +81,7 @@ router.get("/:id/logs", async (req, res) => {
   const logs = await Logs.find({ userId: user._id })
     .hint({
       userId: 1,
-      createdAt: 1,
+      createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);

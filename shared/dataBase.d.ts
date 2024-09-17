@@ -10,12 +10,14 @@ declare global {
       interface User {
         createdAt: Date;
         createdBy: "admin";
+        blocked?: boolean;
         name?: string;
         age?: number;
         tall?: number;
         weight?: number;
         sex?: "male" | "female";
         email?: string;
+        emailVerified?: boolean;
         phone?: string;
         details: {
           whyDidYouCame?: string;

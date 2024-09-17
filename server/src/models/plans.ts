@@ -13,4 +13,5 @@ const schema = new mongoose.Schema<DataBase.Models.Plans>(
   { minimize: false }
 );
 
-export default mongoose.model("plans", schema);
+export default ((mongoose.models && mongoose.models.plans) ||
+  mongoose.model("plans", schema)) as mongoose.Model<DataBase.Models.Plans>;

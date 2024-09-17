@@ -28,6 +28,7 @@ const registerUpdate = new Validator({
   },
   tall: ["integer", { min: 0 }],
   weight: ["integer", { min: 0 }],
+  blocked: ["boolean"],
 });
 router.post("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
@@ -66,7 +67,7 @@ router.get("/:id/payments", async (req, res) => {
   const payments = await Payments.find({ userId: user._id })
     .hint({
       userId: 1,
-      createdAt: 1,
+      createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);
@@ -82,7 +83,7 @@ router.get("/:id/logs", async (req, res) => {
   const logs = await Logs.find({ userId: user._id })
     .hint({
       userId: 1,
-      createdAt: 1,
+      createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);
