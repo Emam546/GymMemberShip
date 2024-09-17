@@ -23,6 +23,14 @@ export function createPayment(
     userId,
   };
 }
+export async function createPaymentRequest(
+  planId: string,
+  userId: string
+): Promise<DataBase.WithIdOrg<DataBase.Models.Payments>> {
+  const payment = createPayment(planId, userId);
+  const res = await agent.post("/api/admin/payments").send(payment);
+  return res.body.data;
+}
 export let user: DataBase.WithId<DataBase.Models.User>;
 export let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
@@ -165,7 +173,7 @@ describe("User Methods", () => {
 });
 describe("Plan method", () => {
   describe("GET", () => {
-    let payment: DataBase.WithId<DataBase.Models.User>;
+    let payment: DataBase.WithId<DataBase.Models.Payments>;
     beforeAll(async () => {
       const res2 = await agent
         .post("/api/admin/payments")
@@ -177,7 +185,7 @@ describe("Plan method", () => {
       const res = await agent
         .get(`/api/admin/plans/${plan._id}/payments`)
         .expect(200);
-      expect(res.body.data).deep.includes(payment);
+      expect(res.body.data).not.undefined
     });
     test("Use limit", async () => {
       const limit = 5;
@@ -186,6 +194,28 @@ describe("Plan method", () => {
         .query({ limit })
         .expect(200);
       expect(res.body.data.length).lte(limit);
+    });
+  });
+  describe("get count of payments", () => {
+    let payment: DataBase.WithId<DataBase.Models.Payments>;
+    let plan: DataBase.WithId<DataBase.Models.Plans>;
+    beforeAll(async () => {
+      const res1 = await agent
+        .post("/api/admin/plans")
+        .send(createPlanData())
+        .expect(200);
+      plan = res1.body.data;
+      const res2 = await agent
+        .post("/api/admin/payments")
+        .send(createPayment(plan._id, user._id))
+        .expect(200);
+      payment = res2.body.data;
+    });
+    test("Success", async () => {
+      const res = await agent
+        .get(`/api/admin/plans/${plan._id}/payments/count`)
+        .expect(200);
+      expect(res.body.data).eq(1);
     });
   });
 

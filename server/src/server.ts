@@ -42,10 +42,7 @@ app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
   logger.err(err, true);
   let status = HttpStatusCodes.BAD_REQUEST;
   if (err instanceof RouteError) status = err.status;
-
-  return res
-    .status(status)
-    .json({ msg: "error", status: false, error: err.message });
+  return res.status(status).SendFailed(err.message, err);
 }) as any);
 
 export default app;

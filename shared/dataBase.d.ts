@@ -1,5 +1,8 @@
 declare global {
   namespace DataBase {
+    type Populate<T, Key extends keyof T, New> = Omit<T, Key> & {
+      [key in Key]: New;
+    };
     type WithId<T> = T & { _id: string };
     type WithIdOrg<T> = T & { id: string };
     interface Price {
@@ -52,6 +55,5 @@ declare global {
       }
     }
   }
-
 }
 export {};

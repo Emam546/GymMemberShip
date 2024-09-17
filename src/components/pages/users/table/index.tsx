@@ -53,7 +53,7 @@ function UserShower({
             </Link>
           </td>
         </E>
-        <E val="name" heads={headKeys}>
+        <E val="age/tall/weight" heads={headKeys}>
           <td>{`${user.weight}KG,${user.tall}CM,${user.age}Year`}</td>
         </E>
         <E val="plan" heads={headKeys}>

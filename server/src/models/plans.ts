@@ -12,6 +12,6 @@ const schema = new mongoose.Schema<DataBase.Models.Plans>(
   },
   { minimize: false }
 );
-
+schema.index({ createdAt: -1 });
 export default ((mongoose.models && mongoose.models.plans) ||
   mongoose.model("plans", schema)) as mongoose.Model<DataBase.Models.Plans>;

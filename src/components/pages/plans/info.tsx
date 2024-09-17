@@ -10,7 +10,7 @@ export type T = DataBase.WithIdOrg<DataBase.Models.Plans>;
 const Elem = CreateElem<T>(({ index, props: { data }, ...props }, ref) => {
   return (
     <OrgElem {...props} ref={ref}>
-      <Link href={`/plans/${data.name}`}>{data.name}</Link>
+      <Link href={`/plans/${data.id}`}>{data.name}</Link>
     </OrgElem>
   );
 });
@@ -20,7 +20,6 @@ export interface Props {
 export default function PlansInfoGetter({ plans: initPlans }: Props) {
   const [curDel, setCurDel] = useState<T>();
   const [plans, setLevels] = useState(initPlans);
-  console.log(curDel);
   const mutate = useMutation({
     async mutationFn(id: string) {
       await requester.delete(`/api/admin/plans/${id}`);

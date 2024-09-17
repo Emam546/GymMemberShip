@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
   res.status(200).sendSuccess(SavedPlan);
 });
 export async function getAllPlans() {
-  return await Plans.find({});
+  return await Plans.find({}).hint({ createdAt: -1 });
 }
 router.get("/", async (req, res) => {
   const plans = await getAllPlans();
