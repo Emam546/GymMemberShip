@@ -1,7 +1,6 @@
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import { GoToButton } from "@src/components/common/inputs/addButton";
 import PlanInfoForm from "@src/components/pages/plans/form";
-
 import Head from "next/head";
 import { useState } from "react";
 import requester from "@src/utils/axios";

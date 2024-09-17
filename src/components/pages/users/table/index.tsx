@@ -42,12 +42,12 @@ function UserShower({
     <>
       <tr>
         <E val="order" heads={headKeys}>
-          <td>
+          <td className="tw-max-w-fit">
             <h6 className="mb-0 fw-semibold">{order}</h6>
           </td>
         </E>
         <E val="name" heads={headKeys}>
-          <td>
+          <td className="tw-w-full">
             <Link href={`/users/${user._id}`} className="tw-block">
               {user.name}
             </Link>
