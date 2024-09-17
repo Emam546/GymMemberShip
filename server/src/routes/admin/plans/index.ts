@@ -30,8 +30,11 @@ router.post("/", async (req, res) => {
   const SavedPlan = await plan.save();
   res.status(200).sendSuccess(SavedPlan);
 });
+export async function getAllPlans() {
+  return await Plans.find({});
+}
 router.get("/", async (req, res) => {
-  const plans = await Plans.find({});
+  const plans = await getAllPlans();
   res.status(200).sendSuccess(plans);
 });
 

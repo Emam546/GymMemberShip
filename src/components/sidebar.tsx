@@ -58,7 +58,7 @@ function CreatorNavBar() {
     <>
       <HeaderNav title="Creator" />
       <LinkElem href="/" title="Dashboard" />
-      <LinkElem href="/levels" title="Organize Data" />
+      <LinkElem href="/plans" title="Manage Plans" />
       <LinkElem href="/users" title="Manage Users" />
     </>
   );

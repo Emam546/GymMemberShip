@@ -1,6 +1,7 @@
 declare global {
   namespace DataBase {
     type WithId<T> = T & { _id: string };
+    type WithIdOrg<T> = T & { id: string };
     interface Price {
       num: number;
       type: "EGP";
@@ -51,5 +52,6 @@ declare global {
       }
     }
   }
+
 }
 export {};

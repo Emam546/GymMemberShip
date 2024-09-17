@@ -46,14 +46,14 @@ describe("POST", () => {
   });
 });
 describe("DELETE", () => {
-  let user: DataBase.WithId<DataBase.Models.User>;
+  let plan: DataBase.WithId<DataBase.Models.Plans>;
   beforeEach(async () => {
     const res = await agent.post("/api/admin/plans").send(createPlanData());
     expect(res.statusCode).eq(200);
-    user = res.body.data;
+    plan = res.body.data;
   });
   test("Success", async () => {
-    await agent.delete(`/api/admin/plans/${user._id}`).expect(200);
-    await agent.get(`/api/admin/plans/${user._id}`).expect(404);
+    await agent.delete(`/api/admin/plans/${plan._id}`).expect(200);
+    await agent.get(`/api/admin/plans/${plan._id}`).expect(404);
   });
 });
