@@ -28,7 +28,7 @@ export default function BudgetInput({
         <div className="tw-flex-1">
           <StyledInput {...priceProps} />
         </div>
-        <div>
+        {/* <div>
           <StyledSelect {...{ defaultValue: "EGP", ...unitProps }}>
             {currencies.map(({ code, name }) => {
               return (
@@ -38,7 +38,7 @@ export default function BudgetInput({
               );
             })}
           </StyledSelect>
-        </div>
+        </div> */}
       </div>
       <ErrorInputShower err={err} />
     </WrapElem>

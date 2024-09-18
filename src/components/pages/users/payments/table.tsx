@@ -1,6 +1,6 @@
 import queryClient from "@src/queryClient";
 import requester from "@src/utils/axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryKey, useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   HeadKeys,
@@ -22,6 +22,16 @@ type S = Routes.ResponseSuccess<
     >
   >[]
 >;
+function isQueryPayment(
+  val: QueryKey
+): val is ["payments", "users", string, number] {
+  return (
+    val[0] == "payments" &&
+    val[1] == "users" &&
+    typeof val[3] == "number" &&
+    val.length == 4
+  );
+}
 export default function FullPaymentInfoGenerator({
   id,
   perPage,
@@ -34,12 +44,12 @@ export default function FullPaymentInfoGenerator({
     },
     onSuccess(_, payment) {
       const pages = queryClient.getQueriesData<ElemProps[]>([
+        "payments",
         "users",
         id,
-        "payments",
       ]);
       const newPages = pages
-        .filter((val) => typeof val[0] == "number" || val[0] instanceof Number)
+        .filter(([key]) => isQueryPayment(key))
         .reduce((acc, [_, cur]) => {
           if (!cur) return acc;
           return [...acc, ...cur];
@@ -55,16 +65,16 @@ export default function FullPaymentInfoGenerator({
           [[]] as ElemProps[][]
         );
       newPages.forEach((data, page) => {
-        queryClient.setQueryData(["users", id, "payments", page], data);
+        queryClient.setQueryData(["payments", "users", id, page], data);
       });
       queryClient.setQueryData(
-        ["users", id, "payments", "number"],
-        queryNum.data! - 1
+        ["payments", "users", id, "count"],
+        Math.max(0, queryNum.data! - 1)
       );
     },
   });
   const query = useQuery({
-    queryKey: ["users", id, "payments", page],
+    queryKey: ["payments", "users", id, page],
     queryFn: async () => {
       const request = await requester.get<S>(`/api/admin/user/${id}/payments`, {
         params: {
@@ -82,7 +92,7 @@ export default function FullPaymentInfoGenerator({
     },
   });
   const queryNum = useQuery({
-    queryKey: ["users", id, "payments", "number"],
+    queryKey: ["payments", "users", id, "count"],
     queryFn: async () => {
       const request = await requester.get<Routes.ResponseSuccess<number>>(
         `/api/admin/user/${id}/payments/count`
@@ -100,7 +110,7 @@ export default function FullPaymentInfoGenerator({
       onDelete={(elem) => mutate.mutateAsync(elem.payment)}
       payments={query.data}
       setPage={setPage}
-      totalUsers={queryNum.data}
+      totalCount={queryNum.data}
     />
   );
 }

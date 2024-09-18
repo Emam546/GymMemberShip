@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
+import CheckInput from "@src/components/common/checkInput";
 
 interface ElemProps {
   order: number;
@@ -70,23 +71,20 @@ function UserShower({
         </E>
         <E val="blocked" heads={headKeys}>
           <td>
-            <div className="mb-0 tw-flex tw-items-center fw-normal">
-              <input
-                type="checkbox"
-                checked={blocked}
-                className="tw-mr-1"
-                onChange={async (e) => {
-                  if (blocked) {
-                    mutate.mutate(false);
-                  } else {
-                    setOpen(true);
-                  }
-                }}
-                disabled={mutate.isLoading}
-                id={`block-${user._id}`}
-              />
-              <label id={`block-${user._id}`}>block</label>
-            </div>
+            <CheckInput
+              label="block"
+              checked={blocked}
+              className="tw-mr-1"
+              onChange={async (e) => {
+                if (blocked) {
+                  mutate.mutate(false);
+                } else {
+                  setOpen(true);
+                }
+              }}
+              disabled={mutate.isLoading}
+              id={`block-${user._id}`}
+            />
           </td>
         </E>
       </tr>
@@ -188,9 +186,9 @@ export default function UsersTable({
             <div className="tw-mt-2">
               <Pagination
                 onChange={(e, value) => {
-                  setPage(value);
+                  setPage(value - 1);
                 }}
-                page={page}
+                page={page + 1}
                 count={pageNum}
               />
             </div>

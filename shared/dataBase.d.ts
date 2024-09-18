@@ -32,7 +32,7 @@ declare global {
       interface Plans {
         name: string;
         createdAt: Date;
-        prices: Partial<Record<PlansType, Price>>;
+        prices: Record<PlansType, Price>;
         details: {
           desc?: string;
         };

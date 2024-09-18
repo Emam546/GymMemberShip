@@ -11,11 +11,15 @@ import { GetServerSideProps } from "next";
 import PrintUsersPayments from "@src/components/pages/plans/payments/print";
 import PaymentInfoGenerator from "@src/components/pages/users/payments/table";
 import { getUser } from "@serv/routes/admin/user/[id]";
+import AddUserPayment from "@src/components/pages/users/addPayment";
+import { getAllPlans } from "@serv/routes/admin/plans";
+import queryClient from "@src/queryClient";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
+  plans: DataBase.WithId<DataBase.Models.Plans>[];
 }
-export default function Page({ doc: initData }: Props) {
+export default function Page({ doc: initData, plans }: Props) {
   const [doc, setDoc] = useState(initData);
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
@@ -44,14 +48,29 @@ export default function Page({ doc: initData }: Props) {
             buttonName="Update"
           />
         </MainCard>
+
         <div className="tw-flex tw-items-center tw-justify-between">
           <CardTitle>Payments</CardTitle>
           <PrintUsersPayments id={doc._id} />
         </div>
         <MainCard>
+          <AddUserPayment
+            onData={async ({ ...data }) => {
+              await requester.post("/api/admin/payments", {
+                ...data,
+                userId: doc._id,
+              });
+              queryClient.invalidateQueries(["payments", "users", doc._id]);
+              alert("document added successfully");
+            }}
+            plans={plans}
+          />
+        </MainCard>
+
+        <MainCard>
           <PaymentInfoGenerator
             id={doc._id}
-            perPage={7}
+            perPage={10}
             headKeys={[
               "createdAt",
               "delete",
@@ -75,9 +94,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   try {
     const user = await getUser(ctx.params!.id as string);
+    const plans = await getAllPlans();
     return {
       props: {
         doc: MakeItSerializable({ ...user.toJSON(), _id: user._id.toString() }),
+        plans: plans.map((plan) => {
+          return {
+            ...MakeItSerializable(plan),
+            _id: plan._id.toString(),
+          };
+        }),
       },
     };
   } catch {

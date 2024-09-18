@@ -85,9 +85,7 @@ export default function Page({ earnings, payments, users }: Props) {
   );
 }
 export async function getLastUsers() {
-  console.log(mongoose.connection.readyState);
   const results = await Users.find({}).hint({ createdAt: -1 }).limit(5);
-
   return await Promise.all(
     results.map<Promise<UserTabelProps["users"][0]>>(async (doc, i) => {
       const payment = await Payments.findOne({ userId: doc._id }).hint({
@@ -100,7 +98,6 @@ export async function getLastUsers() {
           user: JSON.parse(JSON.stringify(doc)),
         };
       const plan = await Plans.findById(payment.planId);
-      console.log(plan);
       return {
         order: i + 1,
         user: JSON.parse(JSON.stringify(doc)),
@@ -110,7 +107,6 @@ export async function getLastUsers() {
   );
 }
 export async function getPaymentsTotal(startData: Date): Promise<number> {
-  console.log(mongoose.connection.readyState);
   const results = await Payments.aggregate([
     {
       $match: {
@@ -133,7 +129,6 @@ export async function getPaymentsTotal(startData: Date): Promise<number> {
   }
 }
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  console.log(EnvVars.mongo.url);
   await connect(EnvVars.mongo.url);
   const currentDate = new Date();
   const year = currentDate.getFullYear();

@@ -10,7 +10,6 @@ export default function Page() {
   const router = useRouter();
   const mutate = useMutation({
     mutationFn(data: unknown) {
-      console.log(data);
       return requester.post(`/api/admin/plans`, data);
     },
   });

@@ -6,6 +6,7 @@ import { FieldError, useForm } from "react-hook-form";
 import React from "react";
 import { Grid } from "@mui/material";
 import BudgetInput from "@src/components/common/inputs/budget";
+import { ObjectEntries } from "@src/utils";
 
 export interface DataType {
   blocked?: boolean;
@@ -33,8 +34,17 @@ export default function UserInfoForm({
   const { register, handleSubmit, formState } = useForm<DataType>({
     values: defaultData,
   });
+  register("details", { value: {} });
   return (
-    <form onSubmit={handleSubmit(onData)} autoComplete="off">
+    <form
+      onSubmit={handleSubmit((data: any) => {
+        ObjectEntries(data).forEach(([key, val]) => {
+          if (typeof val == "number" && isNaN(val)) delete data[key];
+        });
+        return onData(data);
+      })}
+      autoComplete="off"
+    >
       <Grid2>
         <MainInput
           id={"name-input"}
@@ -79,7 +89,7 @@ export default function UserInfoForm({
         <TextArea
           id={"desc-input"}
           title={"Why did you come"}
-          {...register("details.whyDidYouCame", { value: "" })}
+          {...register("details.whyDidYouCame")}
           className="tw-min-h-[10rem]"
           err={formState.errors.details?.whyDidYouCame}
         />

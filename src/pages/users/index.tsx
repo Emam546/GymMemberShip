@@ -4,6 +4,7 @@ import UsersTable from "@src/components/pages/users/table";
 import Head from "next/head";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
+import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 const perLoad = 20;
 export default function Page() {
   const QueryInfinity = useInfiniteQuery({
@@ -21,15 +22,14 @@ export default function Page() {
       return { page: pageParam, data: users.data.data };
     },
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data.length) return lastPage.page + 1;
-      return null;
+      if (lastPage.data.length > 0) return lastPage.page + 1;
+      return undefined;
     },
   });
   const users =
     QueryInfinity.data?.pages
       .map((page) => page.data)
       .reduce((acc, cur) => [...acc, ...cur], []) || [];
-  console.log(users);
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -57,6 +57,12 @@ export default function Page() {
             </div>
           }
         </MainCard>
+        <TriggerOnVisible
+          onVisible={async () => {
+            if (!QueryInfinity.isFetching && QueryInfinity.hasNextPage)
+              QueryInfinity.fetchNextPage();
+          }}
+        />
       </BigCard>
     </div>
   );

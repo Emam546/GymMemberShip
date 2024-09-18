@@ -16,8 +16,7 @@ import PaymentInfoGenerator from "@src/components/pages/plans/payments/table";
 interface Props {
   doc: DataBase.WithIdOrg<DataBase.Models.Plans>;
 }
-export default function Page({ doc: initData }: Props) {
-  const [doc, setDoc] = useState(initData);
+export default function Page({ doc }: Props) {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -34,7 +33,6 @@ export default function Page({ doc: initData }: Props) {
             }}
             onData={async (data) => {
               await requester.post(`/api/admin/plans/${doc.id}`, data);
-              setDoc({ ...doc, ...data });
               alert("the document updated successfully");
             }}
             buttonName="Update"

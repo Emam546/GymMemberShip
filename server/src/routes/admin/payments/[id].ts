@@ -54,34 +54,40 @@ const registerQuery = new Validator({
   limit: ["numeric"],
   ".": ["required"],
 });
-router
-  .get("/:id/logs", async (req, res) => {
-    const result = registerQuery.passes(req.query);
-    if (!result.state)
-      return res.status(400).SendFailed("invalid Data", result.errors);
-    const { skip, limit } = result.data;
-    const payment = res.locals.payment as Document<DataBase.Models.User>;
-    const logs = await Logs.find({ paymentId: payment._id })
-      .hint({
-        userId: 1,
-        createdAt: -1,
-      })
-      .skip(parseInt(skip as string) || 0)
-      .limit(parseInt(limit as string) || Infinity);
+router.get("/:id/logs", async (req, res) => {
+  const result = registerQuery.passes(req.query);
+  if (!result.state)
+    return res.status(400).SendFailed("invalid Data", result.errors);
+  const { skip, limit } = result.data;
+  const payment = res.locals.payment as Document<DataBase.Models.User>;
+  const logs = await Logs.find({ paymentId: payment._id })
+    .hint({
+      userId: 1,
+      createdAt: -1,
+    })
+    .skip(parseInt(skip as string) || 0)
+    .limit(parseInt(limit as string) || Infinity);
 
-    res.status(200).sendSuccess(logs);
-  })
-  .post("/:id/logs", async (req, res) => {
-    const payment = res.locals.payment as Document<DataBase.Models.User> &
-      DataBase.Models.Payments;
-
-    const log = new Logs({
-      paymentId: payment._id.toString(),
-      planId: payment.planId,
-      userId: payment.userId,
-      createdBy: { type: "Admin" },
-    });
-    const logSave = await log.save();
-    res.status(200).sendSuccess(logSave);
+  res.status(200).sendSuccess(logs);
+});
+router.post("/:id/logs", async (req, res) => {
+  const payment = res.locals.payment as Document<DataBase.Models.User> &
+    DataBase.Models.Payments;
+  const log = new Logs({
+    paymentId: payment._id.toString(),
+    planId: payment.planId,
+    userId: payment.userId,
+    createdBy: { type: "Admin" },
   });
+  const logSave = await log.save();
+  res.status(200).sendSuccess(logSave);
+});
+router.get("/:id/logs/count", async (req, res) => {
+  const payment = res.locals.payment as Document<DataBase.Models.User>;
+  const logs = await Logs.countDocuments({ paymentId: payment._id }).hint({
+    paymentId: 1,
+    createdAt: -1,
+  });
+  res.status(200).sendSuccess(logs);
+});
 export default router;

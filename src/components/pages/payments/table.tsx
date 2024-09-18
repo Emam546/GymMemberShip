@@ -33,23 +33,23 @@ export type HeadKeys =
 
 function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
   const query = useQuery({
-    queryKey: ["payments", payment._id, "logs"],
+    queryKey: ["logs", "payments", payment._id, "count"],
     queryFn: async () => {
-      const request = await requester.get<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>[]>
-      >(`/api/admin/payments/${payment._id}/logs`);
+      const request = await requester.get<Routes.ResponseSuccess<number>>(
+        `/api/admin/payments/${payment._id}/logs/count`
+      );
       return request.data.data;
     },
   });
   if (query.isLoading) return <p>Loading...</p>;
   if (query.isError) return <p>{JSON.stringify(query.error)}</p>;
   const TotalDays = planToDays(payment.plan);
-  const rDays = remainingDays(payment, query.data.length);
+  const rDays = remainingDays(payment, query.data);
   return (
     <div>
       <Link href={`/payments/${payment._id}/logs`} className="tw-text-inherit">
         <p className="tw-text-center tw-mb-0">
-          <span>{query.data.length}</span>/<span>{rDays}</span>/
+          <span>{query.data}</span>/<span>{rDays}</span>/
           <span>{TotalDays}</span>
         </p>
       </Link>
@@ -65,14 +65,28 @@ function AddLog({
 }) {
   const mutate = useMutation({
     async mutationFn() {
+      const request = await requester.get<Routes.ResponseSuccess<number>>(
+        `/api/admin/payments/${payment._id}/logs/count`
+      );
+      const rDays = remainingDays(payment, request.data.data);
+
+      if (
+        rDays <= 0 &&
+        !confirm(
+          "Do you want to add more logs to the payment?\nThe remaining days of the payment is 0 ."
+        )
+      )
+        return null;
+
       const data = await requester.post<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>>
       >(`/api/admin/payments/${payment._id}/logs`);
       return data.data.data;
     },
     onSuccess(data) {
+      if (!data) return;
       queryClient.setQueryData<DataBase.WithId<DataBase.Models.Logs>[]>(
-        ["payments", payment._id, "logs"],
+        ["logs", "payments", payment._id],
         (old) => {
           return [...old!, data];
         }
@@ -127,7 +141,7 @@ function Separated({
     />
   );
 }
-function UserShower({
+function Shower({
   payment,
   user,
   order,
@@ -196,9 +210,11 @@ function UserShower({
             </div>
           </td>
         </E>
-        <td>
-          <DeleteButton onClick={() => setOpen(true)} />
-        </td>
+        <E val="delete" heads={headKeys}>
+          <td>
+            <DeleteButton onClick={() => setOpen(true)} />
+          </td>
+        </E>
       </tr>
       <DeleteDialog
         onAccept={async () => {
@@ -210,7 +226,7 @@ function UserShower({
         }}
         open={open}
         data={{
-          title: `Block User`,
+          title: `Delete Payment`,
           desc: `Once you click Block, The payment will be deleted from his history`,
           accept: `Delete Payment`,
           deny: "Keep",
@@ -241,17 +257,18 @@ function E({
 export interface PaymentProps {
   page: number;
   payments: ElemProps[];
-  totalUsers: number;
+  totalCount: number;
   setPage: (page: number) => any;
   headKeys: HeadKeys[];
-  onDelete: (payment: ElemProps) => any;
+  onDelete: (elem: ElemProps) => any;
 }
 export function PaymentInfoGenerator({
   page,
   payments,
-  totalUsers: totalPayments,
+  totalCount: totalPayments,
   setPage,
   headKeys,
+  onDelete,
 }: PaymentProps) {
   const pageNum = Math.ceil(totalPayments / payments.length);
   return (
@@ -298,8 +315,9 @@ export function PaymentInfoGenerator({
               <tbody>
                 {payments.map((doc) => {
                   return (
-                    <UserShower
+                    <Shower
                       {...doc}
+                      onDelete={() => onDelete(doc)}
                       key={doc.payment._id}
                       headKeys={headKeys}
                     />
@@ -312,9 +330,9 @@ export function PaymentInfoGenerator({
             <div className="tw-mt-2">
               <Pagination
                 onChange={(e, value) => {
-                  setPage(value);
+                  setPage(value - 1);
                 }}
-                page={page}
+                page={page + 1}
                 count={pageNum}
               />
             </div>

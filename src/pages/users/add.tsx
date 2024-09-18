@@ -5,6 +5,7 @@ import { GoToButton } from "@src/components/common/inputs/addButton";
 import Head from "next/head";
 import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
+import { ObjectEntries } from "@src/utils";
 
 export default function Page() {
   const router = useRouter();

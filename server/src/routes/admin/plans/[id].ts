@@ -90,14 +90,23 @@ router.get("/:id/logs", async (req, res) => {
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
   const { skip, limit } = result.data;
-  const user = res.locals.user as Document<DataBase.Models.User>;
-  const logs = await Logs.find({ userId: user._id })
+  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
+  const logs = await Logs.find({ planId: plan._id })
     .hint({
       userId: 1,
       createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);
+
+  res.status(200).sendSuccess(logs);
+});
+router.get("/:id/logs/count", async (req, res) => {
+  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
+  const logs = await Logs.countDocuments({ planId: plan._id }).hint({
+    planId: 1,
+    createdAt: -1,
+  });
 
   res.status(200).sendSuccess(logs);
 });

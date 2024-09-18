@@ -1,12 +1,8 @@
-import { useState } from "react";
-import { QueryKey, useMutation, useQuery } from "@tanstack/react-query";
-import requester from "@src/utils/axios";
 import queryClient from "@src/queryClient";
-import {
-  HeadKeys,
-  PaymentInfoGenerator,
-  ElemProps,
-} from "../../payments/table";
+import requester from "@src/utils/axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { HeadKeys, LogInfoGenerator, ElemProps } from "../../logs/table";
 
 export interface Props {
   id: string;
@@ -17,45 +13,34 @@ type S = Routes.ResponseSuccess<
   DataBase.WithId<
     DataBase.Populate<
       DataBase.Models.Payments,
-      "userId",
+      "planId",
       DataBase.WithId<DataBase.Models.User>
     >
   >[]
 >;
-function isQueryPayment(
-  val: QueryKey
-): val is ["payments", "users", string, number] {
-  return (
-    val[0] == "payments" &&
-    val[1] == "plans" &&
-    typeof val[3] == "number" &&
-    val.length == 4
-  );
-}
-export default function FullPaymentInfoGenerator({
+export default function FullLogsInfoGenerator({
   id,
   perPage,
   headKeys,
 }: Props) {
   const [page, setPage] = useState(0);
   const mutate = useMutation({
-    async mutationFn(payment: ElemProps["payment"]) {
-      return await requester.delete(`/api/admin/payments/${payment._id}`);
+    mutationFn(payment: ElemProps["log"]) {
+      return requester.delete(`/api/admin/logs/${payment._id}`);
     },
-    onSuccess(_, payment) {
-      queryClient.getQueryData(["payments", "plans", id]);
+    onSuccess(_, doc) {
       const pages = queryClient.getQueriesData<ElemProps[]>([
-        "payments",
-        "plans",
+        "users",
         id,
+        "payments",
       ]);
       const newPages = pages
-        .filter(([val]) => isQueryPayment(val))
+        .filter((val) => typeof val[0] == "number" || val[0] instanceof Number)
         .reduce((acc, [_, cur]) => {
           if (!cur) return acc;
           return [...acc, ...cur];
         }, [] as ElemProps[])
-        .filter((val) => val.payment._id != payment._id)
+        .filter((val) => val.log._id != doc._id)
         .reduce(
           (acc, cur) => {
             const last = acc.at(-1)!;
@@ -66,46 +51,37 @@ export default function FullPaymentInfoGenerator({
           [[]] as ElemProps[][]
         );
       newPages.forEach((data, page) => {
-        queryClient.setQueryData(["payments", "plans", id, page], data);
+        queryClient.setQueryData(["logs", "users", id, page], data);
       });
       queryClient.setQueryData(
-        ["payments", "plans", id, "number"],
-        Math.max(0, queryNum.data! - 1)
+        ["logs", "users", id, "number"],
+        queryNum.data! - 1
       );
     },
   });
   const query = useQuery({
-    queryKey: ["payments", "plans", id, page],
+    queryKey: ["logs", "users", id, page],
     queryFn: async () => {
-      const request = await requester.get<S>(
-        `/api/admin/plans/${id}/payments`,
-        {
-          params: {
-            skip: page * perPage,
-            limit: perPage,
-          },
-        }
-      );
+      const request = await requester.get<S>(`/api/admin/user/${id}/logs`, {
+        params: {
+          skip: page * perPage,
+          limit: perPage,
+        },
+      });
       return request.data.data.map((doc, i) => {
         return {
           order: page + i + 1,
           payment: doc,
-          user: doc.userId,
+          plan: doc.planId,
         } as unknown as ElemProps;
       });
     },
   });
   const queryNum = useQuery({
-    queryKey: ["payments", "plans", id, "number"],
+    queryKey: ["logs", "users", id, "number"],
     queryFn: async () => {
       const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/plans/${id}/payments/count`,
-        {
-          params: {
-            skip: page * perPage,
-            limit: perPage,
-          },
-        }
+        `/api/admin/user/${id}/logs/count`
       );
       return request.data.data;
     },
@@ -114,11 +90,11 @@ export default function FullPaymentInfoGenerator({
   if (query.isError) return <p>{JSON.stringify(query.error)}</p>;
   if (queryNum.isError) return <p>{JSON.stringify(query.error)}</p>;
   return (
-    <PaymentInfoGenerator
+    <LogInfoGenerator
       headKeys={headKeys}
       page={page}
-      onDelete={(elem) => mutate.mutateAsync(elem.payment)}
-      payments={query.data}
+      onDelete={(elem) => mutate.mutateAsync(elem.log)}
+      logs={query.data}
       setPage={setPage}
       totalCount={queryNum.data}
     />
