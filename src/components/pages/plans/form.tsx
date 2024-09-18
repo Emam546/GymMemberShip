@@ -38,7 +38,7 @@ export default function LevelInfoForm({
           err={formState.errors.name}
         />
       </Grid2>
-      <Grid>
+      <Grid2 className="tw-mt-3">
         <BudgetInput
           label={"Day Price"}
           priceProps={{
@@ -106,7 +106,7 @@ export default function LevelInfoForm({
               formState.errors.prices?.year?.type) as FieldError
           }
         />
-      </Grid>
+      </Grid2>
       <div className="tw-mt-4">
         <TextArea
           id={"desc-input"}

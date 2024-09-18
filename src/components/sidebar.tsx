@@ -60,6 +60,7 @@ function CreatorNavBar() {
       <LinkElem href="/" title="Dashboard" />
       <LinkElem href="/plans" title="Manage Plans" />
       <LinkElem href="/users" title="Manage Users" />
+      <LinkElem href="/users/add" title="Add User" />
     </>
   );
 }
@@ -96,9 +97,7 @@ export default function SideBar({ onClose: onToggle }: Props) {
           <nav className="sidebar-nav">
             <ul id="sidebarnav">
               <AdminNavBar />
-
               <CreatorNavBar />
-
               <AssistantNavBar />
             </ul>
           </nav>

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import requester from "@src/utils/axios";
 import queryClient from "@src/queryClient";
+import requester from "@src/utils/axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   HeadKeys,
   PaymentInfoGenerator,
@@ -17,7 +17,7 @@ type S = Routes.ResponseSuccess<
   DataBase.WithId<
     DataBase.Populate<
       DataBase.Models.Payments,
-      "userId",
+      "planId",
       DataBase.WithId<DataBase.Models.User>
     >
   >[]
@@ -33,9 +33,9 @@ export default function FullPaymentInfoGenerator({
       return requester.delete(`/api/admin/payments/${payment._id}`);
     },
     onSuccess(_, payment) {
-      queryClient.getQueryData(["plans", id, "payments"]);
       const pages = queryClient.getQueriesData<ElemProps[]>([
-        "plans",
+        "users",
+        id,
         "payments",
       ]);
       const newPages = pages
@@ -55,46 +55,37 @@ export default function FullPaymentInfoGenerator({
           [[]] as ElemProps[][]
         );
       newPages.forEach((data, page) => {
-        queryClient.setQueryData(["plans", id, "payments", page], data);
+        queryClient.setQueryData(["users", id, "payments", page], data);
       });
       queryClient.setQueryData(
-        ["plans", id, "payments", "number"],
+        ["users", id, "payments", "number"],
         queryNum.data! - 1
       );
     },
   });
   const query = useQuery({
-    queryKey: ["plans", id, "payments", page],
+    queryKey: ["users", id, "payments", page],
     queryFn: async () => {
-      const request = await requester.get<S>(
-        `/api/admin/plans/${id}/payments`,
-        {
-          params: {
-            skip: page * perPage,
-            limit: perPage,
-          },
-        }
-      );
+      const request = await requester.get<S>(`/api/admin/user/${id}/payments`, {
+        params: {
+          skip: page * perPage,
+          limit: perPage,
+        },
+      });
       return request.data.data.map((doc, i) => {
         return {
           order: page + i + 1,
           payment: doc,
-          user: doc.userId,
+          plan: doc.planId,
         } as unknown as ElemProps;
       });
     },
   });
   const queryNum = useQuery({
-    queryKey: ["plans", id, "payments", "number"],
+    queryKey: ["users", id, "payments", "number"],
     queryFn: async () => {
       const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/plans/${id}/payments/count`,
-        {
-          params: {
-            skip: page * perPage,
-            limit: perPage,
-          },
-        }
+        `/api/admin/user/${id}/payments/count`
       );
       return request.data.data;
     },

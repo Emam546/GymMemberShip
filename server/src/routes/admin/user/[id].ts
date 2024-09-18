@@ -4,14 +4,17 @@ import Payments from "@serv/models/payments";
 import Logs from "@serv/models/log";
 import Users from "@serv/models/user";
 import Validator from "validator-checker-js";
+import { RouteError } from "@serv/declarations/classes";
 const router = Router();
-
+export async function getUser(id: string) {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    throw new RouteError(404, "The user id is not valid");
+  const user = await Users.findById(id);
+  if (!user) throw new RouteError(404, "The user is not found");
+  return user;
+}
 router.use("/:id", async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id))
-    return res.status(404).SendFailed("The user id is not valid");
-  const user = await Users.findById(req.params.id);
-  if (!user) return res.status(404).SendFailed("The user is not found");
-  res.locals.user = user;
+  res.locals.user = await getUser(req.params.id);
   next();
 });
 router.get("/:id", (req, res) => {
@@ -70,9 +73,19 @@ router.get("/:id/payments", async (req, res) => {
       createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity);
+    .limit(parseInt(limit as string) || Infinity)
+    .populate("planId");
 
   res.status(200).sendSuccess(payments);
+});
+router.get("/:id/payments/count", async (req, res) => {
+  const user = res.locals.user as Document<DataBase.Models.Plans>;
+  const count = await Payments.countDocuments({ userId: user._id }).hint({
+    userId: 1,
+    createdAt: -1,
+  });
+
+  res.status(200).sendSuccess(count);
 });
 router.get("/:id/logs", async (req, res) => {
   const result = registerQuery.passes(req.query);
