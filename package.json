@@ -2,6 +2,8 @@
   "name": "gym-membership-admin",
   "version": "0.0.0",
   "main": "./out/main/index.js",
+  "description": "An admin app for Gym business",
+  "author": "Imam Ashour",
   "publish": {
     "owner": "Emam546",
     "provider": "github",
