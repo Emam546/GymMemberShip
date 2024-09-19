@@ -56,7 +56,7 @@ export default function PrintPlanPayments({ id }: { id: string }) {
           [["Id", "User", "Paid Price", "CreatedAt", "EndAt"]],
           body
         );
-        printJsDoc(doc, `${plan.name}-payments.pdf`);
+        await printJsDoc(doc, `${plan.name}-payments.pdf`);
       }}
     />
   );

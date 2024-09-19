@@ -1,3 +1,4 @@
+import "@src/setup";
 import "@src/styles/styles.scss";
 import "@src/styles/global.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";

@@ -24,6 +24,8 @@ export namespace ApiMain {
     quitApp(): void;
   }
   interface OnceMethods {}
-  interface HandleMethods {}
+  interface HandleMethods {
+    saveFile(data: Buffer, filename: string): Promise<boolean>;
+  }
   interface HandleOnceMethods {}
 }

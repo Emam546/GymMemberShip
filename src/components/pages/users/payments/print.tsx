@@ -42,7 +42,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
           [["Id", "Plan", "Paid Price", "CreatedAt", "End At"]],
           body
         );
-        printJsDoc(doc, `${user.name}-payments.pdf`);
+        await printJsDoc(doc, `${user.name}-payments.pdf`);
       }}
     />
   );

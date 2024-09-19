@@ -3,6 +3,7 @@ import { ObjectEntries } from "@utils/index";
 import { app, BrowserWindow, ipcMain } from "electron";
 
 import { ApiMain } from "@shared/api";
+import { SaveFile } from "./saveFile";
 type OnMethodsType = {
   [K in keyof ApiMain.OnMethods]: ConvertToIpCMainFunc<ApiMain.OnMethods[K]>;
 };
@@ -57,14 +58,20 @@ export const OnMethods: OnMethodsType = {
   },
 };
 export const OnceMethods: OnceMethodsType = {};
-export const HandleMethods: HandelMethodsType = {};
+export const HandleMethods: HandelMethodsType = {
+  async saveFile(e, data, filename) {
+    const res = await SaveFile(data, filename);
+    if (!res) return false;
+    return true;
+  },
+};
 export const HandleOnceMethods: HandelOnceMethodsType = {};
 ObjectEntries(OnMethods).forEach(([key, val]) => {
   ipcMain.on(key, val);
 });
-// ObjectEntries(HandleMethods).forEach(([key, val]) => {
-//     ipcMain.handle(key, val);
-// });
+ObjectEntries(HandleMethods).forEach(([key, val]) => {
+  ipcMain.handle(key, val);
+});
 // ObjectEntries(OnceMethods).forEach(([key, val]) => {
 //     ipcMain.once(key, val);
 // });
