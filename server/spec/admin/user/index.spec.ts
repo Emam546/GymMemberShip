@@ -17,6 +17,14 @@ export function createUserData(): Omit<
     },
   };
 }
+export async function createUserRequest(
+  data?: ReturnType<typeof createUserData>
+): Promise<DataBase.WithId<DataBase.Models.User>> {
+  const response = await agent
+    .post("/api/admin/user")
+    .send(data || createUserData());
+  return response.body.data;
+}
 describe("POST", () => {
   test("success", async () => {
     const user = createUserData();
@@ -101,6 +109,50 @@ describe("GET", () => {
       (response.body.data as DataBase.Models.User[]).forEach((user) => {
         expect(user.age).toBeLessThanOrEqual(query.ageMax);
       });
+    });
+  });
+  describe("Search name", () => {
+    let user: DataBase.WithId<DataBase.Models.User>;
+    beforeAll(async () => {
+      user = await createUserRequest();
+    });
+    test("With Exact Name", async () => {
+      const query = {
+        name: user.name,
+      };
+      const response = await agent.get("/api/admin/user").query(query);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBeGreaterThan(1);
+    });
+    test("With Sliced  Name", async () => {
+      const query = {
+        name: user.name?.slice(3, 8),
+      };
+      const response = await agent.get("/api/admin/user").query(query);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBeGreaterThan(1);
+    });
+  });
+  describe("Get Last Users", () => {
+    let user: DataBase.WithId<DataBase.Models.User>;
+    beforeAll(async () => {
+      user = await createUserRequest();
+    });
+    test("Get the last created user by Get method no skip", async () => {
+      const response = await agent.get("/api/admin/user").query({ limit: 1 });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).not.toBeUndefined();
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.data[0]._id).toBe(user._id);
+    });
+    test("Get the last created user by Get method using skip", async () => {
+      const response = await agent
+        .get("/api/admin/user")
+        .query({ limit: 1, skip: 0 });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).not.toBeUndefined();
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.data[0]._id).toBe(user._id);
     });
   });
 });

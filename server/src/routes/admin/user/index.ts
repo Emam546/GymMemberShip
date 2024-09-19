@@ -2,6 +2,7 @@ import { Router } from "express";
 import Users from "@serv/models/user";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
+import { RootFilterQuery } from "mongoose";
 const router = Router();
 const registerValidator = new Validator({
   name: ["string"],
@@ -32,6 +33,7 @@ router.post("/", async (req, res) => {
   res.status(200).sendSuccess(savedUser);
 });
 const registerQuery = new Validator({
+  name: ["string"],
   ageMin: ["numeric"],
   ageMax: ["numeric"],
   tallMin: ["numeric"],
@@ -42,16 +44,6 @@ const registerQuery = new Validator({
   limit: ["numeric"],
   ".": ["required"],
 });
-interface Query {
-  ageMin?: string;
-  ageMax?: string;
-  tallMin?: string;
-  tallMax?: string;
-  weightMin?: string;
-  weightMax?: string;
-  skip?: number;
-  limit?: number;
-}
 router.get("/", async (req, res) => {
   const result = registerQuery.passes(req.query);
   if (!result.state)
@@ -65,21 +57,32 @@ router.get("/", async (req, res) => {
     weightMin,
     skip,
     limit,
+    name,
   } = result.data;
-  const results = await Users.find({
-    tall: {
+  const query: RootFilterQuery<DataBase.Models.User> = {};
+  if (tallMin || tallMax) {
+    query["tall"] = {
       $lte: parseInt(tallMax as string) || Infinity,
       $gte: parseInt(tallMin as string) || 0,
-    },
-    age: {
+    };
+  }
+  if (ageMin || ageMax) {
+    query["age"] = {
       $lte: parseInt(ageMax as string) || Infinity,
       $gte: parseInt(ageMin as string) || 0,
-    },
-    weight: {
+    };
+  }
+  if (weightMin || weightMax) {
+    query["weight"] = {
       $lte: parseInt(weightMax as string) || Infinity,
       $gte: parseInt(weightMin as string) || 0,
-    },
-  })
+    };
+  }
+  if (name) query["name"] = { $regex: name, $options: "i" };
+  const results = await Users.find(query)
+    .hint({
+      createdAt: -1,
+    })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity);
   res.status(200).sendSuccess(results);
