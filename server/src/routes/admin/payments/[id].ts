@@ -3,14 +3,19 @@ import mongoose, { Document } from "mongoose";
 import Payments from "@serv/models/payments";
 import Validator from "validator-checker-js";
 import Logs from "@serv/models/log";
+import { RouteError } from "@serv/declarations/classes";
 const router = Router();
-
+export async function getPayment(id: string) {
+  if (!mongoose.Types.ObjectId.isValid(id))
+    throw new RouteError(404, "the plan id is not valid");
+  const payment = await Payments.findById(id)
+    .populate("userId")
+    .populate("planId");
+  if (!payment) throw new RouteError(404, "the plan id is not exist");
+  return payment;
+}
 router.use("/:id", async (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id))
-    return res.status(404).SendFailed("The payment is not valid");
-  const payment = await Payments.findById(req.params.id);
-  if (!payment) return res.status(404).SendFailed("The payment is not found");
-  res.locals.payment = payment;
+  res.locals.payment = await getPayment(req.params.id);
   next();
 });
 router.get("/:id", (req, res) => {

@@ -71,7 +71,12 @@ function Shower({
           </td>
         </E>
         <E val="createdAt" heads={headKeys}>
-          <td>
+          <td
+            className={classNames({
+              "tw-w-full":
+                !headKeys.includes("plan") && !headKeys.includes("user"),
+            })}
+          >
             <p className="mb-0 fw-normal">
               {formatDate(new Date(log.createdAt))}
             </p>

@@ -48,7 +48,7 @@ export default function UserInfoForm({
       <Grid2>
         <MainInput
           id={"name-input"}
-          title={"Plan Name"}
+          title={"User Name"}
           {...register("name")}
           err={formState.errors.name}
         />
@@ -70,7 +70,7 @@ export default function UserInfoForm({
         />
         <MainInput
           id={"tall-input"}
-          title={"Tall in cantie meter"}
+          title={"Tall in centimeter"}
           {...register("tall", {
             valueAsNumber: true,
           })}

@@ -13,7 +13,7 @@ export function planToDays(plan: DataBase.Models.Payments["plan"]) {
 function getDifferenceInDays(date1: Date, date2: Date) {
   const oneDay = 24 * 60 * 60 * 1000; // Hours * minutes * seconds * milliseconds
   const diffInTime = date2.getTime() - date1.getTime(); // Get the absolute difference in milliseconds
-  const diffInDays = Math.ceil(diffInTime / oneDay); // Convert to days and round up
+  const diffInDays = Math.floor(diffInTime / oneDay); // Convert to days and round up
 
   return diffInDays;
 }

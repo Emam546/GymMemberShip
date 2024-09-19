@@ -6,17 +6,16 @@ import MainInput, {
 import SelectInput, { Props as SelectProps } from "./select";
 
 export interface Props {
-  label: string;
+
   priceProps?: Omit<MainInputProps, "title" | "id">;
-  unitProps?: Omit<SelectProps, "title" | "id">;
+  unitProps?: Omit<SelectProps,"title"|"id">;
   err?: FieldError;
 }
 
 export default function PlanTypeInput({
   priceProps,
   unitProps,
-  err,
-  label,
+  err
 }: Props) {
   return (
     <div>

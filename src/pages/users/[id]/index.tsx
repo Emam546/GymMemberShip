@@ -14,6 +14,7 @@ import { getUser } from "@serv/routes/admin/user/[id]";
 import AddUserPayment from "@src/components/pages/users/addPayment";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import queryClient from "@src/queryClient";
+import DeleteAccountForm from "@src/components/pages/users/deleteAccountForm";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
@@ -48,7 +49,9 @@ export default function Page({ doc: initData, plans }: Props) {
             buttonName="Update"
           />
         </MainCard>
-
+        <div className="tw-mb-8">
+          <DeleteAccountForm id={doc._id} />
+        </div>
         <div className="tw-flex tw-items-center tw-justify-between">
           <CardTitle>Payments</CardTitle>
           <PrintUsersPayments id={doc._id} />
@@ -80,6 +83,7 @@ export default function Page({ doc: initData, plans }: Props) {
               "addLog",
               "separated",
               "link",
+              "endAt"
             ]}
           />
         </MainCard>

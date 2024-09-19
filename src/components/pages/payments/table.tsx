@@ -27,6 +27,7 @@ export type HeadKeys =
   | "delete"
   | "separated"
   | "log"
+  | "endAt"
   | "daysLogged"
   | "addLog"
   | "link";
@@ -47,12 +48,9 @@ function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
   const rDays = remainingDays(payment, query.data);
   return (
     <div>
-      <Link href={`/payments/${payment._id}/logs`} className="tw-text-inherit">
-        <p className="tw-text-center tw-mb-0">
-          <span>{query.data}</span>/<span>{rDays}</span>/
-          <span>{TotalDays}</span>
-        </p>
-      </Link>
+      <p className="tw-text-center tw-mb-0">
+        <span>{query.data}</span>/<span>{rDays}</span>/<span>{TotalDays}</span>
+      </p>
     </div>
   );
 }
@@ -85,10 +83,10 @@ function AddLog({
     },
     onSuccess(data) {
       if (!data) return;
-      queryClient.setQueryData<DataBase.WithId<DataBase.Models.Logs>[]>(
-        ["logs", "payments", payment._id],
+      queryClient.setQueryData<number>(
+        ["logs", "payments", payment._id, "count"],
         (old) => {
-          return [...old!, data];
+          return old! + 1;
         }
       );
       alert("Log Added successfully");
@@ -150,6 +148,10 @@ function Shower({
   plan,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
+  const endAT = new Date(
+    new Date(payment.createdAt).getTime() +
+      planToDays(payment.plan) * 1000 * 24 * 60 * 60
+  );
   return (
     <>
       <tr>
@@ -189,6 +191,11 @@ function Shower({
             <p className="mb-0 fw-normal">
               {formateDate(new Date(payment.createdAt))}
             </p>
+          </td>
+        </E>
+        <E val="endAt" heads={headKeys}>
+          <td>
+            <p className="mb-0 fw-normal">{formateDate(endAT)}</p>
           </td>
         </E>
         <E val="log" heads={headKeys}>
@@ -297,7 +304,9 @@ export function PaymentInfoGenerator({
                   <E heads={headKeys} val="createdAt">
                     <TH>Created At</TH>
                   </E>
-
+                  <E heads={headKeys} val="endAt">
+                    <TH>End At</TH>
+                  </E>
                   <E heads={headKeys} val="log">
                     <TH className="tw-text-center">A/R/T</TH>
                   </E>

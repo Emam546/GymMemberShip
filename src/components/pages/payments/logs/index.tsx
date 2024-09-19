@@ -1,14 +1,11 @@
-import { BigCard, CardTitle, MainCard } from "@src/components/card";
+import { BigCard, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
-import UsersTable from "@src/components/pages/users/table";
 import Head from "next/head";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
-import { useRouter } from "next/router";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import queryClient from "@src/queryClient";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
-import { last } from "ramda";
 const perLoad = 20;
 type Page = {
   page: number;
@@ -22,16 +19,17 @@ interface InfiniteQueryData {
   pages: Page[];
   pageParams: unknown[];
 }
-export default function Page() {
-  const router = useRouter();
-  const { id } = router.query;
+export interface Props {
+  id: string;
+}
+export default function LogsPaymentInfo({ id }: Props) {
   const mutate = useMutation({
     mutationFn(id: string) {
       return requester.delete(`/api/admin/logs/${id}`);
     },
     onSuccess(_, logId) {
       queryClient.setQueryData<InfiniteQueryData>(
-        ["logs", "users", id, "infinity"],
+        ["logs", "payments", id, "infinity"],
         (oldData) => {
           if (!oldData) return oldData;
           return {
@@ -46,17 +44,11 @@ export default function Page() {
     },
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["logs", "users", id, "infinity"],
+    queryKey: ["logs", "payments", id, "infinity"],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
-        Routes.ResponseSuccess<
-          DataBase.Populate<
-            DataBase.WithId<DataBase.Models.Logs>,
-            "planId",
-            DataBase.WithId<DataBase.Models.Plans>
-          >[]
-        >
-      >(`/api/admin/user/${id}/logs`, {
+        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>[]>
+      >(`/api/admin/payments/${id}/logs`, {
         params: {
           skip: perLoad * pageParam,
           limit: perLoad,
@@ -76,43 +68,32 @@ export default function Page() {
       .map((page) => page.data)
       .reduce((acc, cur) => [...acc, ...cur], []) || [];
   return (
-    <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
-      <Head>
-        <title>Logs</title>
-      </Head>
-      <BigCard>
-        <MainCard className="p-4 tw-mt-3">
-          <ErrorShower
-            loading={QueryInfinity.isLoading}
-            error={QueryInfinity.error}
-          />
-          <CardTitle>User Logs</CardTitle>
-          <div>
-            <LogInfoGenerator
-              page={0}
-              setPage={() => {}}
-              totalCount={logs.length}
-              logs={logs.map((log, i) => ({
-                order: i,
-                log,
-                plan: log.planId,
-              }))}
-              headKeys={["order", "delete", "paymentLink", "plan", "createdAt"]}
-              onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
-            />
-          </div>
-          <TriggerOnVisible
-            onVisible={async () => {
-              if (
-                !QueryInfinity.isFetching &&
-                !QueryInfinity.isLoading &&
-                QueryInfinity.hasNextPage
-              )
-                QueryInfinity.fetchNextPage();
-            }}
-          />
-        </MainCard>
-      </BigCard>
+    <div>
+      <ErrorShower
+        loading={QueryInfinity.isLoading}
+        error={QueryInfinity.error}
+      />
+      <LogInfoGenerator
+        page={0}
+        setPage={() => {}}
+        totalCount={logs.length}
+        logs={logs.map((log, i) => ({
+          order: i,
+          log,
+        }))}
+        headKeys={["order", "delete", "createdAt"]}
+        onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
+      />
+      <TriggerOnVisible
+        onVisible={async () => {
+          if (
+            !QueryInfinity.isFetching &&
+            !QueryInfinity.isLoading &&
+            QueryInfinity.hasNextPage
+          )
+            QueryInfinity.fetchNextPage();
+        }}
+      />
     </div>
   );
 }
