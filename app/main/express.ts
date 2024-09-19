@@ -10,6 +10,7 @@ const expressPath = app.isPackaged
   : "./out/server/index.js";
 const utf16Decoder = new TextDecoder("UTF-8");
 const command = `-r module-alias/register ${expressPath} --env=${process.env.NODE_ENV}`;
+
 export function RunServer() {
   return new Promise((res, rej) => {
     const expressAppProcess = spawn(`${appName}`, command.split(" "), {
@@ -17,6 +18,8 @@ export function RunServer() {
         ELECTRON_RUN_AS_NODE: "1",
         ...process.env,
       },
+    }).on("error", (e) => {
+      console.log(e);
     });
     expressAppProcess.stderr.on("data", (e) => {
       const text = utf16Decoder.decode(e);
@@ -24,6 +27,7 @@ export function RunServer() {
     });
     expressAppProcess.stdout.on("data", (data: Buffer) => {
       const text = utf16Decoder.decode(data);
+      console.log(text.replaceAll("\n", ""));
       const state = text.split("\n").includes(serverStart);
       if (state) res([expressAppProcess.stdout, expressAppProcess.stderr]);
     });

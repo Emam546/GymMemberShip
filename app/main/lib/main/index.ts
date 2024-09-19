@@ -10,6 +10,7 @@ import { convertFunc } from "@app/main/utils/convert";
 import { isDev, isProd } from "@app/main/utils";
 import { Context } from "@src/types/api";
 import { MainWindow } from "./window";
+import EnvVars from "@app/main/declarations/major/EnvVars";
 export const createMainWindow = async (
   options: BrowserWindowConstructorOptions,
   preloadData?: Context
@@ -63,7 +64,7 @@ export const createMainWindow = async (
     return { action: "deny" };
   });
   win.on("close", saveState);
-  await win.loadURL(`http://localhost:3000`);
+  await win.loadURL(`http://localhost:${EnvVars.port}`);
   if (isDev) win.webContents.openDevTools();
   win.webContents.on("did-fail-load", () => {
     win.webContents.reloadIgnoringCache();

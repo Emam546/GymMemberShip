@@ -32,7 +32,7 @@ export function PrintButton<T>({
           <FontAwesomeIcon className="tw-mr-1" icon={faPrint} />
           Print
         </SuccessButton>
-        <ErrorShower error={mutate.error} />
+        <ErrorShower error={mutate.error as Error} />
       </div>
     </div>
   );

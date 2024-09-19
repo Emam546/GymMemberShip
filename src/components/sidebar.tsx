@@ -1,10 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-import { useAppSelector } from "@src/store";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import SimpleBar from "simplebar-react";
-import { IsAdminComp, IsCreatorComp } from "./wrappers/wrapper";
 
 interface HeaderNavProps {
   title: string;

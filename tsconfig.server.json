@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "commonjs",
-    "outDir": "",
+    "outDir": "dist",
     "noEmit": false,
     "baseUrl": "./",
     "paths": {
