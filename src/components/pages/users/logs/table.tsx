@@ -62,7 +62,7 @@ export default function FullLogsInfoGenerator({
   const query = useQuery({
     queryKey: ["logs", "users", id, page],
     queryFn: async () => {
-      const request = await requester.get<S>(`/api/admin/user/${id}/logs`, {
+      const request = await requester.get<S>(`/api/admin/users/${id}/logs`, {
         params: {
           skip: page * perPage,
           limit: perPage,
@@ -81,7 +81,7 @@ export default function FullLogsInfoGenerator({
     queryKey: ["logs", "users", id, "number"],
     queryFn: async () => {
       const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/user/${id}/logs/count`
+        `/api/admin/users/${id}/logs/count`
       );
       return request.data.data;
     },

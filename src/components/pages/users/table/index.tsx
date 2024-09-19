@@ -31,7 +31,7 @@ function UserShower({
   const mutate = useMutation({
     async mutationFn(val: boolean) {
       const state = new Boolean(val).valueOf();
-      await requester.post(`/api/admin/user/${user._id}`, {
+      await requester.post(`/api/admin/users/${user._id}`, {
         blocked: state,
       });
     },
@@ -55,7 +55,11 @@ function UserShower({
           </td>
         </E>
         <E val="age/tall/weight" heads={headKeys}>
-          <td>{`${user.weight}KG,${user.tall}CM,${user.age}Year`}</td>
+          <td>
+            <span>{`${user.weight || 0}KG`}</span>,
+            <span>{`${user.tall || 0}CM`}</span>,
+            <span>{`${user.age || 0}Year`}</span>
+          </td>
         </E>
         <E val="plan" heads={headKeys}>
           <td>

@@ -3,6 +3,7 @@ import { createTableDoc } from "@src/utils/jspdf";
 import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
+import { planToDays } from "@src/utils/payment";
 
 export default function PrintUserPayments({ id }: { id: string }) {
   return (
@@ -10,7 +11,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
       fn={async () => {
         const res = await requester.get<
           Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Plans>>
-        >(`/api/admin/plans/${id}`);
+        >(`/api/admin/users/${id}`);
         const payments = await requester.get<
           Routes.ResponseSuccess<
             DataBase.WithId<
@@ -22,21 +23,26 @@ export default function PrintUserPayments({ id }: { id: string }) {
             >[]
           >
         >(`/api/admin/users/${id}/payments`);
-        const plan = res.data.data;
+        const user = res.data.data;
         const body = payments.data.data.map<string[]>((doc, i) => {
+          const endAT = new Date(
+            new Date(doc.createdAt).getTime() +
+              planToDays(doc.plan) * 1000 * 24 * 60 * 60
+          );
           return [
             (i + 1).toString(),
             doc.planId.name || "",
             `${doc.paid.num} ${doc.paid.type}`,
             formateDate(new Date(doc.createdAt)),
+            formateDate(new Date(endAT)),
           ];
         });
 
         const doc = createTableDoc(
-          [["Id", "Plan", "Paid Price", "CreatedAt"]],
+          [["Id", "Plan", "Paid Price", "CreatedAt", "End At"]],
           body
         );
-        printJsDoc(doc, `${plan.name}-payments.pdf`);
+        printJsDoc(doc, `${user.name}-payments.pdf`);
       }}
     />
   );

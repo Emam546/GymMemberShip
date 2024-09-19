@@ -1,5 +1,5 @@
 import mongoose, { Model } from "mongoose";
-import User from "./user";
+import User from "./users";
 import Plans from "./plans";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {

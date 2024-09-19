@@ -15,7 +15,7 @@ export default function Page() {
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.User>[]>
-      >(`/api/admin/user`, {
+      >(`/api/admin/users`, {
         params: {
           skip: perLoad * pageParam,
           limit: perLoad,

@@ -38,7 +38,7 @@ const gotSingleInstanceLock = app.requestSingleInstanceLock();
 if (!gotSingleInstanceLock) app.quit();
 else
   app.on("second-instance", (_, argv) => {
-    //User requested a second instance of the app.
+    //users requested a second instance of the app.
     //argv has the process.argv arguments of the second instance.
     if (!app.hasSingleInstanceLock()) return;
     if (MainWindow.Window) {

@@ -1,5 +1,5 @@
-import "@src/styles/global.scss";
 import "@src/styles/styles.scss";
+import "@src/styles/global.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "simplebar-react/dist/simplebar.min.css";

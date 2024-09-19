@@ -4,18 +4,18 @@ import agent from "@test/index";
 import { expect } from "chai";
 let user: DataBase.WithId<DataBase.Models.User>;
 beforeAll(async () => {
-  const res = await agent.post("/api/admin/user").send(createUserData());
+  const res = await agent.post("/api/admin/users").send(createUserData());
   expect(res.statusCode).eq(200);
   user = res.body.data;
 });
 describe("GET", () => {
   test("Success", async () => {
-    const res = await agent.get(`/api/admin/user/${user._id}`);
+    const res = await agent.get(`/api/admin/users/${user._id}`);
     expect(res.statusCode).eq(200);
     expect(user).deep.eq(res.body.data);
   });
   test("WrongId", async () => {
-    const res = await agent.get(`/api/admin/user/WrongId`);
+    const res = await agent.get(`/api/admin/users/WrongId`);
     expect(res.statusCode).eq(404);
     expect(res.body.status).false;
   });
@@ -24,7 +24,7 @@ describe("POST", () => {
   test("Success", async () => {
     const newUser = createUserData();
     const res = await agent
-      .post(`/api/admin/user/${user._id}`)
+      .post(`/api/admin/users/${user._id}`)
       .send({ ...newUser });
 
     expect(res.statusCode).eq(200);
@@ -33,7 +33,7 @@ describe("POST", () => {
   test("WrongId", async () => {
     const newUser = createUserData();
     const res = await agent
-      .post(`/api/admin/user/WrongId`)
+      .post(`/api/admin/users/WrongId`)
       .send({ ...newUser });
     expect(res.statusCode).eq(404);
     expect(res.body.status).false;
@@ -41,14 +41,14 @@ describe("POST", () => {
   test("update email type", async () => {
     const email = faker.internet.email();
     const res = await agent
-      .post(`/api/admin/user/${user._id}`)
+      .post(`/api/admin/users/${user._id}`)
       .send({ email })
       .expect(200);
     expect(res.body.data.email).eq(email);
   });
   test("update blocked type", async () => {
     const res = await agent
-      .post(`/api/admin/user/${user._id}`)
+      .post(`/api/admin/users/${user._id}`)
       .send({ blocked: true })
       .expect(200);
     expect(res.body.data.blocked).eq(true);
@@ -58,12 +58,12 @@ describe("POST", () => {
 describe("DELETE", () => {
   let user: DataBase.WithId<DataBase.Models.User>;
   beforeEach(async () => {
-    const res = await agent.post("/api/admin/user").send(createUserData());
+    const res = await agent.post("/api/admin/users").send(createUserData());
     expect(res.statusCode).eq(200);
     user = res.body.data;
   });
   test("Success", async () => {
-    await agent.delete(`/api/admin/user/${user._id}`).expect(200);
-    await agent.get(`/api/admin/user/${user._id}`).expect(404);
+    await agent.delete(`/api/admin/users/${user._id}`).expect(200);
+    await agent.get(`/api/admin/users/${user._id}`).expect(404);
   });
 });

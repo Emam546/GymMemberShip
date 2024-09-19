@@ -13,7 +13,6 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
       if (!wrapper) return;
       const width =
         window.innerWidth > 0 ? window.innerWidth : window.screen.width;
-
       if (width < 1199) {
         wrapper.setAttribute("data-sidebartype", "mini-sidebar");
         wrapper.classList.add("mini-sidebar");

@@ -76,12 +76,15 @@ export default function FullPaymentInfoGenerator({
   const query = useQuery({
     queryKey: ["payments", "users", id, page],
     queryFn: async () => {
-      const request = await requester.get<S>(`/api/admin/user/${id}/payments`, {
-        params: {
-          skip: page * perPage,
-          limit: perPage,
-        },
-      });
+      const request = await requester.get<S>(
+        `/api/admin/users/${id}/payments`,
+        {
+          params: {
+            skip: page * perPage,
+            limit: perPage,
+          },
+        }
+      );
       return request.data.data.map((doc, i) => {
         return {
           order: page + i + 1,
@@ -95,7 +98,7 @@ export default function FullPaymentInfoGenerator({
     queryKey: ["payments", "users", id, "count"],
     queryFn: async () => {
       const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/user/${id}/payments/count`
+        `/api/admin/users/${id}/payments/count`
       );
       return request.data.data;
     },

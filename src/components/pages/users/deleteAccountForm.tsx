@@ -12,7 +12,7 @@ export default function DeleteAccountForm({ id }: { id: string }) {
 
   const deleteAccountMutate = useMutation({
     mutationFn: async () => {
-      await requester.delete(`/api/admin/user/${id}`);
+      await requester.delete(`/api/admin/users/${id}`);
       queryClient.invalidateQueries(["users"]);
       alert("document deleted successfully");
       await router.push("/users");

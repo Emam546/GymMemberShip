@@ -20,7 +20,7 @@ export default function Header({ OnOpen }: Props) {
               <i className="ti ti-menu-2" />
             </button>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <button
               type="button"
               className="nav-link nav-icon-hover tw-bg-transparent tw-border-none"
@@ -31,7 +31,7 @@ export default function Header({ OnOpen }: Props) {
               <i className="ti ti-bell-ringing" />
               <div className="notification bg-primary rounded-circle" />
             </button>
-          </li>
+          </li> */}
         </ul>
         <div
           className="px-0 navbar-collapse justify-content-end"

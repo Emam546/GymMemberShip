@@ -1,7 +1,7 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 import { expect } from "chai";
-import { createUserData } from "../user/index.spec";
+import { createUserData } from "../users/index.spec";
 import { createPlanData } from "../plans/index.spec";
 export function createPayment(
   planId: string,
@@ -35,7 +35,7 @@ export let user: DataBase.WithId<DataBase.Models.User>;
 export let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
   const res = await agent
-    .post("/api/admin/user")
+    .post("/api/admin/users")
     .send(createUserData())
     .expect(200);
   user = res.body.data;
@@ -113,7 +113,7 @@ describe("User Methods", () => {
   let payment: DataBase.WithId<DataBase.Models.User>;
   beforeEach(async () => {
     const res = await agent
-      .post("/api/admin/user")
+      .post("/api/admin/users")
       .send(createUserData())
       .expect(200);
     user = res.body.data;
@@ -126,14 +126,14 @@ describe("User Methods", () => {
   describe("GET", () => {
     test("Success", async () => {
       const res = await agent
-        .get(`/api/admin/user/${user._id}/payments`)
+        .get(`/api/admin/users/${user._id}/payments`)
         .expect(200);
       expect(res.body.data).deep.includes(payment);
     });
     test("Use limit", async () => {
       const limit = 5;
       const res = await agent
-        .get(`/api/admin/user/${user._id}/payments`)
+        .get(`/api/admin/users/${user._id}/payments`)
         .query({ limit })
         .expect(200);
       expect(res.body.data.length).lte(limit);
@@ -142,22 +142,22 @@ describe("User Methods", () => {
 
   test("no payments", async () => {
     const res = await agent
-      .post("/api/admin/user")
+      .post("/api/admin/users")
       .send(createUserData())
       .expect(200);
     const user = res.body.data;
     const res2 = await agent
-      .get(`/api/admin/user/${user._id}/payments`)
+      .get(`/api/admin/users/${user._id}/payments`)
       .expect(200);
     expect(res2.body.data.length).eq(0);
   });
   test("payments deleted with user", async () => {
-    await agent.delete(`/api/admin/user/${user._id}`).expect(200);
+    await agent.delete(`/api/admin/users/${user._id}`).expect(200);
     await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
   });
   test("unrelated payments will not be deleted", async () => {
     const res = await agent
-      .post("/api/admin/user")
+      .post("/api/admin/users")
       .send(createUserData())
       .expect(200);
     const user2 = res.body.data;
@@ -166,7 +166,7 @@ describe("User Methods", () => {
       .send(createPayment(plan._id, user2._id))
       .expect(200);
     const payment2 = res2.body.data;
-    await agent.delete(`/api/admin/user/${user._id}`).expect(200);
+    await agent.delete(`/api/admin/users/${user._id}`).expect(200);
     await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
     await agent.get(`/api/admin/payments/${payment2._id}`).expect(200);
   });
@@ -185,7 +185,7 @@ describe("Plan method", () => {
       const res = await agent
         .get(`/api/admin/plans/${plan._id}/payments`)
         .expect(200);
-      expect(res.body.data).not.undefined
+      expect(res.body.data).not.undefined;
     });
     test("Use limit", async () => {
       const limit = 5;

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import mongoose, { Model } from "mongoose";
-import User from "./user";
+import User from "./users";
 import Plans from "./plans";
 import Payment from "./payments";
 const schema = new mongoose.Schema<DataBase.Models.Logs>(

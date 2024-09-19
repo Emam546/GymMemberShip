@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Users from "@serv/models/user";
+import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
 import { RootFilterQuery } from "mongoose";

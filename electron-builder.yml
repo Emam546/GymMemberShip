@@ -10,6 +10,7 @@ directories:
 files:
   - out/**/*
   - build/**/*
+  - .next/**/*
 icon: build\icon.ico
 linux:
   category: Utility

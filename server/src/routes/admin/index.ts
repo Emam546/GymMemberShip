@@ -1,11 +1,11 @@
 import { Router } from "express";
-import userRouter from "./user";
+import userRouter from "./users";
 import plansRouter from "./plans";
 import paymentsRouter from "./payments";
 import LogsRouter from "./log";
 const router = Router();
 
-router.use("/user", userRouter);
+router.use("/users", userRouter);
 router.use("/plans", plansRouter);
 router.use("/payments", paymentsRouter);
 router.use("/logs", LogsRouter);

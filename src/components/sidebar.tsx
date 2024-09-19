@@ -11,7 +11,7 @@ interface HeaderNavProps {
 }
 export function HeaderNav({ title }: HeaderNavProps) {
   return (
-    <li className="nav-small-cap">
+    <li className="nav-small-cap first:tw-mt-0">
       <i className="ti ti-dots nav-small-cap-icon fs-4" />
       <span className="hide-menu">{title}</span>
     </li>
@@ -96,9 +96,9 @@ export default function SideBar({ onClose: onToggle }: Props) {
         <SimpleBar className="scroll-sidebar">
           <nav className="sidebar-nav">
             <ul id="sidebarnav">
-              <AdminNavBar />
+              {/* <AdminNavBar /> */}
               <CreatorNavBar />
-              <AssistantNavBar />
+              {/* <AssistantNavBar /> */}
             </ul>
           </nav>
         </SimpleBar>

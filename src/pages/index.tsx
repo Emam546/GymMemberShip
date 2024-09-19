@@ -1,5 +1,5 @@
 import { BigCard } from "@src/components/card";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import Payments from "@serv/models/payments";
 import Head from "next/head";
 import {
@@ -14,7 +14,7 @@ import connect from "@serv/db/connect";
 import UsersTable, {
   Props as UserTabelProps,
 } from "@src/components/pages/users/table";
-import Users from "@serv/models/user";
+import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
@@ -58,9 +58,7 @@ export default function Page({ earnings, payments, users }: Props) {
             <div className="col-lg-8 d-flex align-items-stretch">
               <div className="card w-100">
                 <div className="p-4 card-body">
-                  <h5 className="mb-4 card-title fw-semibold">
-                    Recent Students
-                  </h5>
+                  <h5 className="mb-4 card-title fw-semibold">Recent Users</h5>
                   <UsersTable
                     page={0}
                     setPage={() => {}}
@@ -128,7 +126,10 @@ export async function getPaymentsTotal(startData: Date): Promise<number> {
     return 0; // If no documents, return 0
   }
 }
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+
+
+
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -152,5 +153,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
       },
       users,
     },
+    revalidate: 60 * 10,
   };
 };

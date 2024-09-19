@@ -8,9 +8,9 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
-import PrintUsersPayments from "@src/components/pages/plans/payments/print";
+import PrintUsersPayments from "@src/components/pages/users/payments/print";
 import PaymentInfoGenerator from "@src/components/pages/users/payments/table";
-import { getUser } from "@serv/routes/admin/user/[id]";
+import { getUser } from "@serv/routes/admin/users/[id]";
 import AddUserPayment from "@src/components/pages/users/addPayment";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import queryClient from "@src/queryClient";
@@ -42,7 +42,7 @@ export default function Page({ doc: initData, plans }: Props) {
               weight: doc.weight,
             }}
             onData={async (data) => {
-              await requester.post(`/api/admin/user/${doc._id}`, data);
+              await requester.post(`/api/admin/users/${doc._id}`, data);
               setDoc({ ...doc, ...data });
               alert("the document updated successfully");
             }}
@@ -81,9 +81,8 @@ export default function Page({ doc: initData, plans }: Props) {
               "plan",
               "log",
               "addLog",
-              "separated",
               "link",
-              "endAt"
+              "endAt",
             ]}
           />
         </MainCard>

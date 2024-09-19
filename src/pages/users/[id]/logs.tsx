@@ -56,7 +56,7 @@ export default function Page() {
             DataBase.WithId<DataBase.Models.Plans>
           >[]
         >
-      >(`/api/admin/user/${id}/logs`, {
+      >(`/api/admin/users/${id}/logs`, {
         params: {
           skip: perLoad * pageParam,
           limit: perLoad,

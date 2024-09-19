@@ -13,7 +13,7 @@ export default function Page() {
     async mutationFn(data: unknown) {
       const request = await requester.post<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.User>>
-      >(`/api/admin/user`, data);
+      >(`/api/admin/users`, data);
       return request.data.data;
     },
   });

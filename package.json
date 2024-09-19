@@ -11,7 +11,6 @@
   "scripts": {
     "build:server": "ts-node build.ts",
     "build:next": "next build",
-    "export": "npm run build:next&&next export",
     "build": "npm run build:server && npm run build:next",
     "lint": "next lint -c ./src/.eslintrc.json src",
     "lint:server": "eslint -c ./server/.eslintrc.json --ext  .ts server/src/ ",
@@ -22,7 +21,7 @@
     "start:desk": "electron-vite preview",
     "build:electron": "electron-vite build",
     "dev:desk": "tsc -p tsconfig.prod.json --outDir ./out/server && electron-vite dev",
-    "build:desk": "npm run build:next&& npm run build:electron",
+    "build:desk": "npm run build:next&&tsc -p tsconfig.prod.json --outDir ./out/server --clean&& npm run build:electron",
     "build:win": "electron-builder --win -p never",
     "build:inno": "innosetup-compiler setup.iss --verbose",
     "publish": "node release.js",

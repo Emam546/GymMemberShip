@@ -2,7 +2,7 @@ import { Router } from "express";
 import "@serv/validator/database";
 import Payments from "@serv/models/payments";
 import Validator from "validator-checker-js";
-import Users from "@serv/models/user";
+import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import IdRouter from "./[id]";
 const router = Router();

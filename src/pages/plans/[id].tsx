@@ -52,7 +52,6 @@ export default function Page({ doc }: Props) {
               "paid",
               "user",
               "log",
-              "separated",
               "link"
             ]}
           />

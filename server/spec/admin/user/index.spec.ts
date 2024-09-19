@@ -21,14 +21,14 @@ export async function createUserRequest(
   data?: ReturnType<typeof createUserData>
 ): Promise<DataBase.WithId<DataBase.Models.User>> {
   const response = await agent
-    .post("/api/admin/user")
+    .post("/api/admin/users")
     .send(data || createUserData());
   return response.body.data;
 }
 describe("POST", () => {
   test("success", async () => {
     const user = createUserData();
-    const res = await agent.post("/api/admin/user").send(user);
+    const res = await agent.post("/api/admin/users").send(user);
     expect(res.statusCode).toBe(200);
     const testUser = res.body.data;
     expect(testUser._id).not.toBe(undefined);
@@ -40,32 +40,32 @@ describe("POST", () => {
   });
   describe("wrong", () => {
     test("email", async () => {
-      const res = await agent.post("/api/admin/user").send({ email: 1230 });
+      const res = await agent.post("/api/admin/users").send({ email: 1230 });
       expect(res.statusCode).toBe(400);
     });
     test("age", async () => {
       const res = await agent
-        .post("/api/admin/user")
+        .post("/api/admin/users")
         .send({ age: "wrong value" });
       expect(res.statusCode).toBe(400);
     });
     test("description", async () => {
-      const res = await agent.post("/api/admin/user").send({});
+      const res = await agent.post("/api/admin/users").send({});
       expect(res.statusCode).toBe(400);
     });
   });
 });
 describe("GET", () => {
   test("GET Any Result", async () => {
-    await agent.post("/api/admin/user").send(createUserData());
-    const response = await agent.get("/api/admin/user");
+    await agent.post("/api/admin/users").send(createUserData());
+    const response = await agent.get("/api/admin/users");
     expect(response.statusCode).toBe(200);
     expect(response.body.data).not.toBeUndefined();
     expect(response.body.data.length).not.toBe(0);
   });
   test("limit query", async () => {
-    await agent.post("/api/admin/user").send(createUserData());
-    const response = await agent.get("/api/admin/user").query({
+    await agent.post("/api/admin/users").send(createUserData());
+    const response = await agent.get("/api/admin/users").query({
       limit: 2,
     });
     expect(response.statusCode).toBe(200);
@@ -75,12 +75,12 @@ describe("GET", () => {
   describe("Age", () => {
     test("age", async () => {
       const orgUser = createUserData();
-      await agent.post("/api/admin/user").send(orgUser);
+      await agent.post("/api/admin/users").send(orgUser);
       const query = {
         ageMin: orgUser.age,
         ageMax: orgUser.age,
       };
-      const response = await agent.get("/api/admin/user").query(query);
+      const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data).not.toBeUndefined();
       expect(response.body.data.length).not.toBe(0);
@@ -92,7 +92,7 @@ describe("GET", () => {
       const query = {
         ageMin: 5,
       };
-      const response = await agent.get("/api/admin/user").query(query);
+      const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data).not.toBeUndefined();
       (response.body.data as DataBase.Models.User[]).forEach((user) => {
@@ -103,7 +103,7 @@ describe("GET", () => {
       const query = {
         ageMax: 5,
       };
-      const response = await agent.get("/api/admin/user").query(query);
+      const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data).not.toBeUndefined();
       (response.body.data as DataBase.Models.User[]).forEach((user) => {
@@ -120,7 +120,7 @@ describe("GET", () => {
       const query = {
         name: user.name,
       };
-      const response = await agent.get("/api/admin/user").query(query);
+      const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data.length).toBeGreaterThan(1);
     });
@@ -128,7 +128,7 @@ describe("GET", () => {
       const query = {
         name: user.name?.slice(3, 8),
       };
-      const response = await agent.get("/api/admin/user").query(query);
+      const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data.length).toBeGreaterThan(1);
     });
@@ -139,7 +139,7 @@ describe("GET", () => {
       user = await createUserRequest();
     });
     test("Get the last created user by Get method no skip", async () => {
-      const response = await agent.get("/api/admin/user").query({ limit: 1 });
+      const response = await agent.get("/api/admin/users").query({ limit: 1 });
       expect(response.statusCode).toBe(200);
       expect(response.body.data).not.toBeUndefined();
       expect(response.body.data.length).toBe(1);
@@ -147,7 +147,7 @@ describe("GET", () => {
     });
     test("Get the last created user by Get method using skip", async () => {
       const response = await agent
-        .get("/api/admin/user")
+        .get("/api/admin/users")
         .query({ limit: 1, skip: 0 });
       expect(response.statusCode).toBe(200);
       expect(response.body.data).not.toBeUndefined();

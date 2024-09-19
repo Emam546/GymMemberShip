@@ -2,7 +2,7 @@ import { Router } from "express";
 import mongoose, { Document } from "mongoose";
 import Payments from "@serv/models/payments";
 import Logs from "@serv/models/log";
-import Users from "@serv/models/user";
+import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
 const router = Router();
