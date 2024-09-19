@@ -2,11 +2,13 @@ import { NodeEnvs } from "@serv/declarations/enums";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import mongoose from "mongoose";
 export const dbName = "GymMemberShip";
-
-export default function connect(url: string, autoIndex = false) {
-  return mongoose.connect(url, {
+let cached: mongoose.Mongoose;
+export default async function connect(url: string, autoIndex = false) {
+  if (cached) return cached;
+  cached = await mongoose.connect(url, {
     minPoolSize: 10, // Can now run 10 operations at a time
     autoIndex: EnvVars.nodeEnv !== NodeEnvs.Production || autoIndex,
     dbName,
   });
+  return cached;
 }

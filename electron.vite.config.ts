@@ -39,8 +39,6 @@ export default defineConfig({
       outDir: "./out/windows/",
       rollupOptions: {
         input: {
-          progress: resolve(__dirname, "app/renderer/progress.html"),
-          finish: resolve(__dirname, "app/renderer/finish.html"),
           update: resolve(__dirname, "app/renderer/update.html"),
         },
       },
