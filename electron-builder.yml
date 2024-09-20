@@ -12,6 +12,11 @@ files:
   - build/**/*
   - .next/**/*
   - public/**/*
+extraFiles:
+  - from: "./"
+    to: "."
+    filter:
+      - "production.env"
 icon: build\icon.ico
 linux:
   category: Utility

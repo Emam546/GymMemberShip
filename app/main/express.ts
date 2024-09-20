@@ -2,6 +2,7 @@ import { app } from "electron";
 import { spawn } from "child_process";
 import { serverStart } from "@serv/command";
 import path from "path";
+import { getEnv } from "./utils";
 
 const appName = app.getPath("exe");
 
@@ -9,13 +10,15 @@ const expressPath = app.isPackaged
   ? path.join(app.getAppPath(), "out/server/index.js")
   : "./out/server/index.js";
 const utf16Decoder = new TextDecoder("UTF-8");
-const command = `-r module-alias/register ${expressPath} --env=${process.env.NODE_ENV}`;
+const command = `${expressPath} --env=${getEnv()}`;
 
 export function RunServer() {
   return new Promise((res, rej) => {
+    console.log(appName, command, expressPath);
     const expressAppProcess = spawn(`${appName}`, command.split(" "), {
       env: {
         ELECTRON_RUN_AS_NODE: "1",
+        dir: app.isPackaged ? app.getAppPath() : "./",
         ...process.env,
       },
     }).on("error", (e) => {

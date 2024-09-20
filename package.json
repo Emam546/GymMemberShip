@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "main": "./out/main/index.js",
   "description": "An admin app for Gym business",
+  "repository": "https://github.com/Emam546/GymMemberShip",
   "author": "Imam Ashour",
   "publish": {
     "owner": "Emam546",
     "provider": "github",
     "releaseType": "release",
-    "repo": "GymMemberShipAdmin"
+    "repo": "GymMemberShip"
   },
   "scripts": {
     "build:server": "ts-node build.ts",
@@ -17,7 +18,7 @@
     "lint": "next lint -c ./src/.eslintrc.json src",
     "lint:server": "eslint -c ./server/.eslintrc.json --ext  .ts server/src/ ",
     "lint:electron": "eslint -c app/.eslintrc.json --ext .ts app/main/",
-    "start": "node -r module-alias/register ./dist --env=production",
+    "start": "node ./dist --env=production",
     "dev": "nodemon",
     "test": "jest",
     "start:desk": "electron-vite preview",
@@ -34,7 +35,7 @@
       "./server/src"
     ],
     "ext": "ts, html",
-    "exec": "./node_modules/.bin/ts-node --project tsconfig.server.json --files -r tsconfig-paths/register ./server/src"
+    "exec": "./node_modules/.bin/ts-node --project tsconfig.server.json --files ./server/src"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -46,6 +47,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.14.6",
+    "@mui/x-charts": "^7.18.0",
     "@mui/x-date-pickers": "^6.12.0",
     "@react-oauth/google": "^0.11.1",
     "@reduxjs/toolkit": "^1.9.7",
@@ -54,6 +56,7 @@
     "@types/node": "20.5.4",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "apexcharts": "^3.53.0",
     "axios": "^1.5.0",
     "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",
@@ -88,6 +91,7 @@
     "pagedjs": "^0.4.3",
     "ramda": "^0.30.1",
     "react": "18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-bootstrap": "^2.10.2",
     "react-dom": "18.2.0",
     "react-draft-wysiwyg": "^1.15.0",

@@ -5,9 +5,10 @@ import dotenv from "dotenv";
 // **** Setup command line options **** //
 
 // **** Set the env file **** //
+import { getEnv } from "./utils";
 
 const result2 = dotenv.config({
-  path: `${process.env.NODE_ENV}.env`,
+  path: `${getEnv()}.env`,
 });
 
 if (result2.error) {

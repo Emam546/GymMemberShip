@@ -8,11 +8,13 @@ import { serverStart } from "./command";
 import connect from "./db/connect";
 // **** Start server **** //
 const dev = EnvVars.nodeEnv == "development";
-const app = next({ dev });
+const app = next({ dev, dir: EnvVars.dir });
+// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+logger.info(`NEXT PATH ${EnvVars.dir}`);
 const handle = app.getRequestHandler();
 // **** Start server **** //
 logger.info(`${EnvVars.nodeEnv}`);
-connect(EnvVars.mongo.url).then((db) => {
+connect(EnvVars.mongo.url).then(() => {
   app
     .prepare()
     .then(() => {

@@ -16,11 +16,24 @@ export function createPlanData(): Omit<
         num: faker.number.int({ min: 50, max: 300 }),
         type: "EGP",
       },
+      year: {
+        num: faker.number.int({ min: 50, max: 300 }),
+        type: "EGP",
+      },
     },
     details: {
       desc: faker.lorem.text(),
     },
   };
+}
+export async function createPlanRequest(
+  data?: ReturnType<typeof createPlanData>
+): Promise<DataBase.WithId<DataBase.Models.Plans>> {
+  const res = await agent
+    .post("/api/admin/plans")
+    .send(data || createPlanData())
+    .expect(200);
+  return res.body.data;
 }
 describe("POST", () => {
   test("success", async () => {

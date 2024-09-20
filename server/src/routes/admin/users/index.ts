@@ -26,7 +26,6 @@ router.post("/", async (req, res) => {
   result.data;
   const user = new Users({
     ...result.data,
-
     createdBy: "admin",
   } as DataBase.Models.User);
   const savedUser = await user.save();

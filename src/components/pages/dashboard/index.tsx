@@ -1,11 +1,54 @@
+import {
+  MonthlyEarnings,
+  YearlyBreakUp,
+  SalesOverView as SalesOverViewChart,
+} from "@src/components/pages/dashboard/charts";
+import { ComponentProps, useState } from "react";
+
 export interface YearsAndMonthEarningsProps {
-  yearsEarnings: number;
-  monthEarnings: number;
+  yearsEarnings: DataBase.Queries.Payments.Profit[];
+  monthEarnings: DataBase.Queries.Payments.Profit[];
+  lastMonthEarning?: DataBase.Queries.Payments.Profit;
+}
+interface PercentProps extends ComponentProps<"p"> {
+  increasing: number;
+}
+export function Percent({ increasing, ...props }: PercentProps) {
+  return (
+    <div className="pb-1 d-flex align-items-center">
+      <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+        {increasing > 0 ? (
+          <i className="ti ti-arrow-up-left text-success" />
+        ) : (
+          <i className="ti ti-arrow-down-right text-danger" />
+        )}
+      </span>
+      <p className="mb-0 text-dark me-1 fs-3">+{increasing}%</p>
+      <p className="mb-0 fs-3" {...props} />
+    </div>
+  );
 }
 export function YearsAndMonthEarnings({
   yearsEarnings,
   monthEarnings,
+  lastMonthEarning,
 }: YearsAndMonthEarningsProps) {
+  const currentYear = yearsEarnings.find(
+    (val) => val._id.year == new Date().getFullYear()
+  )!;
+  const lastYear = yearsEarnings.find(
+    (val) => val._id.year == new Date().getFullYear() - 2
+  );
+  const yearIncreasing = lastYear
+    ? (currentYear.profit / (lastYear.profit || 1)) * 100 - 100
+    : 100;
+  const totalMonthEarnings = monthEarnings.reduce(
+    (acc, cur) => acc + cur.profit,
+    0
+  );
+  const monthIncreasing = lastMonthEarning
+    ? (totalMonthEarnings / (lastMonthEarning.profit || 1)) * 100 - 100
+    : 100;
   return (
     <div className="col-lg-4">
       <div className="row">
@@ -16,14 +59,8 @@ export function YearsAndMonthEarnings({
               <h5 className="card-title mb-9 fw-semibold">Yearly Breakup</h5>
               <div className="row align-items-center">
                 <div className="col-8">
-                  <h4 className="mb-3 fw-semibold">${yearsEarnings}</h4>
-                  <div className="mb-3 d-flex align-items-center">
-                    <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                      <i className="ti ti-arrow-up-left text-success" />
-                    </span>
-                    <p className="mb-0 text-dark me-1 fs-3">+9%</p>
-                    <p className="mb-0 fs-3">last year</p>
-                  </div>
+                  <h4 className="mb-3 fw-semibold">${currentYear?.profit}</h4>
+                  <Percent increasing={yearIncreasing}>last year</Percent>
                   <div className="d-flex align-items-center">
                     <div className="me-4">
                       <span className="round-8 bg-primary rounded-circle me-2 d-inline-block" />
@@ -32,14 +69,19 @@ export function YearsAndMonthEarnings({
                     <div>
                       <span className="round-8 bg-light-primary rounded-circle me-2 d-inline-block" />
                       <span className="fs-2">
-                        {new Date().getFullYear() + 1}
+                        {new Date().getFullYear() - 1}
                       </span>
                     </div>
                   </div>
                 </div>
                 <div className="col-4">
                   <div className="d-flex justify-content-center">
-                    <div id="breakup" />
+                    <YearlyBreakUp
+                      series={yearsEarnings.map((val) => ({
+                        num: val.profit,
+                        label: val._id.year!.toString(),
+                      }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -55,14 +97,8 @@ export function YearsAndMonthEarnings({
                   <h5 className="card-title mb-9 fw-semibold">
                     Monthly Earnings
                   </h5>
-                  <h4 className="mb-3 fw-semibold">${monthEarnings}</h4>
-                  <div className="pb-1 d-flex align-items-center">
-                    <span className="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                      <i className="ti ti-arrow-down-right text-danger" />
-                    </span>
-                    <p className="mb-0 text-dark me-1 fs-3">+9%</p>
-                    <p className="mb-0 fs-3">last year</p>
-                  </div>
+                  <h4 className="mb-3 fw-semibold">${totalMonthEarnings}</h4>
+                  <Percent increasing={monthIncreasing}>last month</Percent>
                 </div>
                 <div className="col-4">
                   <div className="d-flex justify-content-end">
@@ -73,7 +109,7 @@ export function YearsAndMonthEarnings({
                 </div>
               </div>
             </div>
-            <div id="earning" />
+            <MonthlyEarnings series={monthEarnings.map((val) => val.profit)} />
           </div>
         </div>
       </div>
@@ -212,6 +248,67 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
               </div>
             </li> */}
           </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+export interface SalesOverViewProps {
+  months: { date: Date; data: DataBase.Queries.Payments.Profit[] }[];
+}
+function getMonthName(date: Date) {
+  return new Intl.DateTimeFormat("en-US", { month: "long" }).format(date);
+}
+export function SalesOverView({ months }: SalesOverViewProps) {
+  months = months
+    .map((val) => ({
+      data: val.data,
+      date: new Date(val.date),
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+  const [curMonth, setCurMonth] = useState(new Date().getMonth());
+  return (
+    <div className="col-lg-8 d-flex align-items-strech">
+      <div className="card w-100">
+        <div className="card-body">
+          <div className="d-sm-flex d-block align-items-center justify-content-between mb-9">
+            <div className="mb-3 mb-sm-0">
+              <h5 className="card-title fw-semibold">Sales Overview</h5>
+            </div>
+            <div>
+              <select
+                onChange={(e) => {
+                  setCurMonth(parseInt(e.currentTarget.value));
+                }}
+                value={curMonth}
+                className="form-select"
+              >
+                {months.map((val) => {
+                  return (
+                    <option
+                      key={val.date.getTime().toString()}
+                      value={val.date.getMonth()}
+                    >
+                      {getMonthName(val.date)}{" "}
+                      {new Date(val.date).getFullYear()}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+          <SalesOverViewChart
+            data={
+              months
+                .find((val) => val.date.getMonth() == curMonth)
+                ?.data.map((val) => {
+                  return {
+                    label: `${val._id.month}/${val._id.day}`,
+                    num: val.profit,
+                  };
+                }) || []
+            }
+          />
         </div>
       </div>
     </div>

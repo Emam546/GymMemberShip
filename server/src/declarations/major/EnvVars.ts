@@ -22,4 +22,5 @@ export default {
     secret: process.env.JWT_SECRET ?? "",
     exp: process.env.COOKIE_EXP ?? "", // exp at the same time as the cookie
   },
+  dir: process.env.DIR,
 } as const;

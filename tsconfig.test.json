@@ -9,5 +9,5 @@
       "@test/*": ["./server/spec/*"]
     }
   },
-  "include": ["server", "shared", "utils"]
+  "include": ["server", "shared", "utils", "src"]
 }

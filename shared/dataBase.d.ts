@@ -54,6 +54,19 @@ declare global {
         paid: Price;
       }
     }
+    namespace Queries {
+      namespace Payments {
+        interface Profit {
+          _id: {
+            year?: number;
+            day?: number;
+            month?: number;
+            currency: string;
+          };
+          profit: number;
+        }
+      }
+    }
   }
 }
 export {};

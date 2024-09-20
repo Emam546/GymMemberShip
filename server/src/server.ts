@@ -9,7 +9,7 @@ import logger from "jet-logger";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import { NodeEnvs } from "@serv/declarations/enums";
-import { RouteError } from "@serv/declarations/classes";
+import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
 
 // **** Init express **** //
 
@@ -40,9 +40,12 @@ app.use("/api", baseRoute);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
   logger.err(err, true);
+  let error: unknown;
   let status = HttpStatusCodes.BAD_REQUEST;
   if (err instanceof RouteError) status = err.status;
-  return res.status(status).SendFailed(err.message, err);
+  if (err instanceof RouteErrorHasError) error = err.err;
+
+  return res.status(status).SendFailed(err.message, error);
 }) as any);
 
 export default app;

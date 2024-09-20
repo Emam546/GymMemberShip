@@ -1,8 +1,8 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 import { expect } from "chai";
-import { createUserData } from "../users/index.spec";
-import { createPlanData } from "../plans/index.spec";
+import { createUserRequest } from "../users/index.spec";
+import { createPlanData, createPlanRequest } from "../plans/index.spec";
 export function createPayment(
   planId: string,
   userId: string
@@ -26,7 +26,7 @@ export function createPayment(
 export async function createPaymentRequest(
   planId: string,
   userId: string
-): Promise<DataBase.WithIdOrg<DataBase.Models.Payments>> {
+): Promise<DataBase.WithId<DataBase.Models.Payments>> {
   const payment = createPayment(planId, userId);
   const res = await agent.post("/api/admin/payments").send(payment);
   return res.body.data;
@@ -34,16 +34,8 @@ export async function createPaymentRequest(
 export let user: DataBase.WithId<DataBase.Models.User>;
 export let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
-  const res = await agent
-    .post("/api/admin/users")
-    .send(createUserData())
-    .expect(200);
-  user = res.body.data;
-  const res2 = await agent
-    .post("/api/admin/plans")
-    .send(createPlanData())
-    .expect(200);
-  plan = res2.body.data;
+  user = await createUserRequest();
+  plan = await createPlanRequest();
 });
 describe("POST", () => {
   test("success", async () => {
@@ -110,13 +102,9 @@ describe("GET", () => {
 });
 describe("User Methods", () => {
   let user: DataBase.WithId<DataBase.Models.User>;
-  let payment: DataBase.WithId<DataBase.Models.User>;
+  let payment: DataBase.WithId<DataBase.Models.Payments>;
   beforeEach(async () => {
-    const res = await agent
-      .post("/api/admin/users")
-      .send(createUserData())
-      .expect(200);
-    user = res.body.data;
+    user = await createUserRequest();
     const res2 = await agent
       .post("/api/admin/payments")
       .send(createPayment(plan._id, user._id))
@@ -128,7 +116,11 @@ describe("User Methods", () => {
       const res = await agent
         .get(`/api/admin/users/${user._id}/payments`)
         .expect(200);
-      expect(res.body.data).deep.includes(payment);
+      expect(
+        (res.body.data as DataBase.WithId<DataBase.Models.Payments>[]).some(
+          (val) => val._id == payment._id
+        )
+      ).true;
     });
     test("Use limit", async () => {
       const limit = 5;
@@ -141,11 +133,7 @@ describe("User Methods", () => {
   });
 
   test("no payments", async () => {
-    const res = await agent
-      .post("/api/admin/users")
-      .send(createUserData())
-      .expect(200);
-    const user = res.body.data;
+    const user = await createUserRequest();
     const res2 = await agent
       .get(`/api/admin/users/${user._id}/payments`)
       .expect(200);
@@ -156,11 +144,7 @@ describe("User Methods", () => {
     await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
   });
   test("unrelated payments will not be deleted", async () => {
-    const res = await agent
-      .post("/api/admin/users")
-      .send(createUserData())
-      .expect(200);
-    const user2 = res.body.data;
+    const user2 = await createUserRequest();
     const res2 = await agent
       .post("/api/admin/payments")
       .send(createPayment(plan._id, user2._id))
@@ -200,11 +184,7 @@ describe("Plan method", () => {
     let payment: DataBase.WithId<DataBase.Models.Payments>;
     let plan: DataBase.WithId<DataBase.Models.Plans>;
     beforeAll(async () => {
-      const res1 = await agent
-        .post("/api/admin/plans")
-        .send(createPlanData())
-        .expect(200);
-      plan = res1.body.data;
+      plan = await createPlanRequest();
       const res2 = await agent
         .post("/api/admin/payments")
         .send(createPayment(plan._id, user._id))
@@ -220,14 +200,23 @@ describe("Plan method", () => {
   });
 
   test("no payments", async () => {
-    const res = await agent
-      .post("/api/admin/plans")
-      .send(createPlanData())
-      .expect(200);
-    const plan = res.body.data;
+    const plan = await createPlanRequest();
     const res2 = await agent
       .get(`/api/admin/plans/${plan._id}/payments`)
       .expect(200);
     expect(res2.body.data.length).eq(0);
+  });
+});
+
+describe("Get Profit Profit", () => {
+  let payment: DataBase.WithId<DataBase.Models.Payments>;
+  beforeAll(async () => {
+    payment = await createPaymentRequest(plan._id, user._id);
+  });
+  test("get All payments profit", async () => {
+    const res = await agent.get(`/api/admin/payments/profit`).expect(200);
+    expect(res.body.data.length).greaterThanOrEqual(1);
+    console.log(res.body.data);
+    expect(res.body.data[0]).include.keys("profit");
   });
 });

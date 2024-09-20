@@ -1,5 +1,5 @@
 import { BigCard } from "@src/components/card";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import Payments from "@serv/models/payments";
 import Head from "next/head";
 import {
@@ -7,21 +7,25 @@ import {
   RecentPayments,
   YearsAndMonthEarningsProps,
   RecentPaymentsProps,
-} from "@src/components/common/dashboard";
-import mongoose from "mongoose";
+  SalesOverView,
+  SalesOverViewProps,
+} from "@src/components/pages/dashboard";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import connect from "@serv/db/connect";
 import UsersTable, {
-  Props as UserTabelProps,
+  Props as UserTableProps,
 } from "@src/components/pages/users/table";
 import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
+import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
+import { MakeItSerializable } from "@src/utils";
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
   payments: RecentPaymentsProps;
-  users: UserTabelProps["users"];
+  users: UserTableProps["users"];
+  sales: SalesOverViewProps;
 }
-export default function Page({ earnings, payments, users }: Props) {
+export default function Page({ earnings, payments, users, sales }: Props) {
   return (
     <>
       <Head>
@@ -31,26 +35,7 @@ export default function Page({ earnings, payments, users }: Props) {
         <div>
           {/*  Row 1 */}
           <div className="row">
-            <div className="col-lg-8 d-flex align-items-strech">
-              <div className="card w-100">
-                <div className="card-body">
-                  <div className="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                    <div className="mb-3 mb-sm-0">
-                      <h5 className="card-title fw-semibold">Sales Overview</h5>
-                    </div>
-                    <div>
-                      <select className="form-select">
-                        <option value={1}>March 2023</option>
-                        <option value={2}>April 2023</option>
-                        <option value={3}>May 2023</option>
-                        <option value={4}>June 2023</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div id="chart" />
-                </div>
-              </div>
-            </div>
+            <SalesOverView {...sales} />
             <YearsAndMonthEarnings {...earnings} />
           </div>
           <div className="row">
@@ -85,7 +70,7 @@ export default function Page({ earnings, payments, users }: Props) {
 export async function getLastUsers() {
   const results = await Users.find({}).hint({ createdAt: -1 }).limit(5);
   return await Promise.all(
-    results.map<Promise<UserTabelProps["users"][0]>>(async (doc, i) => {
+    results.map<Promise<UserTableProps["users"][0]>>(async (doc, i) => {
       const payment = await Payments.findOne({ userId: doc._id }).hint({
         userId: 1,
         createdAt: -1,
@@ -104,52 +89,96 @@ export async function getLastUsers() {
     })
   );
 }
-export async function getPaymentsTotal(startData: Date): Promise<number> {
-  const results = await Payments.aggregate([
-    {
-      $match: {
-        createdAt: {
-          $gte: startData,
-        },
-      },
-    },
-    {
-      $group: { _id: "$paid.type", totalPrice: { $sum: "$paid.num" } },
-    },
-  ])
-    .hint({ createdAt: -1 })
-    .sort({ createdAT: -1 })
-    .limit(5);
-  if (results.length > 0) {
-    return results[0].totalPrice;
-  } else {
-    return 0; // If no documents, return 0
+function getDaysArray(start: Date, end: Date) {
+  const arr = [];
+  const dt = new Date(start);
+
+  while (dt <= end) {
+    arr.push(new Date(dt));
+    dt.setDate(dt.getDate() + 1);
   }
+
+  return arr;
 }
-
-
-
+async function getLastMonthDays(last: number) {
+  const currentDate = new Date();
+  const LastMonthEarnings = await Promise.all(
+    new Array(last).fill(0).map(async (_, i) => {
+      const start = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        currentDate.getDate() - 8
+      );
+      const endAt = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        currentDate.getDate()
+      );
+      const data = await getPaymentsProfit({
+        startAt: start.getTime().toString(),
+        endAT: endAt.getTime().toString(),
+        month: true,
+        day: true,
+        year: true,
+      });
+      console.log(data);
+      return {
+        date: start,
+        data: getDaysArray(start, endAt).map((day) => {
+          const res = data.find(
+            (val) =>
+              val._id.day == day.getDate() &&
+              val._id.month == day.getMonth() + 1
+          );
+          console.log(day, day.getDate(), day.getMonth());
+          if (res) return res;
+          return {
+            _id: {
+              day: day.getDate(),
+              month: day.getMonth(),
+              currency: "EGP",
+            },
+            profit: 0,
+          };
+        }),
+      };
+    })
+  );
+  return LastMonthEarnings;
+}
 export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   const currentDate = new Date();
   const year = currentDate.getFullYear();
-  const yearsEarnings = await getPaymentsTotal(new Date(year - 1, 0, 1));
-  const monthEarnings = await getPaymentsTotal(
-    new Date(year, currentDate.getMonth() - 1, 1)
-  );
+  const yearsEarnings = await getPaymentsProfit({
+    startAt: new Date(year - 3, 0, 1).getTime().toString(),
+    year: true,
+  });
+  const monthEarnings = await getPaymentsProfit({
+    startAt: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
+    day: true,
+  });
+  const LastMonthEarnings = await getPaymentsProfit({
+    startAt: new Date(year, currentDate.getMonth() - 2, 1).getTime().toString(),
+    endAT: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
+  });
+  const lastMonths = await getLastMonthDays(6);
   const users = await getLastUsers();
-  const lastTransactions = await Payments.find({})
-    .sort({ createdAt: -1 })
-    .hint({ createdAt: -1 })
-    .limit(5)
-    .populate("userId");
+  const lastTransactions = await getPayments({ limit: 5 });
   return {
     props: {
-      earnings: { yearsEarnings, monthEarnings },
+      earnings: {
+        yearsEarnings,
+        monthEarnings,
+        lastMonthEarning: LastMonthEarnings[0] || null,
+      },
       payments: {
         payments: lastTransactions.map((val) =>
           JSON.parse(JSON.stringify(val))
-        ) as unknown as RecentPaymentsProps["payments"],
+        ),
+      },
+      sales: {
+        months: MakeItSerializable(lastMonths),
       },
       users,
     },

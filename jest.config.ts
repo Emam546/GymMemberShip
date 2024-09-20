@@ -16,6 +16,7 @@ const config: Config = {
   moduleNameMapper: {
     ...pathsToModuleNameMapper(
       {
+        "@src/*": ["./src/*"],
         "@serv/*": ["./server/src/*"],
         "@shared/*": ["./shared/*"],
         "@utils/*": ["./utils/*"],
