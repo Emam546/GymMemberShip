@@ -28,9 +28,16 @@ async function createWindow(args: string[]) {
 }
 app.whenReady().then(async () => {
   console.log("start server");
-  await RunServer();
+  const expressProcess = await RunServer();
+  console.log("server started");
   console.log("start app");
   await createWindow(process.argv);
+  console.log("app started");
+  app.once("quit", () => {
+    console.log("server killed");
+    if (!expressProcess.killed) expressProcess.kill();
+  });
+  
 });
 electronApp.setAppUserModelId("com.youtube-downloader");
 
