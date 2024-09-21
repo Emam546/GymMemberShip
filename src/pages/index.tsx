@@ -19,6 +19,7 @@ import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
 import { MakeItSerializable } from "@src/utils";
+import { useTranslation } from "next-i18next";
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
   payments: RecentPaymentsProps;
@@ -26,6 +27,7 @@ export interface Props {
   sales: SalesOverViewProps;
 }
 export default function Page({ earnings, payments, users, sales }: Props) {
+  const { t } = useTranslation();
   return (
     <>
       <Head>
@@ -33,7 +35,9 @@ export default function Page({ earnings, payments, users, sales }: Props) {
       </Head>
       <BigCard>
         <div>
-          {/*  Row 1 */}
+          <p>
+            {t("welcome")}
+          </p>
           <div className="row">
             <SalesOverView {...sales} />
             <YearsAndMonthEarnings {...earnings} />
@@ -139,6 +143,7 @@ async function getLastMonthDays(last: number) {
               currency: "EGP",
             },
             profit: 0,
+            paymentCount: 0,
           };
         }),
       };
@@ -146,7 +151,7 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
-export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
+export const getStaticProps: GetStaticProps<Props> = async (ctx,) => {
   await connect(EnvVars.mongo.url);
   const currentDate = new Date();
   const year = currentDate.getFullYear();

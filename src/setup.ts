@@ -1,7 +1,9 @@
 import { isElectron } from "@utils/electron";
+import translation from "@src/i18n";
 declare global {
   interface Window {
     Environment: "web" | "desktop";
+    t: (typeof translation)["t"];
   }
 }
 if (typeof window != "undefined") {
@@ -13,4 +15,5 @@ if (typeof window != "undefined") {
       return proxied.apply(this, arguments as any);
     };
   })(window.alert);
+  window.t = translation.t;
 }

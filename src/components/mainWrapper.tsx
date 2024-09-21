@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import Header from "@src/components/header";
 
 import { useRouter } from "next/router";
+import i18n from "@src/i18n";
 
 function MainApp({ children: children }: { children: React.ReactNode }) {
   const mainWrapper = useRef<HTMLDivElement>(null);
@@ -32,6 +33,7 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
   }
   useEffect(() => {
     router.events.on("routeChangeComplete", onClose);
+    document.body.dir = i18n.language === "ar" ? "rtl" : "ltr";
     return () => {
       router.events.off("routeChangeComplete", onClose);
     };
