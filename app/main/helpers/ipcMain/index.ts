@@ -1,6 +1,6 @@
 import { ConvertToIpCMainFunc, ConvertToIpCHandleMainFunc } from "@shared/api";
 import { ObjectEntries } from "@utils/index";
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 
 import { ApiMain } from "@shared/api";
 import { SaveFile } from "./saveFile";
@@ -55,6 +55,14 @@ export const OnMethods: OnMethodsType = {
   },
   quitApp: function (): void {
     app.quit();
+  },
+  alert(event, message, title) {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+    dialog.showMessageBox(window, {
+      message,
+      title: title || "Process",
+    });
   },
 };
 export const OnceMethods: OnceMethodsType = {};

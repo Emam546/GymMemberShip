@@ -22,6 +22,7 @@ export namespace ApiMain {
     minimizeWindow(): void;
     hideWindow(): void;
     quitApp(): void;
+    alert(message: string, title?: string): any;
   }
   interface OnceMethods {}
   interface HandleMethods {
