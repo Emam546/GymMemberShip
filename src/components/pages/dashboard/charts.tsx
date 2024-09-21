@@ -95,12 +95,16 @@ export function YearlyBreakUp({
     />
   );
 }
-export function MonthlyEarnings({ series: dataSeries }: { series: number[] }) {
+export function MonthlyEarnings({
+  series: dataSeries,
+  height,
+}: {
+  series: number[];
+  height?: number;
+}) {
   const chartOptions: any = {
     chart: {
       id: "sparkline3",
-      type: "area",
-      height: 60,
       sparkline: {
         enabled: true,
       },
@@ -141,6 +145,11 @@ export function MonthlyEarnings({ series: dataSeries }: { series: number[] }) {
   ];
 
   return (
-    <Chart options={chartOptions} series={series} type="area" height={60} />
+    <Chart
+      options={chartOptions}
+      series={series}
+      type="area"
+      height={height || 60}
+    />
   );
 }

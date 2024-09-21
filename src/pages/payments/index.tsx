@@ -76,6 +76,8 @@ export default function Page() {
   });
   const totalPrice =
     QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
+  const totalCount =
+    QueryProfit.data?.reduce((acc, val) => acc + val.paymentCount, 0) || 0;
   const payments = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
@@ -98,12 +100,20 @@ export default function Page() {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-body">
-                <div className="row alig n-items-start">
-                  <div className="col-8">
-                    <h5 className="card-title mb-9 fw-semibold">Earnings</h5>
-                    <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
+                <div className="tw-flex tw-justify-between tw-gap-x-4">
+                  <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
+                    <div>
+                      <h5 className="card-title mb-9 fw-semibold">Earnings</h5>
+                      <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
+                    </div>
+                    <div>
+                      <h5 className="card-title mb-9 fw-semibold">
+                        Total Count
+                      </h5>
+                      <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+                    </div>
                   </div>
-                  <div className="col-4">
+                  <div>
                     <div className="d-flex justify-content-end">
                       <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
                         <i className="ti ti-currency-dollar fs-6" />
@@ -113,6 +123,7 @@ export default function Page() {
                 </div>
               </div>
               <MonthlyEarnings
+                height={100}
                 series={QueryProfit.data?.map((val) => val.profit) || []}
               />
             </div>

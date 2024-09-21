@@ -64,6 +64,7 @@ declare global {
             currency: string;
           };
           profit: number;
+          paymentCount: number;
         }
       }
     }

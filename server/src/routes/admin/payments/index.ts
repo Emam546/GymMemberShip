@@ -109,6 +109,7 @@ export async function getPaymentsProfit(query: unknown) {
       $group: {
         _id: ID,
         profit: { $sum: "$paid.num" },
+        paymentCount: { $sum: 1 },
       },
     },
     {
@@ -119,15 +120,7 @@ export async function getPaymentsProfit(query: unknown) {
       },
     },
   ]);
-  return payments as {
-    _id: {
-      year?: number;
-      day?: number;
-      month?: number;
-      currency: string;
-    };
-    profit: number;
-  }[];
+  return payments as DataBase.Queries.Payments.Profit[];
 }
 router.get("/profit", async (req, res) => {
   const payments = await getPaymentsProfit(req.query);
