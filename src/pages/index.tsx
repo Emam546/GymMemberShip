@@ -116,7 +116,7 @@ async function getLastMonthDays(last: number) {
       );
       const data = await getPaymentsProfit({
         startAt: start.getTime().toString(),
-        endAT: endAt.getTime().toString(),
+        endAt: endAt.getTime().toString(),
         month: true,
         day: true,
         year: true,
@@ -160,7 +160,7 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   });
   const LastMonthEarnings = await getPaymentsProfit({
     startAt: new Date(year, currentDate.getMonth() - 2, 1).getTime().toString(),
-    endAT: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
+    endAt: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
   });
   const lastMonths = await getLastMonthDays(6);
   const users = await getLastUsers();

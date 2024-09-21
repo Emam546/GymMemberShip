@@ -38,7 +38,7 @@ export default function PrintPlanPayments({ id }: { id: string }) {
 
         const body = await Promise.all(
           payments.data.data.map<Promise<string[]>>(async (doc, i) => {
-            const endAT = new Date(
+            const endAt = new Date(
               new Date(doc.createdAt).getTime() +
                 planToDays(doc.plan) * 1000 * 24 * 60 * 60
             );
@@ -47,7 +47,7 @@ export default function PrintPlanPayments({ id }: { id: string }) {
               doc.userId.name || "",
               `${doc.paid.num} ${doc.paid.type}`,
               formateDate(new Date(doc.createdAt)),
-              formateDate(new Date(endAT)),
+              formateDate(new Date(endAt)),
             ];
           })
         );

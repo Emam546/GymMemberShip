@@ -1,6 +1,7 @@
 import classNames from "classnames";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/router";
+import { ComponentProps } from "react";
 import SimpleBar from "simplebar-react";
 
 interface HeaderNavProps {
@@ -14,12 +15,12 @@ export function HeaderNav({ title }: HeaderNavProps) {
     </li>
   );
 }
-interface LinkElemProps {
+interface LinkElemProps extends ComponentProps<"div"> {
   href: string;
   title: string;
 }
 
-export function LinkElem({ href, title }: LinkElemProps) {
+export function LinkElem({ href, title, children }: LinkElemProps) {
   const router = useRouter();
   const state = router.pathname == href;
   return (
@@ -31,9 +32,7 @@ export function LinkElem({ href, title }: LinkElemProps) {
         href={href}
         aria-expanded={state}
       >
-        <span>
-          <i className="ti ti-layout-dashboard" />
-        </span>
+        <span>{children}</span>
         <span className="hide-menu">{title}</span>
       </Link>
     </li>
@@ -54,10 +53,21 @@ function CreatorNavBar() {
   return (
     <>
       <HeaderNav title="Creator" />
-      <LinkElem href="/" title="Dashboard" />
-      <LinkElem href="/plans" title="Manage Plans" />
-      <LinkElem href="/users" title="Manage Users" />
-      <LinkElem href="/users/add" title="Add User" />
+      <LinkElem href="/" title="Dashboard">
+        <i className="ti ti-layout-dashboard" />
+      </LinkElem>
+      <LinkElem href="/plans" title="Manage Plans">
+        <i className="ti ti-calendar-plus"></i>
+      </LinkElem>
+      <LinkElem href="/users" title="Manage Users">
+        <i className="ti ti-users"></i>
+      </LinkElem>
+      <LinkElem href="/users/add" title="Add User">
+        <i className="ti ti-user-plus"></i>
+      </LinkElem>
+      <LinkElem href="/payments" title="Manage Payments">
+        <i className="ti ti-credit-card"></i>
+      </LinkElem>
     </>
   );
 }

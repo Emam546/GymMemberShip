@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
 });
 const registerQuery = new Validator({
   startAt: ["numeric"],
-  endAT: ["numeric"],
+  endAt: ["numeric"],
   skip: ["numeric"],
   limit: ["numeric"],
   ".": ["required"],
@@ -46,8 +46,16 @@ export async function getPayments(query: unknown) {
   const result = registerQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
-  const { skip, limit } = result.data;
-  const payments = await Payments.find({})
+  const { skip, limit, startAt, endAt } = result.data;
+  const matchQuery: Record<string, unknown> = {};
+  if (startAt || endAt) {
+    matchQuery["createdAt"] = {
+      $lte: parseInt(endAt as string) || Infinity,
+      $gte: parseInt(startAt as string) || 0,
+    };
+  }
+
+  const payments = await Payments.find(matchQuery)
     .hint({ createdAt: -1 })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity)
@@ -61,10 +69,10 @@ router.get("/", async (req, res) => {
 });
 const registerProfitQuery = new Validator({
   startAt: ["numeric"],
-  endAT: ["numeric"],
-  year: ["boolean"],
-  month: ["boolean"],
-  day: ["boolean"],
+  endAt: ["numeric"],
+  year: ["accepted"],
+  month: ["accepted"],
+  day: ["accepted"],
 });
 export async function getPaymentsProfit(query: unknown) {
   const result = registerProfitQuery.passes(query);
@@ -79,15 +87,15 @@ export async function getPaymentsProfit(query: unknown) {
   const ID: Record<string, unknown> = {
     currency: "$paid.type",
   };
-  if (result.data?.startAt || result.data?.endAT) {
+  if (result.data?.startAt || result.data?.endAt) {
     matchQuery["createdAt"] = {};
     if (result.data.startAt)
       matchQuery["createdAt"]["$gte"] = new Date(
         parseInt(result.data.startAt as string)
       );
-    if (result.data.endAT)
+    if (result.data.endAt)
       matchQuery["createdAt"]["$lte"] = new Date(
-        parseInt(result.data.endAT as string)
+        parseInt(result.data.endAt as string)
       );
   }
   if (result.data?.year) ID["year"] = { $year: "$createdAt" };

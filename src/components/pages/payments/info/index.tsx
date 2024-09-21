@@ -41,7 +41,7 @@ export default function PaymentInfoForm({
   const planId = watch("planId");
   const plan = plans.find((val) => val._id == planId);
   const planPrice = plan?.prices[paidType];
-  const endAT = new Date(
+  const endAt = new Date(
     new Date(payment.createdAt).getTime() +
       planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
@@ -130,7 +130,7 @@ export default function PaymentInfoForm({
           <WrapElem label="Created At">
             <DatePicker disabled value={new Date(getValues("createdAt"))} />
             <p className="tw-mb-0">
-              This payment should be end at {formateDate(endAT)}
+              This payment should be end at {formateDate(endAt)}
             </p>
           </WrapElem>
           <div className="tw-self-stretch tw-flex tw-items-end tw-max-h-[4.4rem]">

@@ -44,7 +44,7 @@ function UserShower({
       <tr>
         <E val="order" heads={headKeys}>
           <td className="tw-max-w-fit">
-            <h6 className="mb-0 fw-semibold">{order}</h6>
+            <h6 className="mb-0 fw-semibold">{order + 1}</h6>
           </td>
         </E>
         <E val="name" heads={headKeys}>

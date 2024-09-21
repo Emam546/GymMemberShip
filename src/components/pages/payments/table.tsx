@@ -148,7 +148,7 @@ function Shower({
   plan,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
-  const endAT = new Date(
+  const endAt = new Date(
     new Date(payment.createdAt).getTime() +
       planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
@@ -157,7 +157,7 @@ function Shower({
       <tr>
         <E val="order" heads={headKeys}>
           <td>
-            <h6 className="mb-0 fw-semibold">{order}</h6>
+            <h6 className="mb-0 fw-semibold">{order + 1}</h6>
           </td>
         </E>
         <E val="user" heads={headKeys}>
@@ -195,7 +195,7 @@ function Shower({
         </E>
         <E val="endAt" heads={headKeys}>
           <td>
-            <p className="mb-0 fw-normal">{formateDate(endAT)}</p>
+            <p className="mb-0 fw-normal">{formateDate(endAt)}</p>
           </td>
         </E>
         <E val="log" heads={headKeys}>

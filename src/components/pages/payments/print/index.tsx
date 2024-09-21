@@ -4,26 +4,23 @@ import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 import { planToDays } from "@src/utils/payment";
-
-export default function PrintUserPayments({ id }: { id: string }) {
+type Payment = DataBase.Populate<
+  DataBase.Populate<
+    DataBase.WithId<DataBase.Models.Payments>,
+    "userId",
+    DataBase.WithId<DataBase.Models.User>
+  >,
+  "planId",
+  DataBase.WithId<DataBase.Models.Plans>
+>;
+export default function PrintUserPayments({ query }: { query: unknown }) {
   return (
     <PrintButton
       fn={async () => {
-        const res = await requester.get<
-          Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Plans>>
-        >(`/api/admin/users/${id}`);
-        const payments = await requester.get<
-          Routes.ResponseSuccess<
-            DataBase.WithId<
-              DataBase.Populate<
-                DataBase.Models.Payments,
-                "planId",
-                DataBase.WithId<DataBase.Models.Plans>
-              >
-            >[]
-          >
-        >(`/api/admin/users/${id}/payments`);
-        const user = res.data.data;
+        const payments = await requester.get<Routes.ResponseSuccess<Payment[]>>(
+          `/api/admin/payments`,
+          { params: query }
+        );
         const body = payments.data.data.map<string[]>((doc, i) => {
           const endAt = new Date(
             new Date(doc.createdAt).getTime() +
@@ -32,6 +29,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
           return [
             (i + 1).toString(),
             doc.planId.name || "",
+            doc.planId.name || "",
             `${doc.paid.num} ${doc.paid.type}`,
             formateDate(new Date(doc.createdAt)),
             formateDate(new Date(endAt)),
@@ -39,10 +37,10 @@ export default function PrintUserPayments({ id }: { id: string }) {
         });
 
         const doc = createTableDoc(
-          [["Id", "Plan", "Paid Price", "CreatedAt", "End At"]],
+          [["Id", "User", "Plan", "Paid Price", "CreatedAt", "End At"]],
           body
         );
-        await printJsDoc(doc, `${user.name}-payments.pdf`);
+        await printJsDoc(doc, `${new Date().getTime()}-payments.pdf`);
       }}
     />
   );

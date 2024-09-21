@@ -45,7 +45,7 @@ export default function Page() {
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
-          <CardTitle>Students</CardTitle>
+          <CardTitle>Users</CardTitle>
           <div>
             {users && (
               <UsersTable
@@ -56,7 +56,13 @@ export default function Page() {
                   order: i,
                   user: user,
                 }))}
-                headKeys={["order", "name", "createdAt", "blocked"]}
+                headKeys={[
+                  "order",
+                  "name",
+                  "createdAt",
+                  "blocked",
+                  "age/tall/weight",
+                ]}
               />
             )}
           </div>

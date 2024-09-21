@@ -44,7 +44,7 @@ function Shower({
       <tr>
         <E val="order" heads={headKeys}>
           <td>
-            <h6 className="mb-0 fw-semibold">{order}</h6>
+            <h6 className="mb-0 fw-semibold">{order + 1}</h6>
           </td>
         </E>
         <E val="user" heads={headKeys}>
