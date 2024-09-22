@@ -20,7 +20,8 @@
       "@shared/*": ["./shared/*"],
       "@utils/*": ["./utils/*"],
       "@app/*": ["./app/*"],
-      "@shared/renderer/*": ["./app/renderer/shared/*"]
+      "@shared/renderer/*": ["./app/renderer/shared/*"],
+      "@locales/*": ["./src/i18n/locales/*"]
     },
     "skipLibCheck": true,
     "plugins": [
