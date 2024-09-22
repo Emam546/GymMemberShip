@@ -6,13 +6,13 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "simplebar-react/dist/simplebar.min.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import type { AppProps } from "next/app";
-import React, { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import MainWrapper from "@src/components/mainWrapper";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "@src/queryClient";
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import { AppContext } from "next/app";
 import ConnectedBar from "@src/components/internetConnection";
 import LoadingBar from "@src/components/loadingBar";
@@ -45,13 +45,27 @@ export function Provider({ children }: { children: ReactNode }) {
     </ReduxProvider>
   );
 }
-
-const App = function ({ Component, pageProps, router }: AppPropsWithLayout) {
+interface AppG extends AppPropsWithLayout {
+  translations: [string, any][];
+  lng: string;
+}
+const App = function ({
+  Component,
+  pageProps: { ...pageProps },
+  translations,
+  lng,
+}: AppG) {
   useEffect(() => {
-    window.ResizeObserver = ResizeObserver;
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
+    i18n.on("languageChanged", async (lng) => {
+      console.log("change");
+    });
+    return () => i18n.off("languageChanged");
   }, []);
-
+  translations.forEach(([ns, res]) => {
+    if (res) i18n.addResourceBundle(lng, ns, res, true, true);
+  });
+  i18n.changeLanguage(lng);
   return (
     <Provider>
       <ConnectedBar />
@@ -66,7 +80,8 @@ const App = function ({ Component, pageProps, router }: AppPropsWithLayout) {
     </Provider>
   );
 };
-App.getInitialProps = async ({ Component, ctx }: AppContext) => {
+export function loadTranslation(lng: string, path: string) {}
+App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   // Retrieve language from cookies on the server side
   const cookies = ctx.req?.headers.cookie || "";
   const langFromCookie =
@@ -76,11 +91,13 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
       ?.split("=")[1] || i18n.language; // Default to 'en' if not found
 
   // Change i18next language
-  await i18n.changeLanguage(langFromCookie);
+  await i18n.changeLanguageAndLoad(langFromCookie);
+  const translations = ((i18n.options.ns as string[]) || []).map((key) => {
+    return [key, i18n.getResourceBundle(langFromCookie, key)];
+  });
   const appProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
     : {};
-
-  return { ...appProps };
+  return { ...appProps, lng: langFromCookie, translations };
 };
 export default appWithTranslation(App);

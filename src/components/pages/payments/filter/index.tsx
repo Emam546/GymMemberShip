@@ -26,7 +26,6 @@ export default function PaymentsFilter({ onData, values }: Props) {
     1000,
     [watch("startAt"), watch("endAt")]
   );
-  console.log(values, getValues("startAt"));
   return (
     <form
       onSubmit={handleSubmit((data: any) => {

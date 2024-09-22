@@ -3,8 +3,10 @@ import {
   YearlyBreakUp,
   SalesOverView as SalesOverViewChart,
 } from "@src/components/pages/dashboard/charts";
+import "./locales";
 import { ComponentProps, useState } from "react";
-
+import { useTranslation } from "react-i18next";
+import i18n from "@src/i18n";
 export interface YearsAndMonthEarningsProps {
   yearsEarnings: DataBase.Queries.Payments.Profit[];
   monthEarnings: DataBase.Queries.Payments.Profit[];
@@ -267,13 +269,14 @@ export function SalesOverView({ months }: SalesOverViewProps) {
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
   const [curMonth, setCurMonth] = useState(new Date().getMonth());
+  const { t } = useTranslation("dashboard");
   return (
     <div className="col-lg-8 d-flex align-items-strech">
       <div className="card w-100">
         <div className="card-body">
           <div className="d-sm-flex d-block align-items-center justify-content-between mb-9">
             <div className="mb-3 mb-sm-0">
-              <h5 className="card-title fw-semibold">Sales Overview</h5>
+              <h5 className="card-title fw-semibold">{t("SalesOverView")}</h5>
             </div>
             <div>
               <select
