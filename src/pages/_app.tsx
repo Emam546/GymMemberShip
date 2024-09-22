@@ -4,6 +4,7 @@ import "@src/styles/global.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "simplebar-react/dist/simplebar.min.css";
+import "@locales/common";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode, useEffect } from "react";
@@ -18,8 +19,8 @@ import ConnectedBar from "@src/components/internetConnection";
 import LoadingBar from "@src/components/loadingBar";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "@src/store";
-import { appWithTranslation } from "next-i18next";
 import i18n from "@src/i18n";
+
 config.autoAddCss = false;
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
@@ -49,18 +50,10 @@ interface AppG extends AppPropsWithLayout {
   translations: [string, any][];
   lng: string;
 }
-const App = function ({
-  Component,
-  pageProps: { ...pageProps },
-  translations,
-  lng,
-}: AppG) {
+
+const App = function ({ Component, pageProps, translations, lng }: AppG) {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
-    i18n.on("languageChanged", async (lng) => {
-      console.log("change");
-    });
-    return () => i18n.off("languageChanged");
   }, []);
   translations.forEach(([ns, res]) => {
     if (res) i18n.addResourceBundle(lng, ns, res, true, true);
@@ -91,7 +84,8 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
       ?.split("=")[1] || i18n.language; // Default to 'en' if not found
 
   // Change i18next language
-  await i18n.changeLanguageAndLoad(langFromCookie);
+  await i18n.changeLanguage(langFromCookie);
+  await i18n.loadR(langFromCookie);
   const translations = ((i18n.options.ns as string[]) || []).map((key) => {
     return [key, i18n.getResourceBundle(langFromCookie, key)];
   });
@@ -100,4 +94,4 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     : {};
   return { ...appProps, lng: langFromCookie, translations };
 };
-export default appWithTranslation(App);
+export default App;

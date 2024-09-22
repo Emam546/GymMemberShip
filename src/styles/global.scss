@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 #__next {
-    @apply tw-flex tw-min-h-screen tw-w-full tw-items-stretch tw-justify-stretch tw-flex-col;
+  @apply tw-flex tw-min-h-screen tw-w-full tw-items-stretch tw-justify-stretch tw-flex-col;
 }
 
+/* Font for English (Latin) text */
+
+
+/* Font for Arabic text */
+[lang="ar"] {
+  body {
+    font-family: "Cairo", sans-serif !important;
+  }
+}
+body {
+  font-size: 1rem;
+}

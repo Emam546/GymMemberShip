@@ -3,6 +3,7 @@ import ErrorShower from "@src/components/common/error";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 export function PrintButton<T>({
   fn,
@@ -17,6 +18,7 @@ export function PrintButton<T>({
     mutationFn: fn,
     onError(err) {},
   });
+  const { t } = useTranslation("translation");
   return (
     <div {...containerProps}>
       <div>
@@ -26,11 +28,12 @@ export function PrintButton<T>({
             e.preventDefault();
             mutate.mutate();
           }}
+          className="tw-flex tw-items-center tw-gap-1"
           disabled={mutate.isLoading}
           {...buttonProps}
         >
-          <FontAwesomeIcon className="tw-mr-1" icon={faPrint} />
-          Print
+          <FontAwesomeIcon icon={faPrint} />
+          <span>{t("buttons.print")}</span>
         </SuccessButton>
         <ErrorShower error={mutate.error as Error} />
       </div>

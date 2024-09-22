@@ -1,3 +1,4 @@
+import "@src/i18n/index";
 import { BigCard } from "@src/components/card";
 import { GetStaticProps } from "next";
 import Payments from "@serv/models/payments";
@@ -19,7 +20,8 @@ import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
 import { MakeItSerializable } from "@src/utils";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
+
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
   payments: RecentPaymentsProps;
@@ -27,7 +29,7 @@ export interface Props {
   sales: SalesOverViewProps;
 }
 export default function Page({ earnings, payments, users, sales }: Props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("index");
   return (
     <>
       <Head>
@@ -35,9 +37,6 @@ export default function Page({ earnings, payments, users, sales }: Props) {
       </Head>
       <BigCard>
         <div>
-          <p>
-            {t("welcome")}
-          </p>
           <div className="row">
             <SalesOverView {...sales} />
             <YearsAndMonthEarnings {...earnings} />
@@ -47,7 +46,9 @@ export default function Page({ earnings, payments, users, sales }: Props) {
             <div className="col-lg-8 d-flex align-items-stretch">
               <div className="card w-100">
                 <div className="p-4 card-body">
-                  <h5 className="mb-4 card-title fw-semibold">Recent Users</h5>
+                  <h5 className="mb-4 card-title fw-semibold">
+                    {t("Recent Users")}
+                  </h5>
                   <UsersTable
                     page={0}
                     setPage={() => {}}
@@ -125,7 +126,6 @@ async function getLastMonthDays(last: number) {
         day: true,
         year: true,
       });
-      console.log(data);
       return {
         date: start,
         data: getDaysArray(start, endAt).map((day) => {
@@ -151,7 +151,7 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
-export const getStaticProps: GetStaticProps<Props> = async (ctx,) => {
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   const currentDate = new Date();
   const year = currentDate.getFullYear();

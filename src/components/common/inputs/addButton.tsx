@@ -8,7 +8,7 @@ export type Props = {
 export function GoToButton({ label, ...props }: Props) {
     return (
         <Link
-            className="tw-text-blue-600 tw-font-bold hover:tw-bg-blue-100 tw-transition-all tw-block tw-w-full tw-py-3 tw-text-start tw-px-4 tw-space-x-2"
+            className="tw-text-blue-600 tw-font-bold hover:tw-bg-blue-100 tw-transition-all tw-w-full tw-py-3 tw-text-start tw-px-4 tw-flex tw-gap-2 tw-items-center"
             {...props}
         >
             <FontAwesomeIcon icon={faArrowRight} />
@@ -19,7 +19,7 @@ export function GoToButton({ label, ...props }: Props) {
 export default function AddButton({ label, ...props }: Props) {
     return (
         <Link
-            className="tw-text-blue-600 tw-font-bold hover:tw-bg-blue-100 tw-transition-all tw-block tw-w-full tw-py-3 tw-text-start tw-px-4 tw-space-x-2"
+            className="tw-text-blue-600 tw-font-bold hover:tw-bg-blue-100 tw-transition-all tw-w-full tw-py-3 tw-text-start tw-px-4 tw-flex tw-gap-2 tw-items-center"
             {...props}
         >
             <FontAwesomeIcon icon={faAdd} />

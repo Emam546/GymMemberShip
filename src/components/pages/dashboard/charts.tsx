@@ -16,19 +16,21 @@ interface SalesOverViewProps {
 }
 export function SalesOverView({ data }: SalesOverViewProps) {
   return (
-    <BarChart
-      skipAnimation
-      dataset={data}
-      xAxis={[{ scaleType: "band", dataKey: "label" }]}
-      yAxis={[{ tickPlacement: "start" }]}
-      series={[
-        {
-          dataKey: "num",
-          valueFormatter: (val: number | null) => `${val}EGP`,
-        },
-      ]}
-      height={400}
-    />
+    <div dir="ltr">
+      <BarChart
+        skipAnimation
+        dataset={data}
+        xAxis={[{ scaleType: "band", dataKey: "label" }]}
+        yAxis={[{ tickPlacement: "start" }]}
+        series={[
+          {
+            dataKey: "num",
+            valueFormatter: (val: number | null) => `${val}EGP`,
+          },
+        ]}
+        height={400}
+      />
+    </div>
   );
 }
 export function YearlyBreakUp({

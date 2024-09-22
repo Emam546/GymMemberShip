@@ -1,11 +1,12 @@
+import "./locales";
 import PrimaryButton from "@src/components/button";
 import { Grid2 } from "@src/components/grid";
 import MainInput from "@src/components/common/inputs/main";
 import TextArea from "@src/components/common/inputs/textArea";
 import { FieldError, useForm } from "react-hook-form";
 import React from "react";
-import { Grid } from "@mui/material";
 import BudgetInput from "@src/components/common/inputs/budget";
+import { useTranslation } from "react-i18next";
 
 export interface DataType {
   name: string;
@@ -18,9 +19,9 @@ export interface Props {
   defaultData?: DefaultData;
   onData: (data: DataType) => Promise<any> | any;
   buttonName: React.ReactNode;
-}
+} 
 export type DefaultData = DataType;
-export default function LevelInfoForm({
+export default function PlanInfoForm({
   defaultData,
   buttonName,
   onData,
@@ -28,19 +29,20 @@ export default function LevelInfoForm({
   const { register, handleSubmit, formState } = useForm<DataType>({
     values: defaultData,
   });
+  const { t } = useTranslation("form:add:plan");
   return (
     <form onSubmit={handleSubmit(onData)} autoComplete="off">
       <Grid2>
         <MainInput
           id={"name-input"}
-          title={"Plan Name"}
+          title={t("Plan Name")}
           {...register("name")}
           err={formState.errors.name}
         />
       </Grid2>
       <Grid2 className="tw-mt-3">
         <BudgetInput
-          label={"Day Price"}
+          label={t("Day Price")}
           priceProps={{
             ...register("prices.day.num", {
               required: "Please set the price or set it to 0",
@@ -62,10 +64,10 @@ export default function LevelInfoForm({
           }
         />
         <BudgetInput
-          label={"Month Price"}
+          label={t("Month Price")}
           priceProps={{
             ...register("prices.month.num", {
-              required: "Please set the price or set it to 0",
+              required: t("errors.price"),
               valueAsNumber: true,
               min: 0,
             }),
@@ -74,7 +76,7 @@ export default function LevelInfoForm({
           }}
           unitProps={{
             ...register("prices.month.type", {
-              required: "Please select a currency",
+              required: t("errors.currency"),
               value: "EGP",
             }),
           }}
@@ -85,10 +87,10 @@ export default function LevelInfoForm({
         />
 
         <BudgetInput
-          label={"Year Price"}
+          label={t("Year Price")}
           priceProps={{
             ...register("prices.year.num", {
-              required: "Please set the price or set it to 0",
+              required: t("errors.price"),
               valueAsNumber: true,
               min: 0,
             }),
@@ -97,7 +99,7 @@ export default function LevelInfoForm({
           }}
           unitProps={{
             ...register("prices.year.type", {
-              required: "Please select a currency",
+              required: t("errors.currency"),
               value: "EGP",
             }),
           }}
@@ -110,7 +112,7 @@ export default function LevelInfoForm({
       <div className="tw-mt-4">
         <TextArea
           id={"desc-input"}
-          title={"Plan description"}
+          title={t("Plan description")}
           {...register("details.desc", { value: "" })}
           className="tw-min-h-[10rem]"
           err={formState.errors.details?.desc}

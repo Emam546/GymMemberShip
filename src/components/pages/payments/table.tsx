@@ -1,3 +1,4 @@
+import "./locales/table";
 import DeleteDialog from "@src/components/common/AlertDialog";
 import { formateDate } from "@src/utils";
 import { Pagination } from "@mui/material";
@@ -11,6 +12,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import queryClient from "@src/queryClient";
+import { useTranslation } from "react-i18next";
 export interface ElemProps {
   order: number;
   payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
@@ -152,6 +154,7 @@ function Shower({
     new Date(payment.createdAt).getTime() +
       planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
+  const { t } = useTranslation("table:payments");
   return (
     <>
       <tr>
@@ -165,7 +168,7 @@ function Shower({
             {user ? (
               <Link href={`/users/${user._id}`}>{user.name}</Link>
             ) : (
-              "Deleted"
+              t("Deleted")
             )}
           </td>
         </E>
@@ -174,13 +177,13 @@ function Shower({
             {plan ? (
               <Link href={`/plans/${plan._id}`}>{plan.name}</Link>
             ) : (
-              "Deleted"
+              t("Deleted")
             )}
           </td>
         </E>
         <E val="link" heads={headKeys}>
           <td>
-            <Link href={`/payments/${payment._id}`}>Link</Link>
+            <Link href={`/payments/${payment._id}`}>{t("Link")}</Link>
           </td>
         </E>
         <E val="paid" heads={headKeys}>
@@ -277,6 +280,7 @@ export function PaymentInfoGenerator({
   headKeys,
   onDelete,
 }: PaymentProps) {
+  const { t } = useTranslation("table:payments");
   const pageNum = Math.ceil(totalPayments / payments.length);
   return (
     <div>
@@ -287,37 +291,37 @@ export function PaymentInfoGenerator({
               <thead className="text-dark fs-4">
                 <tr>
                   <E heads={headKeys} val="order">
-                    <TH>Id</TH>
+                    <TH>{t("head.Id")}</TH>
                   </E>
                   <E heads={headKeys} val="user">
-                    <TH>User</TH>
+                    <TH>{t("head.User")}</TH>
                   </E>
                   <E heads={headKeys} val="plan">
-                    <TH>Plan</TH>
+                    <TH>{t("head.Plan")}</TH>
                   </E>
                   <E heads={headKeys} val="link">
-                    <TH>Link</TH>
+                    <TH>{t("head.Link")}</TH>
                   </E>
                   <E heads={headKeys} val="paid">
-                    <TH>Paid</TH>
+                    <TH>{t("head.Paid")}</TH>
                   </E>
                   <E heads={headKeys} val="createdAt">
-                    <TH>Created At</TH>
+                    <TH>{t("head.Created At")}</TH>
                   </E>
                   <E heads={headKeys} val="endAt">
-                    <TH>End At</TH>
+                    <TH>{t("head.End At")}</TH>
                   </E>
                   <E heads={headKeys} val="log">
-                    <TH className="tw-text-center">A/R/T</TH>
+                    <TH className="tw-text-center">{t("head.A/R/T")}</TH>
                   </E>
                   <E heads={headKeys} val="separated">
-                    <TH>Separated</TH>
+                    <TH>{t("head.Separated")}</TH>
                   </E>
                   <E heads={headKeys} val="addLog">
-                    <TH>Attend</TH>
+                    <TH>{t("head.A/R/T")}</TH>
                   </E>
                   <E heads={headKeys} val="delete">
-                    <TH>Delete</TH>
+                    <TH>{t("head.Attend")}</TH>
                   </E>
                 </tr>
               </thead>
@@ -349,7 +353,7 @@ export function PaymentInfoGenerator({
         </>
       )}
       {totalPayments == 0 && (
-        <p className="tw-mb-0">There is no payments so far</p>
+        <p className="tw-mb-0">{t("There is no payments")}</p>
       )}
     </div>
   );

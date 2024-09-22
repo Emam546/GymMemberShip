@@ -51,6 +51,8 @@ export function YearsAndMonthEarnings({
   const monthIncreasing = lastMonthEarning
     ? (totalMonthEarnings / (lastMonthEarning.profit || 1)) * 100 - 100
     : 100;
+  const { t } = useTranslation("dashboard");
+
   return (
     <div className="col-lg-4">
       <div className="row">
@@ -58,11 +60,15 @@ export function YearsAndMonthEarnings({
           {/* Yearly Breakup */}
           <div className="overflow-hidden card">
             <div className="p-4 card-body">
-              <h5 className="card-title mb-9 fw-semibold">Yearly Breakup</h5>
+              <h5 className="card-title mb-9 fw-semibold">
+                {t("Yearly Breakup")}
+              </h5>
               <div className="row align-items-center">
                 <div className="col-8">
                   <h4 className="mb-3 fw-semibold">${currentYear?.profit}</h4>
-                  <Percent increasing={yearIncreasing}>last year</Percent>
+                  <Percent increasing={yearIncreasing}>
+                    {t("last year")}
+                  </Percent>
                   <div className="d-flex align-items-center">
                     <div className="me-4">
                       <span className="round-8 bg-primary rounded-circle me-2 d-inline-block" />
@@ -97,10 +103,12 @@ export function YearsAndMonthEarnings({
               <div className="row alig n-items-start">
                 <div className="col-8">
                   <h5 className="card-title mb-9 fw-semibold">
-                    Monthly Earnings
+                    {t("Monthly Earnings")}
                   </h5>
                   <h4 className="mb-3 fw-semibold">${totalMonthEarnings}</h4>
-                  <Percent increasing={monthIncreasing}>last month</Percent>
+                  <Percent increasing={monthIncreasing}>
+                    {t("last month")}
+                  </Percent>
                 </div>
                 <div className="col-4">
                   <div className="d-flex justify-content-end">
@@ -137,14 +145,17 @@ function formatTimeToString(date: Date) {
   return `${formattedHours}:${formattedMinutes} ${period}`;
 }
 export function RecentPayments({ payments }: RecentPaymentsProps) {
+  const { t } = useTranslation("index");
   return (
     <div className="col-lg-4 d-flex align-items-stretch">
       <div className="card w-100">
         <div className="p-4 card-body">
           <div className="mb-4">
-            <h5 className="card-title fw-semibold">Recent Transactions</h5>
+            <h5 className="card-title fw-semibold">
+              {t("Recent Transactions")}
+            </h5>
           </div>
-          <ul className="mb-0 timeline-widget position-relative mb-n5">
+          <ul className="timeline-widget position-relative tw-my-1">
             {payments.map((val) => {
               const date = new Date(val.createdAt);
               return (
@@ -258,10 +269,13 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
 export interface SalesOverViewProps {
   months: { date: Date; data: DataBase.Queries.Payments.Profit[] }[];
 }
-function getMonthName(date: Date) {
-  return new Intl.DateTimeFormat("en-US", { month: "long" }).format(date);
+function useGetMonth() {
+  const { i18n } = useTranslation();
+  return (date: Date) =>
+    new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
 }
 export function SalesOverView({ months }: SalesOverViewProps) {
+  const getMonthName = useGetMonth();
   months = months
     .map((val) => ({
       data: val.data,
@@ -276,7 +290,7 @@ export function SalesOverView({ months }: SalesOverViewProps) {
         <div className="card-body">
           <div className="d-sm-flex d-block align-items-center justify-content-between mb-9">
             <div className="mb-3 mb-sm-0">
-              <h5 className="card-title fw-semibold">{t("SalesOverView")}</h5>
+              <h5 className="card-title fw-semibold">{t("Sales OverView")}</h5>
             </div>
             <div>
               <select

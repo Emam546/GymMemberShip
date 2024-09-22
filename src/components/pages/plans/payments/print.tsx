@@ -4,18 +4,7 @@ import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 import { planToDays } from "@src/utils/payment";
-//  | "order"
-//   | "user"
-//   | "plan"
-//   | "paid"
-//   | "createdAt"
-//   | "delete"
-//   | "separated"
-//   | "log"
-//   | "endAt"
-//   | "daysLogged"
-//   | "addLog"
-//   | "link";
+
 export default function PrintPlanPayments({ id }: { id: string }) {
   return (
     <PrintButton

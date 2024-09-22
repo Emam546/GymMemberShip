@@ -4,9 +4,11 @@ import Header from "@src/components/header";
 
 import { useRouter } from "next/router";
 import i18n from "@src/i18n";
+import { useTranslation } from "react-i18next";
 
 function MainApp({ children: children }: { children: React.ReactNode }) {
   const mainWrapper = useRef<HTMLDivElement>(null);
+  const { i18n } = useTranslation();
   const router = useRouter();
   useEffect(() => {
     function setSideBar() {
@@ -31,13 +33,16 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
     wrapper.classList.add("mini-sidebar");
     wrapper.classList.remove("show-sidebar");
   }
+
   useEffect(() => {
     router.events.on("routeChangeComplete", onClose);
-    document.body.dir = i18n.language === "ar" ? "rtl" : "ltr";
     return () => {
       router.events.off("routeChangeComplete", onClose);
     };
   }, []);
+  useEffect(() => {
+    document.body.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
   return (
     <>
       <div
@@ -62,6 +67,13 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
             }}
           />
           <div className="px-4 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
+            <button
+              onClick={() => {
+                i18n.changeLanguageAndLoad(i18n.language == "ar" ? "en" : "ar");
+              }}
+            >
+              Change
+            </button>
             {children}
           </div>
         </div>

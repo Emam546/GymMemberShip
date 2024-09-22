@@ -1,3 +1,4 @@
+import "@locales/users";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import UsersTable from "@src/components/pages/users/table";
@@ -7,8 +8,11 @@ import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import UsersFilter, { DataType } from "@src/components/pages/users/filter";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 const perLoad = 20;
 export default function Page() {
+  const { t } = useTranslation("/users");
   const [filter, setFilter] = useState<DataType>({});
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["users", "infinity", filter],
@@ -36,7 +40,7 @@ export default function Page() {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>Users</title>
+        <title>{t("title")}</title>
       </Head>
       <BigCard>
         <UsersFilter onData={setFilter} />
