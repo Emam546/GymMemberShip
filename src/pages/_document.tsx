@@ -14,7 +14,7 @@ export default function Document() {
           href="/images/logos/favicon.png"
         />
       </Head>
-      <body>
+      <body dir={i18n.language == "ar" ? "rtl" : "ltr"}>
         <Main />
         <NextScript />
       </body>

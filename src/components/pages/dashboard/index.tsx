@@ -65,7 +65,7 @@ export function YearsAndMonthEarnings({
               </h5>
               <div className="row align-items-center">
                 <div className="col-8">
-                  <h4 className="mb-3 fw-semibold">${currentYear?.profit}</h4>
+                  <h4 className="mb-3 fw-semibold">${currentYear?.profit || 0}</h4>
                   <Percent increasing={yearIncreasing}>
                     {t("last year")}
                   </Percent>

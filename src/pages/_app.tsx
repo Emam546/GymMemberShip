@@ -7,7 +7,7 @@ import "simplebar-react/dist/simplebar.min.css";
 import "@locales/common";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, useEffect, useLayoutEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import MainWrapper from "@src/components/mainWrapper";
@@ -20,6 +20,7 @@ import LoadingBar from "@src/components/loadingBar";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "@src/store";
 import i18n from "@src/i18n";
+import { useRouter } from "next/router";
 
 config.autoAddCss = false;
 
@@ -55,10 +56,11 @@ const App = function ({ Component, pageProps, translations, lng }: AppG) {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
+
   translations.forEach(([ns, res]) => {
     if (res) i18n.addResourceBundle(lng, ns, res, true, true);
   });
-  i18n.changeLanguage(lng);
+
   return (
     <Provider>
       <ConnectedBar />
@@ -73,7 +75,7 @@ const App = function ({ Component, pageProps, translations, lng }: AppG) {
     </Provider>
   );
 };
-export function loadTranslation(lng: string, path: string) {}
+export function loadTranslation(lng: string, path: string) { }
 App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   // Retrieve language from cookies on the server side
   const cookies = ctx.req?.headers.cookie || "";
@@ -81,8 +83,7 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     cookies
       .split("; ")
       .find((row) => row.startsWith("i18next="))
-      ?.split("=")[1] || i18n.language; // Default to 'en' if not found
-
+      ?.split("=")[1] || i18n.language || "en"; // Default to 'en' if not found
   // Change i18next language
   await i18n.changeLanguage(langFromCookie);
   await i18n.loadR(langFromCookie);

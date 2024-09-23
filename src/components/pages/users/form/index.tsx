@@ -1,12 +1,12 @@
+import "./locale";
 import PrimaryButton from "@src/components/button";
 import { Grid2 } from "@src/components/grid";
 import MainInput from "@src/components/common/inputs/main";
 import TextArea from "@src/components/common/inputs/textArea";
-import { FieldError, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import React from "react";
-import { Grid } from "@mui/material";
-import BudgetInput from "@src/components/common/inputs/budget";
 import { ObjectEntries } from "@src/utils";
+import { useTranslation } from "react-i18next";
 
 export interface DataType {
   blocked?: boolean;
@@ -34,6 +34,7 @@ export default function UserInfoForm({
   const { register, handleSubmit, formState } = useForm<DataType>({
     values: defaultData,
   });
+  const { t } = useTranslation("form:user")
   register("details", { value: {} });
   return (
     <form
@@ -48,13 +49,13 @@ export default function UserInfoForm({
       <Grid2>
         <MainInput
           id={"name-input"}
-          title={"User Name"}
+          title={t("User Name")}
           {...register("name")}
           err={formState.errors.name}
         />
         <MainInput
           id={"phone-input"}
-          title={"Phone"}
+          title={t("Phone")}
           {...register("phone")}
           err={formState.errors.name}
         />
@@ -62,7 +63,7 @@ export default function UserInfoForm({
       <Grid2 className="tw-mt-3">
         <MainInput
           id={"age-input"}
-          title={"Age"}
+          title={t("Phone")}
           {...register("age", {
             valueAsNumber: true,
           })}
@@ -70,7 +71,7 @@ export default function UserInfoForm({
         />
         <MainInput
           id={"tall-input"}
-          title={"Tall in centimeter"}
+          title={t("Tall in centimeter")}
           {...register("tall", {
             valueAsNumber: true,
           })}
@@ -78,7 +79,7 @@ export default function UserInfoForm({
         />
         <MainInput
           id={"weight-input"}
-          title={"Weight in Kg"}
+          title={t("Weight in Kg")}
           {...register("weight", {
             valueAsNumber: true,
           })}
@@ -88,7 +89,7 @@ export default function UserInfoForm({
       <div className="tw-mt-4">
         <TextArea
           id={"desc-input"}
-          title={"Why did you come"}
+          title={t("Why did you come")}
           {...register("details.whyDidYouCame")}
           className="tw-min-h-[10rem]"
           err={formState.errors.details?.whyDidYouCame}

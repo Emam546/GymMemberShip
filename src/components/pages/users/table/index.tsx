@@ -1,3 +1,4 @@
+import "./locale"
 import DeleteDialog from "@src/components/common/AlertDialog";
 import { formateDate, hasOwnProperty } from "@src/utils";
 import { Pagination } from "@mui/material";
@@ -6,7 +7,7 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import CheckInput from "@src/components/common/checkInput";
-
+import { useTranslation } from "react-i18next";
 interface ElemProps {
   order: number;
   user: DataBase.WithId<DataBase.Models.User>;
@@ -39,6 +40,7 @@ function UserShower({
       setBlocked(val);
     },
   });
+  const { t } = useTranslation("table:users")
   return (
     <>
       <tr>
@@ -63,7 +65,7 @@ function UserShower({
         </E>
         <E val="plan" heads={headKeys}>
           <td>
-            <p className="mb-0 fw-normal">{lastPlan?.name || "Deleted"}</p>
+            <p className="mb-0 fw-normal">{lastPlan?.name || t("td.Deleted")}</p>
           </td>
         </E>
         <E val="createdAt" heads={headKeys}>
@@ -76,7 +78,7 @@ function UserShower({
         <E val="blocked" heads={headKeys}>
           <td>
             <CheckInput
-              label="block"
+              label={t("td.block.label")}
               checked={blocked}
               className="tw-mr-1"
               onChange={async (e) => {
@@ -102,10 +104,10 @@ function UserShower({
         }}
         open={open}
         data={{
-          title: `Block User`,
-          desc: `Once you click Block, The user will be blocked form the courses and he will have no more access on teh server`,
-          accept: `Block ${user.name}`,
-          deny: "Keep",
+          title: t("td.delete.title"),
+          desc: t("td.delete.desc"),
+          accept: t("td.delete.accept", { name: user.name }),
+          deny: t("td.delete.deny"),
         }}
       />
     </>
@@ -144,6 +146,7 @@ export default function UsersTable({
   setPage,
   headKeys,
 }: Props) {
+  const { t } = useTranslation("table:users")
   const pageNum = Math.ceil(totalUsers / users.length);
   return (
     <div>
@@ -154,22 +157,22 @@ export default function UsersTable({
               <thead className="text-dark fs-4">
                 <tr>
                   <E heads={headKeys} val="order">
-                    <TH>Id</TH>
+                    <TH>{t("th.Id")}</TH>
                   </E>
                   <E heads={headKeys} val="name">
-                    <TH>Name</TH>
+                    <TH>{t("th.Name")}</TH>
                   </E>
                   <E heads={headKeys} val="age/tall/weight">
-                    <TH>Age/Tall/Weight</TH>
+                    <TH>{t("th.Age/Tall/Weight")}</TH>
                   </E>
                   <E heads={headKeys} val="plan">
-                    <TH>Plan</TH>
+                    <TH>{t("th.Plan")}</TH>
                   </E>
                   <E heads={headKeys} val="createdAt">
-                    <TH>Created At</TH>
+                    <TH>{t("th.Created At")}</TH>
                   </E>
                   <E heads={headKeys} val="blocked">
-                    <TH>Blocked</TH>
+                    <TH>{t("th.Blocked")}</TH>
                   </E>
                 </tr>
               </thead>
@@ -199,7 +202,7 @@ export default function UsersTable({
           )}
         </>
       )}
-      {totalUsers == 0 && <p className="tw-mb-0">There is no users so far</p>}
+      {totalUsers == 0 && <p className="tw-mb-0">{t("There is no users so far")}</p>}
     </div>
   );
 }

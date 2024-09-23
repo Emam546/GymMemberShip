@@ -1,8 +1,10 @@
+import "./locale";
 import { Grid2 } from "@src/components/grid";
 import { useForm } from "react-hook-form";
 import { ObjectEntries } from "@src/utils";
 import { useDebounceEffect } from "@src/hooks";
 import { StyledInput } from "@src/components/common/inputs/styles";
+import { useTranslation } from "react-i18next";
 
 export interface DataType {
   name?: string;
@@ -13,6 +15,7 @@ export interface Props {
 }
 export type DefaultData = DataType;
 export default function UsersFilter({ onData }: Props) {
+  const { t } = useTranslation("filter:users")
   const { register, handleSubmit, formState, getValues, watch } =
     useForm<DataType>();
   useDebounceEffect(
@@ -36,7 +39,7 @@ export default function UsersFilter({ onData }: Props) {
         <StyledInput
           type="search"
           id={"name-input"}
-          placeholder="Search By Name"
+          placeholder={t("name.placeholder")}
           {...register("name")}
         />
         {/* <MainInput

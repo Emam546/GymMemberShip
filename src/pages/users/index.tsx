@@ -49,12 +49,12 @@ export default function Page() {
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
-          <CardTitle>Users</CardTitle>
+          <CardTitle>{t("Users")}</CardTitle>
           <div>
             {users && (
               <UsersTable
                 page={0}
-                setPage={() => {}}
+                setPage={() => { }}
                 totalUsers={users.length}
                 users={users.map((user, i) => ({
                   order: i,

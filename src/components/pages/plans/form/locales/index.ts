@@ -1,13 +1,19 @@
-import type en from "./en.json";
 import i18n from "@src/i18n";
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "form:add:plan": typeof en;
+      "form:add:plan": {
+        "Plan Name": "Plan Name";
+        "Day Price": "Day Price";
+        "Month Price": "Month Price";
+        "Year Price": "Year Price";
+        "Plan description": "Plan description";
+        errors: {
+          currency: "Please select a currency";
+          price: "Please set the price or set it to 0";
+        };
+      };
     }
   }
 }
-i18n.addLoadResource(async (lng) => {
-  const res = await import(`./${lng}.json`);
-  i18n.addResourceBundle(lng, "form:add:plan", res, true, true);
-});
+i18n.addLoadUrl("/locales/components/plans/form", "form:add:plan");
