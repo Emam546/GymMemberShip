@@ -3,6 +3,7 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import axios from "axios";
 export const langs = ["en", "ar"];
+import path from "path";
 i18n
   .use(LanguageDetector)
   .use(initReactI18next) // Passes i18n instance to react-i18next
@@ -49,6 +50,7 @@ function mergePath(...paths: string[]): string {
   if (r.length) return `${a}/${mergePath(...r)}`;
   return a;
 }
+const publicPath = path.join(__dirname, "../../../public");
 i18n.addLoadUrl = function (path, ns) {
   this.addLoadResource(async (lng) => {
     if (typeof this.getResourceBundle(lng, ns) != "undefined") return;
@@ -58,7 +60,7 @@ i18n.addLoadUrl = function (path, ns) {
       try {
         const fs = require("fs");
         const fileContent = fs.readFileSync(
-          mergePath("public", filepath),
+          mergePath(publicPath, filepath),
           "utf8"
         );
         const data = JSON.parse(fileContent);

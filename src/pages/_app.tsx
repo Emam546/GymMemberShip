@@ -73,7 +73,7 @@ const App = function ({ Component, pageProps, translations }: AppG) {
         <>
           <MainWrapper>{<Component {...pageProps} />}</MainWrapper>
         </>
-      )}
+      )}    
     </Provider>
   );
 };
@@ -89,23 +89,37 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     i18n.language ||
     "en"; // Default to 'en' if not found
   // Change i18next language
-  if (!ctx.req) {
-    await Promise.all(
-      langs.map(async (lng) => {
-        await i18n.loadR(lng);
-      })
-    );
-  } else await i18n.loadR(langFromCookie);
   await i18n.changeLanguage(langFromCookie);
-  const translations = ((i18n.options.ns as string[]) || []).map((key) => {
-    return [key, i18n.getResourceBundle(langFromCookie, key)];
-  });
   const appProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
     : {};
+  if (!ctx.req) {
+    return {
+      ...appProps,
+      translations: Object.fromEntries(
+        await Promise.all(
+          langs.map(async (lng) => {
+            await i18n.loadR(lng);
+            const translations = ((i18n.options.ns as string[]) || []).map(
+              (key) => {
+                return [key, i18n.getResourceBundle(lng, key)];
+              }
+            );
+            return [lng, translations];
+          })
+        )
+      ),
+    };
+  }
+  await i18n.loadR(langFromCookie);
+  const translations = ((i18n.options.ns as string[]) || []).map((key) => {
+    return [key, i18n.getResourceBundle(langFromCookie, key)];
+  });
   return {
+    translations: {
+      [langFromCookie]: translations,
+    },
     ...appProps,
-    translations: { [langFromCookie]: translations },
   };
 };
 export default App;

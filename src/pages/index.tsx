@@ -1,6 +1,6 @@
 import "@locales/index";
 import { BigCard } from "@src/components/card";
-import { GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import Payments from "@serv/models/payments";
 import Head from "next/head";
 import {
@@ -150,8 +150,9 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
-export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
+
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const yearsEarnings = await getPaymentsProfit({
@@ -186,6 +187,5 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
       },
       users,
     },
-    revalidate: 60 * 10,
   };
 };
