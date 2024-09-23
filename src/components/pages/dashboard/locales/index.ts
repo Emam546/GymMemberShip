@@ -1,4 +1,3 @@
-import type en from "./en.json";
 import i18n from "@src/i18n";
 declare global {
   namespace I18ResourcesType {

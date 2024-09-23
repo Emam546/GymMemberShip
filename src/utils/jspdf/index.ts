@@ -1,7 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable, { RowInput } from "jspdf-autotable";
-// import Amiri from "./fonts/Amiri-Regular.ttf"
-export function createTableDoc(head: RowInput[], body: RowInput[]) {
+export function createTableDoc(head: RowInput[], body: RowInput[]): any {
   const doc = new jsPDF("p", "pt", "letter");
   doc.addFileToVFS("/fonts/Amiri-Regular.txt", "Amiri");
   doc.addFont("/fonts/Amiri-Regular.ttf", "Amiri", "normal");

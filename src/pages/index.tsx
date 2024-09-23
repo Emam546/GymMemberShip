@@ -134,7 +134,6 @@ async function getLastMonthDays(last: number) {
               val._id.day == day.getDate() &&
               val._id.month == day.getMonth() + 1
           );
-          console.log(day, day.getDate(), day.getMonth());
           if (res) return res;
           return {
             _id: {

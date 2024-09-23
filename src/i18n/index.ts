@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import axios from "axios";
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next) // Passes i18n instance to react-i18next
@@ -31,13 +32,39 @@ i18n.addLoadResource = (f) => {
 i18n.loadR = async (lng) => {
   await Promise.all(i18n.curPromises.map((f) => f(lng)));
 };
+function mergePath(...paths: string[]): string {
+  let [a, ...r] = paths;
+  a = a.endsWith("/") ? a.slice(0, -1) : a;
+  a = a.startsWith("/") ? a.slice(1) : a;
+  if (r.length) return `${a}/${mergePath(...r)}`;
+  return a;
+}
 i18n.addLoadUrl = function (path, ns) {
   this.addLoadResource(async (lng) => {
-    try {
-      const res = await axios.get(`/locals${path}/${lng}.json`);
-      this.addResourceBundle(lng, ns as string, res.data, true, true);
-    } catch (error) {
-      console.error(error);
+    const filepath = mergePath(path, `${lng}.json`);
+    if (typeof window == "undefined") {
+      try {
+        const fs = require("fs");
+        const fileContent = fs.readFileSync(
+          mergePath("public", filepath),
+          "utf8"
+        );
+        const data = JSON.parse(fileContent);
+
+        this.addResourceBundle(lng, ns as string, data, true, true);
+      } catch (err) {
+        console.log(filepath);
+        console.log("Error", err);
+      }
+    } else {
+      try {
+        const res = await axios.get(`/${filepath}`);
+        if (!res.data) return;
+        this.addResourceBundle(lng, ns as string, res.data, true, true);
+      } catch (error) {
+        console.log(filepath);
+        console.log("error 2", error);
+      }
     }
   });
   return this;

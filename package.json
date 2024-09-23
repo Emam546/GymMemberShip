@@ -81,7 +81,7 @@
     "jet-logger": "^1.2.6",
     "jet-validator": "^1.0.4",
     "js-file-downloader": "^1.1.25",
-    "jspdf": "^2.5.1",
+    "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.7.1",
     "mime-types": "^2.1.35",
     "module-alias": "^2.2.2",

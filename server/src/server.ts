@@ -24,7 +24,7 @@ app.use(cookieParser(EnvVars.cookieProps.secret));
 
 // Show routes called in console during development
 if (EnvVars.nodeEnv === NodeEnvs.Dev) {
-  app.use(morgan("dev"));
+  // app.use(morgan("dev"));
 }
 
 // Security
