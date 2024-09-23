@@ -1,0 +1,10 @@
+{
+    "creator": {
+        "label": "Creator",
+        "/dashboard": "Dashboard",
+        "/plans": "Manage Plans",
+        "/users": "Manage Users",
+        "/users/add": "Add User",
+        "/payments": "Manage Payments"
+    }
+}

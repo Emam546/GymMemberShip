@@ -2,6 +2,11 @@
   "buttons": {
     "submit": "ارسل",
     "update": "تحديث",
-    "print":"اطبع"
+    "print": "اطبع",
+    "activate": "فعل"
+  },
+  "messages": {
+    "updated": "تم تحديث المستند بنجاح",
+    "added": "تمت إضافة المستند بنجاح"
   }
 }

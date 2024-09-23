@@ -1,9 +1,18 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
+import SelectInput from "./common/inputs/select";
+import { useTranslation } from "react-i18next";
+import { ObjectEntries } from "@src/utils";
+import i18n from "@src/i18n";
 export interface Props {
   OnOpen?: () => any;
 }
+const langs: Record<I18ResourcesType.AvailableLang, string> = {
+  ar: "العربيه",
+  en: "English",
+};
 export default function Header({ OnOpen }: Props) {
+  const { i18n, t } = useTranslation("header");
   const router = useRouter();
   return (
     <header className="app-header">
@@ -45,34 +54,41 @@ export default function Header({ OnOpen }: Props) {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                {/* <TeacherImage
-                  className="tw-w-8"
-                  src={user.photoUrl}
-                  alt="user-image"
-                /> */}
+                <div
+                  className={
+                    "tw-flex tw-items-center tw-justify-center tw-overflow-hidden tw-rounded-full tw-aspect-square tw-w-8"
+                  }
+                >
+                  <img
+                    src={"/images/profile/user-1.jpg"}
+                    alt={"userImage"}
+                    className="tw-object-cover tw-min-w-full tw-min-h-full"
+                  />
+                </div>
               </span>
               <div
                 className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                 aria-labelledby="drop2"
               >
                 <div className="message-body">
-                  <Link
-                    href={"/teachers/info"}
-                    className="gap-2 d-flex align-items-center dropdown-item"
-                  >
-                    <i className="ti ti-user fs-6" />
-                    <p className="mb-0 fs-3">My Profile</p>
-                  </Link>
-                  <div className="mx-3 mt-2">
-                    <button
-                      onClick={async () => {
-                        // await signOut(auth);
-                        router.push("/");
+                  <div className="tw-px-2 tw-mx-3">
+                    <SelectInput
+                      title={t("selectLang.label")}
+                      onChange={async (e) => {
+                        await i18n.changeLanguageAndLoad(e.currentTarget.value);
+                        router.reload();
                       }}
-                      className="btn btn-outline-primary tw-block tw-w-full"
+                      id={"choose lang"}
+                      value={i18n.language}
                     >
-                      Logout
-                    </button>
+                      {ObjectEntries(langs).map(([key, label]) => {
+                        return (
+                          <option value={key} key={key}>
+                            {label}
+                          </option>
+                        );
+                      })}
+                    </SelectInput>
                   </div>
                 </div>
               </div>
@@ -83,3 +99,14 @@ export default function Header({ OnOpen }: Props) {
     </header>
   );
 }
+
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      header: {
+        "selectLang.label": "Choose Language";
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/locales/components/header", "header");

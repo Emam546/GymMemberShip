@@ -1,8 +1,7 @@
 import { Grid2 } from "@src/components/grid";
 import { useForm } from "react-hook-form";
-import { formateDate, ObjectEntries } from "@src/utils";
 import { useDebounceEffect } from "@src/hooks";
-import { StyledInput, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import DatePicker from "@src/components/common/inputs/datePicker";
 
 export interface DataType {
@@ -13,12 +12,27 @@ export interface Props {
   onData: (data: DataType) => Promise<any> | any;
   values: DataType;
 }
+import i18n from "@src/i18n";
+import { useTranslation } from "react-i18next";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payments:filter": {
+        "Start at": "Start at",
+        "End At": "End at"
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/locales/components/payments/filter", "payments:filter");
+
 export type DefaultData = DataType;
 export default function PaymentsFilter({ onData, values }: Props) {
   const { handleSubmit, setValue, getValues, watch } = useForm<DataType>({
     defaultValues: values,
     values,
   });
+  const { t } = useTranslation("payments:filter")
   useDebounceEffect(
     () => {
       onData(getValues());
@@ -34,7 +48,7 @@ export default function PaymentsFilter({ onData, values }: Props) {
       autoComplete="off"
     >
       <Grid2>
-        <WrapElem label="Start from">
+        <WrapElem label={t("Start at")}>
           <DatePicker
             value={new Date(getValues("startAt"))}
             onChange={(val) => {
@@ -42,7 +56,7 @@ export default function PaymentsFilter({ onData, values }: Props) {
             }}
           />
         </WrapElem>
-        <WrapElem label="End at">
+        <WrapElem label={t("End At")}>
           <DatePicker
             value={new Date(getValues("endAt"))}
             onChange={(val) => {

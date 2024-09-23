@@ -7,6 +7,12 @@ declare global {
           submit: "Submit";
           update: "Update";
           print: "Print";
+          activate: "Activate";
+        };
+        messages: {
+          updated: "the document updated successfully";
+          added: "the document added successfully";
+          deleted: string;
         };
       };
     }

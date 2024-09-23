@@ -1,0 +1,12 @@
+{
+    "type": {
+        "label": "Choose Type",
+        "default": "Choose Type",
+        "opt": {
+            "day": "Day",
+            "Month": "Month",
+            "year": "Year"
+        }
+    },
+    "amount.label": "Amount of Type"
+}

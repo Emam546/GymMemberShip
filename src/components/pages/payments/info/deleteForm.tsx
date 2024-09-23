@@ -5,7 +5,25 @@ import DeleteDialog from "@src/components/common/AlertDialog";
 import { useRouter } from "next/router";
 import requester from "@src/utils/axios";
 import queryClient from "@src/queryClient";
+import { useTranslation } from "react-i18next";
+import i18n from "@src/i18n";
 
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payments:deleteForm": {
+        "paragraph": "Once you delete the payment, it cannot be undone. This is permanent.",
+        "delete.button": "Delete Payment",
+        "model": {
+          "accept": "Delete",
+          "title": "Are you sure you want to delete the payment?",
+          "desc": "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.",
+          "deny": "Keep The Payment"
+        }
+      }
+    }
+  }
+}
 export default function DeletePaymentForm({
   payment,
 }: {
@@ -13,37 +31,33 @@ export default function DeletePaymentForm({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
+  const { t } = useTranslation("payments:deleteForm")
   const deleteAccountMutate = useMutation({
     mutationFn: async () => {
       await requester.delete(`/api/admin/payments/${payment._id}`);
       queryClient.invalidateQueries(["payments"]);
-      alert("document deleted successfully");
+      alert(t("messages.added", { ns: "translation" }));
       await router.push(`/users/${payment._id}`);
     },
-    onSuccess() {},
+    onSuccess() { },
   });
 
   return (
     <div>
       <div className="tw-flex tw-justify-between">
         <p className="tw-text-neutral-500 tw-text-base">
-          Once you delete the payment, it cannot be undone. This is permanent.
+          {t("paragraph")}
         </p>
         <DangerButton type="button" onClick={() => setOpen(true)}>
-          Delete Payment
+          {t("delete.button")}
         </DangerButton>
       </div>
       <DeleteDialog
         data={{
-          accept: "Delete",
-          title: "Are you sure you want to delete the payment?",
-          desc: `Once you click delete, the payment and associated data
-                        will be permanently deleted and cannot be restored.
-                        Alternatively if you keep your free payment, the next
-                        time you want to edit or update your data you won'
-                        t have to start from scratch.`,
-          deny: "Keep The payment",
+          accept: t("model.accept"),
+          title: t("model.title"),
+          desc: t("model.desc"),
+          deny: t("model.deny"),
         }}
         onAccept={async () => {
           await deleteAccountMutate.mutateAsync();
@@ -58,3 +72,4 @@ export default function DeletePaymentForm({
     </div>
   );
 }
+i18n.addLoadUrl("/locales/components/payments/deleteForm", "payments:deleteForm")

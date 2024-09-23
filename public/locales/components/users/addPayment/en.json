@@ -1,0 +1,16 @@
+{
+    "Choose Course": "Choose Course",
+    "payment": {
+        "endAt": "This payment should be end at {{val}}"
+    },
+    "paid": {
+        "label": "The amount paid",
+        "required": {
+            "currency": "Please select a currency",
+            "num": "Please set the course price or set it to 0"
+        },
+        "paragraph": "The amount to be paid is {{val}}",
+        "placeholder":"eg.120"
+    },
+    "separated": "separated"
+}

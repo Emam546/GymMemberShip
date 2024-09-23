@@ -103,4 +103,21 @@
       }
     }
   }
+
+  body[dir="rtl"] {
+    #main-wrapper[data-layout="vertical"] {
+      &[data-sidebartype="mini-sidebar"],
+      &[data-sidebartype="full"] {
+        .left-sidebar {
+          right: -$sidebar-width-full;
+        }
+
+        &.show-sidebar {
+          .left-sidebar {
+            right: 0;
+          }
+        }
+      }
+    }
+  }
 }

@@ -171,95 +171,11 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
                     <span className="flex-shrink-0 timeline-badge-border d-block" />
                   </div>
                   <div className="timeline-desc fs-3 text-dark mt-n1">
-                    Payment received from {val.userId.name} of $
-                    {`${val.paid.num} ${val.paid.type}`}
+                    {t("transactions.receivePayment", { name: val.userId.name, price: `${val.paid.num}${val.paid.type}` })}
                   </div>
                 </li>
               );
             })}
-            {/* <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                09:30
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-primary" />
-                <span className="flex-shrink-0 timeline-badge-border d-block" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1">
-                Payment received from John Doe of $385.90
-              </div>
-            </li> */}
-            {/* <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                10:00 am
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-info" />
-                <span className="flex-shrink-0 timeline-badge-border d-block" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                New sale recorded{" "}
-                <a
-                  href="javascript:void(0)"
-                  className="text-primary d-block fw-normal"
-                >
-                  #ML-3467
-                </a>
-              </div>
-            </li>
-            <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                12:00 am
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-success" />
-                <span className="flex-shrink-0 timeline-badge-border d-block" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1">
-                Payment was made of $64.95 to Michael
-              </div>
-            </li>
-            <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                09:30 am
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-warning" />
-                <span className="flex-shrink-0 timeline-badge-border d-block" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                New sale recorded{" "}
-                <a
-                  href="javascript:void(0)"
-                  className="text-primary d-block fw-normal"
-                >
-                  #ML-3467
-                </a>
-              </div>
-            </li>
-            <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                09:30 am
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-danger" />
-                <span className="flex-shrink-0 timeline-badge-border d-block" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                New arrival recorded
-              </div>
-            </li>
-            <li className="overflow-hidden timeline-item d-flex position-relative">
-              <div className="flex-shrink-0 timeline-time text-dark text-end">
-                12:00 am
-              </div>
-              <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-success" />
-              </div>
-              <div className="timeline-desc fs-3 text-dark mt-n1">
-                Payment Done
-              </div>
-            </li> */}
           </ul>
         </div>
       </div>

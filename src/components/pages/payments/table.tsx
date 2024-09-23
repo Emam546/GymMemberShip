@@ -1,4 +1,3 @@
-import "./locales/table";
 import DeleteDialog from "@src/components/common/AlertDialog";
 import { formateDate } from "@src/utils";
 import { Pagination } from "@mui/material";
@@ -51,7 +50,7 @@ function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
   return (
     <div>
       <p className="tw-text-center tw-mb-0">
-        <span>{query.data}</span>/<span>{rDays}</span>/<span>{TotalDays}</span>
+        {query.data}/{rDays}/{TotalDays}
       </p>
     </div>
   );
@@ -152,7 +151,7 @@ function Shower({
   const [open, setOpen] = useState(false);
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-      planToDays(payment.plan) * 1000 * 24 * 60 * 60
+    planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
   const { t } = useTranslation("table:payments");
   return (
@@ -318,10 +317,10 @@ export function PaymentInfoGenerator({
                     <TH>{t("head.Separated")}</TH>
                   </E>
                   <E heads={headKeys} val="addLog">
-                    <TH>{t("head.A/R/T")}</TH>
+                    <TH>{t("head.Attend")}</TH>
                   </E>
                   <E heads={headKeys} val="delete">
-                    <TH>{t("head.Attend")}</TH>
+                    <TH>{t("head.Delete")}</TH>
                   </E>
                 </tr>
               </thead>
@@ -358,3 +357,30 @@ export function PaymentInfoGenerator({
     </div>
   );
 }
+import i18n from "@src/i18n";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "table:payments": {
+        Deleted: "Deleted";
+        Link: "Link";
+        head: {
+          Id: "Id";
+          User: "User";
+          Plan: "Plan";
+          Link: "Link";
+          Paid: "Paid";
+          "Created At": "Created At";
+          "End At": "End At";
+          "A/R/T": "A/R/T";
+          Separated: "Separated";
+          Attend: "Attend";
+          Delete: "Delete";
+        };
+        "There is no payments": "There is no payments";
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/locales/components/payments/table", "table:payments");
+

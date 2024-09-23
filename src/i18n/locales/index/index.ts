@@ -5,6 +5,9 @@ declare global {
       index: {
         "Recent Transactions": string;
         "Recent Users": string;
+        transactions: {
+          receivePayment: "Payment received from {{name}} of {{price}}`}";
+        };
       };
     }
   }

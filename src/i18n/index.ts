@@ -12,9 +12,19 @@ i18n
     interpolation: {
       escapeValue: false, // React already does escaping
     },
+
     detection: {
       caches: ["cookie"],
       order: ["cookie"],
+      cookieOptions: {
+        path: "/",
+        sameSite: "strict",
+        expires: (() => {
+          const expires = new Date();
+          expires.setFullYear(expires.getFullYear() + 100);
+          return expires;
+        })(),
+      },
     },
   });
 i18n.curPromises = [];
@@ -41,6 +51,8 @@ function mergePath(...paths: string[]): string {
 }
 i18n.addLoadUrl = function (path, ns) {
   this.addLoadResource(async (lng) => {
+    if (typeof this.getResourceBundle(lng, ns) != "undefined") return;
+  
     const filepath = mergePath(path, `${lng}.json`);
     if (typeof window == "undefined") {
       try {
@@ -50,7 +62,6 @@ i18n.addLoadUrl = function (path, ns) {
           "utf8"
         );
         const data = JSON.parse(fileContent);
-
         this.addResourceBundle(lng, ns as string, data, true, true);
       } catch (err) {
         console.log(filepath);

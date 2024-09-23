@@ -2,8 +2,9 @@ import classNames from "classnames";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { ComponentProps } from "react";
+import { useTranslation } from "react-i18next";
 import SimpleBar from "simplebar-react";
-
+import i18n from "@src/i18n";
 interface HeaderNavProps {
   title: string;
 }
@@ -41,45 +42,31 @@ export function LinkElem({ href, title, children }: LinkElemProps) {
 export interface Props {
   onClose?: (this: HTMLElement) => any;
 }
-function AdminNavBar() {
-  return (
-    <>
-      <HeaderNav title="Admin" />
-      <LinkElem href="/admin/teachers" title="Teachers" />
-    </>
-  );
-}
+
 function CreatorNavBar() {
+  const { t } = useTranslation("sideBar")
   return (
     <>
-      <HeaderNav title="Creator" />
-      <LinkElem href="/" title="Dashboard">
+      <HeaderNav title={t("creator.label")} />
+      <LinkElem href="/" title={t("creator./dashboard")}>
         <i className="ti ti-layout-dashboard" />
       </LinkElem>
-      <LinkElem href="/plans" title="Manage Plans">
+      <LinkElem href="/plans" title={t("creator./plans")}>
         <i className="ti ti-calendar-plus"></i>
       </LinkElem>
-      <LinkElem href="/users" title="Manage Users">
+      <LinkElem href="/users" title={t("creator./users")}>
         <i className="ti ti-users"></i>
       </LinkElem>
-      <LinkElem href="/users/add" title="Add User">
+      <LinkElem href="/users/add" title={t("creator./users/add")}>
         <i className="ti ti-user-plus"></i>
       </LinkElem>
-      <LinkElem href="/payments" title="Manage Payments">
+      <LinkElem href="/payments" title={t("creator./payments")}>
         <i className="ti ti-credit-card"></i>
       </LinkElem>
     </>
   );
 }
-function AssistantNavBar() {
-  return (
-    <>
-      <HeaderNav title="Assistant" />
-      <LinkElem href="/assistant" title="Add Questions" />
-      <LinkElem href="/assistant/users" title="Control Users" />
-    </>
-  );
-}
+
 export default function SideBar({ onClose: onToggle }: Props) {
   return (
     <aside className="left-sidebar">
@@ -115,3 +102,24 @@ export default function SideBar({ onClose: onToggle }: Props) {
     </aside>
   );
 }
+
+
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "sideBar": {
+        "creator": {
+          "label": "Creator",
+
+          "/dashboard": "Dashboard",
+          "/plans": "Manage Plans",
+          "/users": "Manage Users",
+          "/users/add": "Add User",
+          "/payments": "Manage Payments"
+        }
+      }
+    }
+  }
+}
+i18n.addLoadUrl("/locales/components/sidebar", "sideBar");
+

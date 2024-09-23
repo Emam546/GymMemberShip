@@ -1,4 +1,4 @@
-import "@src/i18n/index";
+import "@locales/index";
 import { BigCard } from "@src/components/card";
 import { GetStaticProps } from "next";
 import Payments from "@serv/models/payments";

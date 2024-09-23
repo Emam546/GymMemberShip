@@ -1,4 +1,7 @@
 {
     "Recent Transactions": "المعاملات الأخيرة",
-    "Recent Users": "المستخدمون الجدد"
+    "Recent Users": "المستخدمون الجدد",
+    "transactions": {
+        "receivePayment": "تم استلام المبلغ من {{name}} ل {{price}}"
+    }
 }

@@ -34,7 +34,7 @@ export default function Page({ doc }: Props) {
             }}
             onData={async (data) => {
               await requester.post(`/api/admin/plans/${doc.id}`, data);
-              alert("the document updated successfully");
+              alert(t("messages.updated", { ns: "translation" }));
             }}
             buttonName={t("buttons.update", { ns: "translation" })}
           />

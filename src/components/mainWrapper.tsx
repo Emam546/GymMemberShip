@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import Header from "@src/components/header";
 
 import { useRouter } from "next/router";
-import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 
 function MainApp({ children: children }: { children: React.ReactNode }) {
@@ -67,13 +66,6 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
             }}
           />
           <div className="px-4 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
-            <button
-              onClick={() => {
-                i18n.changeLanguageAndLoad(i18n.language == "ar" ? "en" : "ar");
-              }}
-            >
-              Change
-            </button>
             {children}
           </div>
         </div>

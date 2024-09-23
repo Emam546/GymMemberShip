@@ -39,6 +39,7 @@ function Shower({
   plan,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation("logs:table")
   return (
     <>
       <tr>
@@ -52,7 +53,7 @@ function Shower({
             {user ? (
               <Link href={`/users/${user._id}`}>{user.name}</Link>
             ) : (
-              "Deleted"
+              t("td.deleted")
             )}
           </td>
         </E>
@@ -61,7 +62,7 @@ function Shower({
             {plan ? (
               <Link href={`/plans/${plan._id}`}>{plan.name}</Link>
             ) : (
-              "Deleted"
+              t("td.deleted")
             )}
           </td>
         </E>
@@ -98,10 +99,10 @@ function Shower({
         }}
         open={open}
         data={{
-          title: `Block User`,
-          desc: `Once you click Block, The payment will be deleted from his history`,
-          accept: `Delete Payment`,
-          deny: "Keep",
+          title: t("td.model.title"),
+          desc: t("td.model.desc"),
+          accept: t("td.model.accept"),
+          deny: t("td.model.deny"),
         }}
       />
     </>
@@ -143,6 +144,7 @@ export function LogInfoGenerator({
   onDelete,
 }: PaymentProps) {
   const pageNum = Math.ceil(totalCount / logs.length);
+  const { t } = useTranslation("logs:table")
   return (
     <div>
       {totalCount > 0 && (
@@ -152,22 +154,22 @@ export function LogInfoGenerator({
               <thead className="text-dark fs-4">
                 <tr>
                   <E heads={headKeys} val="order">
-                    <TH>Id</TH>
+                    <TH>{t("th.Id")}</TH>
                   </E>
                   <E heads={headKeys} val="user">
-                    <TH>User</TH>
+                    <TH>{t("th.User")}</TH>
                   </E>
                   <E heads={headKeys} val="plan">
-                    <TH>Plan</TH>
+                    <TH>{t("th.Plan")}</TH>
                   </E>
                   <E heads={headKeys} val="paymentLink">
-                    <TH>Payment Link</TH>
+                    <TH>{t("th.paymentLink")}</TH>
                   </E>
                   <E heads={headKeys} val="createdAt">
-                    <TH>Loged At</TH>
+                    <TH>{t("th.Logged At")}</TH>
                   </E>
                   <E heads={headKeys} val="delete">
-                    <TH>Delete</TH>
+                    <TH>{t("th.Delete")}</TH>
                   </E>
                 </tr>
               </thead>
@@ -200,7 +202,35 @@ export function LogInfoGenerator({
           )}
         </>
       )}
-      {totalCount == 0 && <p className="tw-mb-0">There is no Logs so far</p>}
+      {totalCount == 0 && <p className="tw-mb-0">{t("paragraph")}</p>}
     </div>
   );
 }
+import i18n from "@src/i18n";
+import { useTranslation } from "react-i18next";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "logs:table": {
+        "th": {
+          "Id": "Id",
+          "User": "User",
+          "paymentLink": "paymentLink",
+          "Logged At": "Logged At",
+          "Delete": "Delete",
+          "Plan": "Plan"
+        },
+        "td": {
+          "deleted": "Deleted",
+          "model": {
+            "title": "Block User",
+            "desc": "Once you click Block, The payment will be deleted from his history",
+            "accept": "Delete Payment",
+            "deny": "Keep"
+          }
+        }, "paragraph": "There is no Logs so far"
+      }
+    }
+  }
+}
+i18n.addLoadUrl("/locales/components/logs/table", "logs:table");

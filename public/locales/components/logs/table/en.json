@@ -1,0 +1,20 @@
+{
+    "th": {
+        "Id": "Id",
+        "User": "User",
+        "paymentLink": "paymentLink",
+        "Logged At": "Logged At",
+        "Delete": "Delete",
+        "Plan": "Plan"
+    },
+    "td": {
+        "deleted": "Deleted",
+        "model": {
+            "title": "Delete User",
+            "desc": "Once you click Delete, The log will be deleted from his history",
+            "accept": "Delete Log",
+            "deny": "Keep"
+        }
+    },
+    "paragraph": "There is no Logs so far"
+}

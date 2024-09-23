@@ -1,3 +1,4 @@
+import "@locales/users/[id]"
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import { GoToButton } from "@src/components/common/inputs/addButton";
 import UserInfoForm from "@src/components/pages/users/form";
@@ -15,20 +16,23 @@ import AddUserPayment from "@src/components/pages/users/addPayment";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import queryClient from "@src/queryClient";
 import DeleteAccountForm from "@src/components/pages/users/deleteAccountForm";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
 }
+
 export default function Page({ doc: initData, plans }: Props) {
   const [doc, setDoc] = useState(initData);
+  const { t } = useTranslation("/users/[id]")
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
         <title>{doc.name}</title>
       </Head>
       <BigCard>
-        <CardTitle>Update User Data</CardTitle>
+        <CardTitle>{t("Update User Data")}</CardTitle>
         <MainCard>
           <UserInfoForm
             defaultData={{
@@ -44,16 +48,16 @@ export default function Page({ doc: initData, plans }: Props) {
             onData={async (data) => {
               await requester.post(`/api/admin/users/${doc._id}`, data);
               setDoc({ ...doc, ...data });
-              alert("the document updated successfully");
+              alert(t("messages.updated", { ns: "translation" }));
             }}
-            buttonName="Update"
+            buttonName={t("buttons.update", { ns: "translation" })}
           />
         </MainCard>
         <div className="tw-mb-8">
           <DeleteAccountForm id={doc._id} />
         </div>
         <div className="tw-flex tw-items-center tw-justify-between">
-          <CardTitle>Payments</CardTitle>
+          <CardTitle>{t("Payments")}</CardTitle>
           <PrintUsersPayments id={doc._id} />
         </div>
         <MainCard>
@@ -64,7 +68,7 @@ export default function Page({ doc: initData, plans }: Props) {
                 userId: doc._id,
               });
               queryClient.invalidateQueries(["payments", "users", doc._id]);
-              alert("document added successfully");
+              alert(t("messages.added", { ns: "translation" }));
             }}
             plans={plans}
           />
@@ -88,7 +92,7 @@ export default function Page({ doc: initData, plans }: Props) {
         </MainCard>
       </BigCard>
       <div className="py-3">
-        <GoToButton label="Go To Logs" href={`/users/${doc._id}/logs`} />
+        <GoToButton label={t("Go To Logs")} href={`/users/${doc._id}/logs`} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
+import "@locales/users/[id]/logs";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
-import UsersTable from "@src/components/pages/users/table";
 import Head from "next/head";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import queryClient from "@src/queryClient";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
-import { last } from "ramda";
+import { useTranslation } from "react-i18next";
 const perLoad = 20;
 type Page = {
   page: number;
@@ -24,6 +24,7 @@ interface InfiniteQueryData {
 }
 export default function Page() {
   const router = useRouter();
+  const { t } = useTranslation("/users/[id]/logs");
   const { id } = router.query;
   const mutate = useMutation({
     mutationFn(id: string) {
@@ -78,7 +79,7 @@ export default function Page() {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>Logs</title>
+        <title>{t("title")}</title>
       </Head>
       <BigCard>
         <MainCard className="p-4 tw-mt-3">
@@ -86,7 +87,7 @@ export default function Page() {
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
-          <CardTitle>User Logs</CardTitle>
+          <CardTitle>{t("User Logs")}</CardTitle>
           <div>
             <LogInfoGenerator
               page={0}

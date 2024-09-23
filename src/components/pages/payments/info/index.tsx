@@ -6,12 +6,13 @@ import DatePicker from "@src/components/common/inputs/datePicker";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import SelectPlan from "../../users/addPayment/selectPlan";
 import PlanTypeInput from "@src/components/common/inputs/planType";
-import { useEffect } from "react";
 import CheckInput from "@src/components/common/checkInput";
 import BudgetInput from "@src/components/common/inputs/budget";
 import Link from "next/link";
 import { planToDays } from "@src/utils/payment";
 import { formateDate } from "@src/utils";
+import { useTranslation } from "react-i18next";
+import i18n from "@src/i18n";
 
 export type DataType = {
   plan: DataBase.Models.Payments["plan"];
@@ -25,7 +26,20 @@ export interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
   onData: (data: DataType) => Promise<any> | any;
 }
-
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payment:form:update": {
+        "User": "User",
+        "Plan": "Plan",
+        "createdAt": {
+          "label": "Created At",
+          "paragraph": "This payment should be end at {{val}}"
+        }
+      }
+    }
+  }
+}
 export default function PaymentInfoForm({
   payment,
   onData,
@@ -43,8 +57,10 @@ export default function PaymentInfoForm({
   const planPrice = plan?.prices[paidType];
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-      planToDays(payment.plan) * 1000 * 24 * 60 * 60
+    planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
+  const { t: t1 } = useTranslation("payment:form:update")
+  const { t: t2 } = useTranslation("payment:add")
   return (
     <>
       <form
@@ -61,7 +77,7 @@ export default function PaymentInfoForm({
           <div>
             <MainInput
               id={"name-input"}
-              title={"User"}
+              title={t1("User")}
               value={user.name}
               disabled={true}
             />
@@ -74,7 +90,7 @@ export default function PaymentInfoForm({
             plans={plans}
             planId={planId}
             id={"phone-input"}
-            title={"Plan"}
+            title={t1("Plan")}
             {...register("planId", { disabled: true })}
             err={formState.errors.planId}
           />
@@ -94,10 +110,10 @@ export default function PaymentInfoForm({
           </div>
           <div>
             <BudgetInput
-              label={"The amount paid"}
+              label={t2("paid.label")}
               priceProps={{
                 ...register("paid.num", {
-                  required: "Please set the course price or set it to 0",
+                  required: t2("paid.required.num"),
                   valueAsNumber: true,
                   min: 0,
                 }),
@@ -106,7 +122,7 @@ export default function PaymentInfoForm({
               }}
               unitProps={{
                 ...register("paid.type", {
-                  required: "Please select a currency",
+                  required: t2("paid.required.num"),
                   value: "EGP",
                 }),
               }}
@@ -117,25 +133,24 @@ export default function PaymentInfoForm({
             />
             {planPrice && (
               <p className="tw-mb-0">
-                The amount to be paid is{" "}
-                <span>
-                  {`${
-                    numberOfDays * planPrice.num
-                  }${planPrice.type.toLocaleUpperCase()}`}
-                </span>
+                {t2("paid.paragraph", {
+                  val: `${numberOfDays * planPrice.num
+                    }${planPrice.type.toLocaleUpperCase()}`
+                })}
+
               </p>
             )}
           </div>
 
-          <WrapElem label="Created At">
+          <WrapElem label={t1("createdAt.label")}>
             <DatePicker disabled value={new Date(getValues("createdAt"))} />
             <p className="tw-mb-0">
-              This payment should be end at {formateDate(endAt)}
+              {t1("createdAt.paragraph", { val: formateDate(endAt) })}
             </p>
           </WrapElem>
           <div className="tw-self-stretch tw-flex tw-items-end tw-max-h-[4.4rem]">
             <CheckInput
-              label={"Separated"}
+              label={t2("separated")}
               id={"separated-input"}
               className="tw-mx-0.5 tw-h-4 tw-w-4 tw-rounded tw-overflow-hidden"
               {...register("separated")}
@@ -144,10 +159,13 @@ export default function PaymentInfoForm({
         </Grid2>
         <div className="tw-mt-4 tw-flex tw-justify-end">
           <PrimaryButton type="submit" disabled={formState.isSubmitting}>
-            Update
+            {t2("buttons.update", { ns: "translation" })}
           </PrimaryButton>
         </div>
       </form>
     </>
   );
 }
+i18n.addLoadUrl("/locales/components/payments/info", "payment:form:update")
+i18n.addLoadUrl("/locales/components/users/addPayment", "payment:add")
+

@@ -1,3 +1,4 @@
+import "@locales/payments"
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -11,6 +12,7 @@ import { useState } from "react";
 import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
 import PrintUserPayments from "@src/components/pages/payments/print";
 import { MonthlyEarnings } from "@src/components/pages/dashboard/charts";
+import { useTranslation } from "react-i18next";
 
 const perLoad = 20;
 type Payment = DataBase.Populate<
@@ -74,6 +76,7 @@ export default function Page() {
       return users.data.data;
     },
   });
+  const { t } = useTranslation("/payments")
   const totalPrice =
     QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
   const totalCount =
@@ -84,11 +87,11 @@ export default function Page() {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>Payments</title>
+        <title>{t("title")}</title>
       </Head>
       <BigCard>
         <div className="tw-flex tw-justify-between">
-          <CardTitle>Payments</CardTitle>
+          <CardTitle>{t("Payments")}</CardTitle>
           <div>
             <PrintUserPayments query={filter} />
           </div>
@@ -103,12 +106,12 @@ export default function Page() {
                 <div className="tw-flex tw-justify-between tw-gap-x-4">
                   <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
                     <div>
-                      <h5 className="card-title mb-9 fw-semibold">Earnings</h5>
+                      <h5 className="card-title mb-9 fw-semibold">{t("Earnings")}</h5>
                       <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
                     </div>
                     <div>
                       <h5 className="card-title mb-9 fw-semibold">
-                        Total Count
+                        {t("Total Count")}
                       </h5>
                       <h4 className="mb-3 fw-semibold">{totalCount}</h4>
                     </div>
@@ -138,7 +141,7 @@ export default function Page() {
             {payments && (
               <PaymentInfoGenerator
                 page={0}
-                setPage={() => {}}
+                setPage={() => { }}
                 totalCount={payments.length}
                 payments={payments.map((payment, i) => ({
                   order: i,
@@ -160,7 +163,7 @@ export default function Page() {
                   "log",
                   "endAt",
                 ]}
-                onDelete={() => {}}
+                onDelete={() => { }}
               />
             )}
           </div>
