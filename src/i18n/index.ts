@@ -2,7 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import axios from "axios";
-
+export const langs = ["en", "ar"];
 i18n
   .use(LanguageDetector)
   .use(initReactI18next) // Passes i18n instance to react-i18next
@@ -52,7 +52,7 @@ function mergePath(...paths: string[]): string {
 i18n.addLoadUrl = function (path, ns) {
   this.addLoadResource(async (lng) => {
     if (typeof this.getResourceBundle(lng, ns) != "undefined") return;
-  
+
     const filepath = mergePath(path, `${lng}.json`);
     if (typeof window == "undefined") {
       try {

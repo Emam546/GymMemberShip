@@ -1,4 +1,4 @@
-import "@locales/users/[id]"
+import "@locales/users/[id]";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import { GoToButton } from "@src/components/common/inputs/addButton";
 import UserInfoForm from "@src/components/pages/users/form";
@@ -25,7 +25,7 @@ interface Props {
 
 export default function Page({ doc: initData, plans }: Props) {
   const [doc, setDoc] = useState(initData);
-  const { t } = useTranslation("/users/[id]")
+  const { t } = useTranslation("/users/[id]");
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -119,3 +119,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 };
+

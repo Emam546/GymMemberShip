@@ -54,7 +54,7 @@ export default function Page() {
             {users && (
               <UsersTable
                 page={0}
-                setPage={() => { }}
+                setPage={() => {}}
                 totalUsers={users.length}
                 users={users.map((user, i) => ({
                   order: i,
@@ -81,3 +81,8 @@ export default function Page() {
     </div>
   );
 }
+export const getServerSideProps = () => {
+  return {
+    props: {},
+  };
+};

@@ -19,8 +19,9 @@ import ConnectedBar from "@src/components/internetConnection";
 import LoadingBar from "@src/components/loadingBar";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "@src/store";
-import i18n from "@src/i18n";
+import i18n, { langs } from "@src/i18n";
 import { useRouter } from "next/router";
+import { ObjectEntries } from "@src/utils";
 
 config.autoAddCss = false;
 
@@ -48,17 +49,18 @@ export function Provider({ children }: { children: ReactNode }) {
   );
 }
 interface AppG extends AppPropsWithLayout {
-  translations: [string, any][];
-  lng: string;
+  translations: { lang: [string, any][] };
 }
 
-const App = function ({ Component, pageProps, translations, lng }: AppG) {
+const App = function ({ Component, pageProps, translations }: AppG) {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
-  translations.forEach(([ns, res]) => {
-    if (res) i18n.addResourceBundle(lng, ns, res, true, true);
+  ObjectEntries(translations).map(([lng, val]) => {
+    val.forEach(([ns, res]) => {
+      if (res) i18n.addResourceBundle(lng, ns, res, true, true);
+    });
   });
 
   return (
@@ -75,7 +77,7 @@ const App = function ({ Component, pageProps, translations, lng }: AppG) {
     </Provider>
   );
 };
-export function loadTranslation(lng: string, path: string) { }
+export function loadTranslation(lng: string, path: string) {}
 App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   // Retrieve language from cookies on the server side
   const cookies = ctx.req?.headers.cookie || "";
@@ -83,16 +85,27 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     cookies
       .split("; ")
       .find((row) => row.startsWith("i18next="))
-      ?.split("=")[1] || i18n.language || "en"; // Default to 'en' if not found
+      ?.split("=")[1] ||
+    i18n.language ||
+    "en"; // Default to 'en' if not found
   // Change i18next language
+  if (!ctx.req) {
+    await Promise.all(
+      langs.map(async (lng) => {
+        await i18n.loadR(lng);
+      })
+    );
+  } else await i18n.loadR(langFromCookie);
   await i18n.changeLanguage(langFromCookie);
-  await i18n.loadR(langFromCookie);
   const translations = ((i18n.options.ns as string[]) || []).map((key) => {
     return [key, i18n.getResourceBundle(langFromCookie, key)];
   });
   const appProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
     : {};
-  return { ...appProps, lng: langFromCookie, translations };
+  return {
+    ...appProps,
+    translations: { [langFromCookie]: translations },
+  };
 };
 export default App;

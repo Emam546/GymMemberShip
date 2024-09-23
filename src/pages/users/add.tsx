@@ -1,4 +1,4 @@
-import "@locales/users/add"
+import "@locales/users/add";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import { useRouter } from "next/router";
 import UsersInfoForm from "@src/components/pages/users/form";
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Page() {
   const router = useRouter();
-  const { t } = useTranslation("/users/add")
+  const { t } = useTranslation("/users/add");
   const mutate = useMutation({
     async mutationFn(data: unknown) {
       const request = await requester.post<
@@ -43,3 +43,8 @@ export default function Page() {
     </>
   );
 }
+export const getServerSideProps = () => {
+  return {
+    props: {},
+  };
+};

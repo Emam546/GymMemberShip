@@ -1,4 +1,4 @@
-import "@locales/payments"
+import "@locales/payments";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -76,7 +76,7 @@ export default function Page() {
       return users.data.data;
     },
   });
-  const { t } = useTranslation("/payments")
+  const { t } = useTranslation("/payments");
   const totalPrice =
     QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
   const totalCount =
@@ -106,7 +106,9 @@ export default function Page() {
                 <div className="tw-flex tw-justify-between tw-gap-x-4">
                   <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
                     <div>
-                      <h5 className="card-title mb-9 fw-semibold">{t("Earnings")}</h5>
+                      <h5 className="card-title mb-9 fw-semibold">
+                        {t("Earnings")}
+                      </h5>
                       <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
                     </div>
                     <div>
@@ -141,7 +143,7 @@ export default function Page() {
             {payments && (
               <PaymentInfoGenerator
                 page={0}
-                setPage={() => { }}
+                setPage={() => {}}
                 totalCount={payments.length}
                 payments={payments.map((payment, i) => ({
                   order: i,
@@ -163,7 +165,7 @@ export default function Page() {
                   "log",
                   "endAt",
                 ]}
-                onDelete={() => { }}
+                onDelete={() => {}}
               />
             )}
           </div>
@@ -178,3 +180,8 @@ export default function Page() {
     </div>
   );
 }
+export const getServerSideProps = () => {
+  return {
+    props: {},
+  };
+};
