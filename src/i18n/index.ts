@@ -63,7 +63,6 @@ i18n.addLoadUrl = function (path, ns) {
           mergePath(publicPath, filepath),
           "utf8"
         );
-        console.log(mergePath(publicPath, filepath));
         const data = JSON.parse(fileContent);
         this.addResourceBundle(lng, ns as string, data, true, true);
       } catch (err) {

@@ -53,6 +53,6 @@ declare global {
   }
 }
 i18n.addLoadUrl(
-  "/locales/components/common/planType",
+  "/components/common/planType",
   "inputs:planType"
 );
