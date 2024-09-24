@@ -150,7 +150,7 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
-export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
 
   const currentDate = new Date();
@@ -170,6 +170,10 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const lastMonths = await getLastMonthDays(6);
   const users = await getLastUsers();
   const lastTransactions = await getPayments({ limit: 5 });
+  ctx.res.setHeader(
+    "Cache-Control",
+    `public,  s-maxage=${60 * 60}, stale-while-revalidate=${60 * 60 * 2}`
+  );
   return {
     props: {
       earnings: {
@@ -186,7 +190,6 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
         months: MakeItSerializable(lastMonths),
       },
       users,
-    },
-    revalidate: 10,
+    }
   };
 };

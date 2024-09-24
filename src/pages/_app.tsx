@@ -93,24 +93,6 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   const appProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
     : {};
-  if (!ctx.req) {
-    return {
-      ...appProps,
-      translations: Object.fromEntries(
-        await Promise.all(
-          langs.map(async (lng) => {
-            await i18n.loadR(lng);
-            const translations = ((i18n.options.ns as string[]) || []).map(
-              (key) => {
-                return [key, i18n.getResourceBundle(lng, key)];
-              }
-            );
-            return [lng, translations];
-          })
-        )
-      ),
-    };
-  }
   await i18n.loadR(langFromCookie);
   const translations = ((i18n.options.ns as string[]) || []).map((key) => {
     return [key, i18n.getResourceBundle(langFromCookie, key)];
