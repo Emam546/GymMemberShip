@@ -13,7 +13,9 @@ files:
   - .next/**/*
   - public/**/*
 extraFiles:
-  - from: "./locales"
+  - from: "production.env"
+    to: "./production.env"
+  - from: "locales"
     to: "./locales"
     filter:
       - "**/*"
