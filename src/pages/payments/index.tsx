@@ -93,7 +93,13 @@ export default function Page() {
         <div className="tw-flex tw-justify-between">
           <CardTitle>{t("Payments")}</CardTitle>
           <div>
-            <PrintUserPayments query={filter} />
+            <PrintUserPayments
+              query={{
+                ...filter,
+                startAt: filter.startAt.getTime(),
+                endAt: filter.endAt.getTime(),
+              }}
+            />
           </div>
         </div>
         <div className="tw-my-4">
@@ -180,4 +186,3 @@ export default function Page() {
     </div>
   );
 }
-
