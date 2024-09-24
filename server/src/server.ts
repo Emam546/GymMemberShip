@@ -10,7 +10,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import { NodeEnvs } from "@serv/declarations/enums";
 import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
-
+import path from "path";
 // **** Init express **** //
 
 const app = express();
@@ -32,7 +32,9 @@ if (EnvVars.nodeEnv === NodeEnvs.Production) {
   app.use(helmet());
 }
 // **** Add API routes **** //
-
+const folderToHost = "./locales";
+// Use express.static middleware to serve the folder
+app.use("/locales", express.static(folderToHost));
 // Add APIs
 app.use("/api", baseRoute);
 

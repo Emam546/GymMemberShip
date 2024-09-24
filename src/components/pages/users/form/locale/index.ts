@@ -13,4 +13,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/users/form", "form:user");
+i18n.addLoadUrl("/components/users/form", "form:user");

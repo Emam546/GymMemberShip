@@ -16,4 +16,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/plans/form", "form:add:plan");
+i18n.addLoadUrl("/components/plans/form", "form:add:plan");

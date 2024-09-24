@@ -44,7 +44,7 @@ export interface Props {
 }
 
 function CreatorNavBar() {
-  const { t } = useTranslation("sideBar")
+  const { t } = useTranslation("sideBar");
   return (
     <>
       <HeaderNav title={t("creator.label")} />
@@ -103,23 +103,21 @@ export default function SideBar({ onClose: onToggle }: Props) {
   );
 }
 
-
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "sideBar": {
-        "creator": {
-          "label": "Creator",
+      sideBar: {
+        creator: {
+          label: "Creator";
 
-          "/dashboard": "Dashboard",
-          "/plans": "Manage Plans",
-          "/users": "Manage Users",
-          "/users/add": "Add User",
-          "/payments": "Manage Payments"
-        }
-      }
+          "/dashboard": "Dashboard";
+          "/plans": "Manage Plans";
+          "/users": "Manage Users";
+          "/users/add": "Add User";
+          "/payments": "Manage Payments";
+        };
+      };
     }
   }
 }
-i18n.addLoadUrl("/locales/components/sidebar", "sideBar");
-
+i18n.addLoadUrl("/components/sidebar", "sideBar");

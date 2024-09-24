@@ -50,7 +50,7 @@ function mergePath(...paths: string[]): string {
   if (r.length) return `${a}/${mergePath(...r)}`;
   return a;
 }
-const publicPath = path.join(__dirname, "../../../public");
+const publicPath = "./locales";
 i18n.addLoadUrl = function (path, ns) {
   this.addLoadResource(async (lng) => {
     if (typeof this.getResourceBundle(lng, ns) != "undefined") return;
@@ -63,6 +63,7 @@ i18n.addLoadUrl = function (path, ns) {
           mergePath(publicPath, filepath),
           "utf8"
         );
+        console.log(mergePath(publicPath, filepath));
         const data = JSON.parse(fileContent);
         this.addResourceBundle(lng, ns as string, data, true, true);
       } catch (err) {
@@ -71,7 +72,7 @@ i18n.addLoadUrl = function (path, ns) {
       }
     } else {
       try {
-        const res = await axios.get(`/${filepath}`);
+        const res = await axios.get(`locales/${filepath}`);
         if (!res.data) return;
         this.addResourceBundle(lng, ns as string, res.data, true, true);
       } catch (error) {

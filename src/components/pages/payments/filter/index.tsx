@@ -18,13 +18,13 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "payments:filter": {
-        "Start at": "Start at",
-        "End At": "End at"
+        "Start at": "Start at";
+        "End At": "End at";
       };
     }
   }
 }
-i18n.addLoadUrl("/locales/components/payments/filter", "payments:filter");
+i18n.addLoadUrl("/components/payments/filter", "payments:filter");
 
 export type DefaultData = DataType;
 export default function PaymentsFilter({ onData, values }: Props) {
@@ -32,7 +32,7 @@ export default function PaymentsFilter({ onData, values }: Props) {
     defaultValues: values,
     values,
   });
-  const { t } = useTranslation("payments:filter")
+  const { t } = useTranslation("payments:filter");
   useDebounceEffect(
     () => {
       onData(getValues());

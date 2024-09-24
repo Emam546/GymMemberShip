@@ -30,13 +30,13 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "payment:form:update": {
-        "User": "User",
-        "Plan": "Plan",
-        "createdAt": {
-          "label": "Created At",
-          "paragraph": "This payment should be end at {{val}}"
-        }
-      }
+        User: "User";
+        Plan: "Plan";
+        createdAt: {
+          label: "Created At";
+          paragraph: "This payment should be end at {{val}}";
+        };
+      };
     }
   }
 }
@@ -57,10 +57,10 @@ export default function PaymentInfoForm({
   const planPrice = plan?.prices[paidType];
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-    planToDays(payment.plan) * 1000 * 24 * 60 * 60
+      planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
-  const { t: t1 } = useTranslation("payment:form:update")
-  const { t: t2 } = useTranslation("payment:add")
+  const { t: t1 } = useTranslation("payment:form:update");
+  const { t: t2 } = useTranslation("payment:add");
   return (
     <>
       <form
@@ -134,10 +134,10 @@ export default function PaymentInfoForm({
             {planPrice && (
               <p className="tw-mb-0">
                 {t2("paid.paragraph", {
-                  val: `${numberOfDays * planPrice.num
-                    }${planPrice.type.toLocaleUpperCase()}`
+                  val: `${
+                    numberOfDays * planPrice.num
+                  }${planPrice.type.toLocaleUpperCase()}`,
                 })}
-
               </p>
             )}
           </div>
@@ -166,6 +166,5 @@ export default function PaymentInfoForm({
     </>
   );
 }
-i18n.addLoadUrl("/locales/components/payments/info", "payment:form:update")
-i18n.addLoadUrl("/locales/components/users/addPayment", "payment:add")
-
+i18n.addLoadUrl("/components/payments/info", "payment:form:update");
+i18n.addLoadUrl("/components/users/addPayment", "payment:add");

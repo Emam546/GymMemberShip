@@ -11,4 +11,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/pages/payments", "/payments");
+i18n.addLoadUrl("/pages/payments", "/payments");

@@ -20,14 +20,14 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "plan:info": {
-        "There is no plans so far please add some plans": "There is no plans so far please add some plans",
-        "model": {
-          "title": "Delete Level",
-          "desc": "Once you click delete, The Level and associated data will be permanently deleted and cannot be restored.",
-          "accept": "Delete {{name} Plan",
-          "deny": "Keep"
-        }
-      }
+        "There is no plans so far please add some plans": "There is no plans so far please add some plans";
+        model: {
+          title: "Delete Level";
+          desc: "Once you click delete, The Level and associated data will be permanently deleted and cannot be restored.";
+          accept: "Delete {{name} Plan";
+          deny: "Keep";
+        };
+      };
     }
   }
 }
@@ -37,7 +37,7 @@ export interface Props {
 }
 export default function PlansInfoGetter({ plans: initPlans }: Props) {
   const [curDel, setCurDel] = useState<T>();
-  const { t } = useTranslation("plan:info")
+  const { t } = useTranslation("plan:info");
   const [plans, setLevels] = useState(initPlans);
   const mutate = useMutation({
     async mutationFn(id: string) {
@@ -84,4 +84,4 @@ export default function PlansInfoGetter({ plans: initPlans }: Props) {
     </>
   );
 }
-i18n.addLoadUrl("/locales/components/plans/info", "plan:info")
+i18n.addLoadUrl("/components/plans/info", "plan:info");

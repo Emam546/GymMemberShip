@@ -8,4 +8,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/users/filter", "filter:users");
+i18n.addLoadUrl("/components/users/filter", "filter:users");

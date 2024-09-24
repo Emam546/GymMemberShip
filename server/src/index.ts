@@ -42,4 +42,3 @@ connect(EnvVars.mongo.url).then(() => {
   process.on("SIGINT", shutDown);
 });
 
-server.on("close", () => console.log("Express server closed."));

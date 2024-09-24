@@ -109,4 +109,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/header", "header");
+i18n.addLoadUrl("/components/header", "header");

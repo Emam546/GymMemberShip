@@ -13,10 +13,10 @@ files:
   - .next/**/*
   - public/**/*
 extraFiles:
-  - from: "./"
-    to: "."
+  - from: "./locales"
+    to: "./locales"
     filter:
-      - "production.env"
+      - "**/*"
 icon: build\icon.ico
 linux:
   category: Utility

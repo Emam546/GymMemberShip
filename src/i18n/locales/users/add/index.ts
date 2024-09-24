@@ -10,4 +10,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/pages/users/add", "/users/add");
+i18n.addLoadUrl("/pages/users/add", "/users/add");

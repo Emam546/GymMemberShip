@@ -18,4 +18,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/common", "translation");
+i18n.addLoadUrl("/common", "translation");

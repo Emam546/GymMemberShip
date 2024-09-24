@@ -26,4 +26,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/users/table", "table:users");
+i18n.addLoadUrl("/components/users/table", "table:users");

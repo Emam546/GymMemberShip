@@ -28,21 +28,21 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "payment:add": {
-        "Choose Course": "Choose Course",
-        "payment": {
-          "endAt": "This payment should be end at {{val}}"
-        },
-        "paid": {
-          "label": "The amount paid",
-          "required": {
-            "currency": "Please select a currency",
-            "num": "Please set the course price or set it to 0"
-          },
-          "paragraph": "The amount to be paid is {{val}}",
-          "placeholder": "eg.120"
-        },
-        "separated": "separated"
-      }
+        "Choose Course": "Choose Course";
+        payment: {
+          endAt: "This payment should be end at {{val}}";
+        };
+        paid: {
+          label: "The amount paid";
+          required: {
+            currency: "Please select a currency";
+            num: "Please set the course price or set it to 0";
+          };
+          paragraph: "The amount to be paid is {{val}}";
+          placeholder: "eg.120";
+        };
+        separated: "separated";
+      };
     }
   }
 }
@@ -52,7 +52,7 @@ export default function AddUserPayment({ plans, onData }: Props) {
   const paidType = watch("plan.type");
   const numberOfDays = watch("plan.num");
   const planId = watch("planId");
-  const { t } = useTranslation("payment:add")
+  const { t } = useTranslation("payment:add");
   const plan = plans.find((val) => val._id == planId);
   const planPrice = plan?.prices[paidType];
   useEffect(() => {
@@ -92,16 +92,16 @@ export default function AddUserPayment({ plans, onData }: Props) {
                 val: formateDate(
                   new Date(
                     new Date().getTime() +
-                    planToDays({
-                      type: paidType,
-                      num: numberOfDays,
-                    }) *
-                    1000 *
-                    24 *
-                    60 *
-                    60
+                      planToDays({
+                        type: paidType,
+                        num: numberOfDays,
+                      }) *
+                        1000 *
+                        24 *
+                        60 *
+                        60
                   )
-                )
+                ),
               })}
             </p>
           )}
@@ -132,8 +132,9 @@ export default function AddUserPayment({ plans, onData }: Props) {
           {planPrice && (
             <p className="tw-mb-0">
               {t("paid.paragraph", {
-                val: `${numberOfDays * planPrice.num
-                  }${planPrice.type.toLocaleUpperCase()}`
+                val: `${
+                  numberOfDays * planPrice.num
+                }${planPrice.type.toLocaleUpperCase()}`,
               })}
             </p>
           )}
@@ -148,9 +149,11 @@ export default function AddUserPayment({ plans, onData }: Props) {
         </div>
       </Grid2>
       <div className="tw-flex tw-justify-end tw-items-end tw-mt-5">
-        <PrimaryButton type="submit">{t("buttons.activate", { ns: "translation" })}</PrimaryButton>
+        <PrimaryButton type="submit">
+          {t("buttons.activate", { ns: "translation" })}
+        </PrimaryButton>
       </div>
     </form>
   );
 }
-i18n.addLoadUrl("/locales/components/users/addPayment", "payment:add")
+i18n.addLoadUrl("/components/users/addPayment", "payment:add");

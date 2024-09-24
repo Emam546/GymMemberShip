@@ -39,7 +39,7 @@ function Shower({
   plan,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation("logs:table")
+  const { t } = useTranslation("logs:table");
   return (
     <>
       <tr>
@@ -144,7 +144,7 @@ export function LogInfoGenerator({
   onDelete,
 }: PaymentProps) {
   const pageNum = Math.ceil(totalCount / logs.length);
-  const { t } = useTranslation("logs:table")
+  const { t } = useTranslation("logs:table");
   return (
     <div>
       {totalCount > 0 && (
@@ -212,25 +212,26 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "logs:table": {
-        "th": {
-          "Id": "Id",
-          "User": "User",
-          "paymentLink": "paymentLink",
-          "Logged At": "Logged At",
-          "Delete": "Delete",
-          "Plan": "Plan"
-        },
-        "td": {
-          "deleted": "Deleted",
-          "model": {
-            "title": "Block User",
-            "desc": "Once you click Block, The payment will be deleted from his history",
-            "accept": "Delete Payment",
-            "deny": "Keep"
-          }
-        }, "paragraph": "There is no Logs so far"
-      }
+        th: {
+          Id: "Id";
+          User: "User";
+          paymentLink: "paymentLink";
+          "Logged At": "Logged At";
+          Delete: "Delete";
+          Plan: "Plan";
+        };
+        td: {
+          deleted: "Deleted";
+          model: {
+            title: "Block User";
+            desc: "Once you click Block, The payment will be deleted from his history";
+            accept: "Delete Payment";
+            deny: "Keep";
+          };
+        };
+        paragraph: "There is no Logs so far";
+      };
     }
   }
 }
-i18n.addLoadUrl("/locales/components/logs/table", "logs:table");
+i18n.addLoadUrl("/components/logs/table", "logs:table");

@@ -151,7 +151,7 @@ function Shower({
   const [open, setOpen] = useState(false);
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-    planToDays(payment.plan) * 1000 * 24 * 60 * 60
+      planToDays(payment.plan) * 1000 * 24 * 60 * 60
   );
   const { t } = useTranslation("table:payments");
   return (
@@ -382,5 +382,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/payments/table", "table:payments");
-
+i18n.addLoadUrl("/components/payments/table", "table:payments");

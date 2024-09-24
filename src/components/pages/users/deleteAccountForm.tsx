@@ -11,22 +11,22 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "users:deleteForm": {
-        "paragraph": "Once you delete your account, it cannot be undone, This is permanent.",
-        "Delete Account": "Delete Account",
-        "model": {
-          "accept": "Delete",
-          "title": "Are you sure you want to delete the account?",
-          "desc": "Once you click delete, the account and associated data  will be permanently deleted and cannot be restored. Alternatively if you keep your free account, the next time you want to edit or update your data you won't have to start from scratch.",
-          "deny": "Keep The Account"
-        }
-      }
+        paragraph: "Once you delete your account, it cannot be undone, This is permanent.";
+        "Delete Account": "Delete Account";
+        model: {
+          accept: "Delete";
+          title: "Are you sure you want to delete the account?";
+          desc: "Once you click delete, the account and associated data  will be permanently deleted and cannot be restored. Alternatively if you keep your free account, the next time you want to edit or update your data you won't have to start from scratch.";
+          deny: "Keep The Account";
+        };
+      };
     }
   }
 }
 export default function DeleteAccountForm({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { t } = useTranslation("users:deleteForm")
+  const { t } = useTranslation("users:deleteForm");
   const deleteAccountMutate = useMutation({
     mutationFn: async () => {
       await requester.delete(`/api/admin/users/${id}`);
@@ -34,15 +34,13 @@ export default function DeleteAccountForm({ id }: { id: string }) {
       alert("document deleted successfully");
       await router.push("/users");
     },
-    onSuccess() { },
+    onSuccess() {},
   });
 
   return (
     <div>
       <div className="tw-flex tw-justify-between">
-        <p className="tw-text-neutral-500 tw-text-base">
-          {t("paragraph")}
-        </p>
+        <p className="tw-text-neutral-500 tw-text-base">{t("paragraph")}</p>
         <DangerButton type="button" onClick={() => setOpen(true)}>
           {t("Delete Account")}
         </DangerButton>
@@ -67,4 +65,4 @@ export default function DeleteAccountForm({ id }: { id: string }) {
     </div>
   );
 }
-i18n.addLoadUrl("/locales/components/users/deleteForm", "users:deleteForm")
+i18n.addLoadUrl("/components/users/deleteForm", "users:deleteForm");

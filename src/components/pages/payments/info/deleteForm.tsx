@@ -12,15 +12,15 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "payments:deleteForm": {
-        "paragraph": "Once you delete the payment, it cannot be undone. This is permanent.",
-        "delete.button": "Delete Payment",
-        "model": {
-          "accept": "Delete",
-          "title": "Are you sure you want to delete the payment?",
-          "desc": "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.",
-          "deny": "Keep The Payment"
-        }
-      }
+        paragraph: "Once you delete the payment, it cannot be undone. This is permanent.";
+        "delete.button": "Delete Payment";
+        model: {
+          accept: "Delete";
+          title: "Are you sure you want to delete the payment?";
+          desc: "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.";
+          deny: "Keep The Payment";
+        };
+      };
     }
   }
 }
@@ -31,7 +31,7 @@ export default function DeletePaymentForm({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { t } = useTranslation("payments:deleteForm")
+  const { t } = useTranslation("payments:deleteForm");
   const deleteAccountMutate = useMutation({
     mutationFn: async () => {
       await requester.delete(`/api/admin/payments/${payment._id}`);
@@ -39,15 +39,13 @@ export default function DeletePaymentForm({
       alert(t("messages.added", { ns: "translation" }));
       await router.push(`/users/${payment._id}`);
     },
-    onSuccess() { },
+    onSuccess() {},
   });
 
   return (
     <div>
       <div className="tw-flex tw-justify-between">
-        <p className="tw-text-neutral-500 tw-text-base">
-          {t("paragraph")}
-        </p>
+        <p className="tw-text-neutral-500 tw-text-base">{t("paragraph")}</p>
         <DangerButton type="button" onClick={() => setOpen(true)}>
           {t("delete.button")}
         </DangerButton>
@@ -72,4 +70,4 @@ export default function DeletePaymentForm({
     </div>
   );
 }
-i18n.addLoadUrl("/locales/components/payments/deleteForm", "payments:deleteForm")
+i18n.addLoadUrl("/components/payments/deleteForm", "payments:deleteForm");

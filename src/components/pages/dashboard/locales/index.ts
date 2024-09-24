@@ -12,4 +12,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/locales/components/dashboard", "dashboard");
+i18n.addLoadUrl("/components/dashboard", "dashboard");
