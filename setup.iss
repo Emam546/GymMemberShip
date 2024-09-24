@@ -3,8 +3,8 @@
 #define MyAppName "GymMemberShip"
 #define MyAppVersion "1.1.3"
 #define MyAppPublisher "Imam Ashour"
-#define MyAppURL "https://github.com/Emam546/youtube-downloader"
-#define MyAppExeName "youtube-downloader.exe"
+#define MyAppURL "https://github.com/Emam546/GymMemberShip"
+#define MyAppExeName "gym-membership.exe"
 #define MyAppAssocName MyAppName + " setup"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
