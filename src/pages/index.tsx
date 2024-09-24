@@ -150,7 +150,7 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
 
   const currentDate = new Date();
@@ -187,5 +187,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
       },
       users,
     },
+    revalidate: 10,
   };
 };

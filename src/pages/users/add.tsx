@@ -43,8 +43,4 @@ export default function Page() {
     </>
   );
 }
-export const getServerSideProps = () => {
-  return {
-    props: {},
-  };
-};
+
