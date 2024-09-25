@@ -19,6 +19,10 @@ extraFiles:
     to: "./locales"
     filter:
       - "**/*"
+  - from: "./screenshots"
+    to: "./screenshots"
+    filter:
+      - "**/*"
 icon: build\icon.ico
 linux:
   category: Utility
