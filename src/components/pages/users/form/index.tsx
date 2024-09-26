@@ -63,7 +63,7 @@ export default function UserInfoForm({
       <Grid2 className="tw-mt-3">
         <MainInput
           id={"age-input"}
-          title={t("Phone")}
+          title={t("Age")}
           {...register("age", {
             valueAsNumber: true,
           })}
