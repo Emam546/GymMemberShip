@@ -65,7 +65,7 @@ const App = function ({ Component, pageProps, translations }: AppG) {
 
   return (
     <Provider>
-      <ConnectedBar />
+      {/* <ConnectedBar /> */}
       <LoadingBar />
       {Component.getLayout ? (
         Component.getLayout(<Component {...pageProps} />)
