@@ -10,11 +10,11 @@ const expressPath = app.isPackaged
   ? path.join(app.getAppPath(), "out/server/index.js")
   : "./out/server/index.js";
 const utf16Decoder = new TextDecoder("UTF-8");
-const command = `${expressPath} --env=${getEnv()}`;
+const command = [expressPath, `--env=${getEnv()}`];
 
 export function RunServer() {
   return new Promise<ChildProcessWithoutNullStreams>((res, rej) => {
-    const expressAppProcess = spawn(`${appName}`, command.split(" "), {
+    const expressAppProcess = spawn(`${appName}`, command, {
       env: {
         ELECTRON_RUN_AS_NODE: "1",
         dir: app.isPackaged ? app.getAppPath() : "./",
