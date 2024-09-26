@@ -7,7 +7,7 @@ export default async function connect(url: string, autoIndex = false) {
   if (cached) return cached;
   cached = await mongoose.connect(url, {
     minPoolSize: 10, // Can now run 10 operations at a time
-    autoIndex: EnvVars.nodeEnv !== NodeEnvs.Production || autoIndex,
+    autoIndex: true,
     dbName,
   });
   return cached;
