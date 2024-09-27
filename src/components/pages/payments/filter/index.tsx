@@ -64,6 +64,7 @@ export default function TimeStartEndSelector({ onData, values }: Props) {
             onChange={(val) => {
               setValue("endAt", val);
             }}
+            minDate={dayjs(new Date(getValues("startAt")))}
           />
         </WrapElem>
       </Grid2>

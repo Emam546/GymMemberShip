@@ -52,7 +52,10 @@ export default function Page({ doc }: Props) {
         </MainCard>
       </BigCard>
       <div className="py-3">
-        <GoToButton label={t("Go To Users Logs")} href={`/plans/${doc._id}/logs`} />
+        <GoToButton
+          label={t("Go To Users Logs")}
+          href={`/plans/${doc._id}/logs`}
+        />
         <GoToButton label={t("Go To Plans")} href="/plans" />
       </div>
     </div>

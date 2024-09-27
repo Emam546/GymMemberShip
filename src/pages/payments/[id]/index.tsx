@@ -1,4 +1,4 @@
-import "@locales/payments/[id]"
+import "@src/i18n/locales/payments/[id]"
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
 import { useState } from "react";

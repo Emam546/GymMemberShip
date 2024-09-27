@@ -9,6 +9,14 @@ import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import queryClient from "@src/queryClient";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import { useTranslation } from "react-i18next";
+import EnvVars from "@serv/declarations/major/EnvVars";
+import { getUser } from "@serv/routes/admin/users/[id]";
+import { MakeItSerializable } from "@src/utils";
+import connect from "@serv/db/connect";
+import { GetServerSideProps } from "next";
+interface Props {
+  doc: DataBase.WithId<DataBase.Models.User>;
+}
 const perLoad = 20;
 type Page = {
   page: number;
@@ -22,7 +30,7 @@ interface InfiniteQueryData {
   pages: Page[];
   pageParams: unknown[];
 }
-export default function Page() {
+export default function Page({ doc }: Props) {
   const router = useRouter();
   const { t } = useTranslation("/users/[id]/logs");
   const { id } = router.query;
@@ -79,7 +87,7 @@ export default function Page() {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>{t("title")}</title>
+        <title>{t("title", { name: doc.name })}</title>
       </Head>
       <BigCard>
         <MainCard className="p-4 tw-mt-3">
@@ -117,3 +125,18 @@ export default function Page() {
     </div>
   );
 }
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  await connect(EnvVars.mongo.url);
+  try {
+    const user = await getUser(ctx.params!.id as string);
+    return {
+      props: {
+        doc: MakeItSerializable({ ...user.toJSON(), _id: user._id.toString() }),
+      },
+    };
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
+};
