@@ -27,10 +27,7 @@ export default function Page({ plans: levels }: Props) {
         </MainCard>
       </BigCard>
       <div className="tw-py-3">
-        <AddButton
-          label={t("Add Plan")}
-          href="/plans/add"
-        />
+        <AddButton label={t("Add Plan")} href="/plans/add" />
       </div>
     </div>
   );

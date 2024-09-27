@@ -7,7 +7,7 @@ import {
 import "./locales";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGetMonth } from "@src/hooks";
+import { useFormateDate } from "@src/hooks";
 export interface YearsAndMonthEarningsProps {
   yearsEarnings: DataBase.Queries.Payments.Profit[];
   monthEarnings: DataBase.Queries.Payments.Profit[];
@@ -176,7 +176,7 @@ export interface SalesOverViewProps {
 }
 
 export function SalesOverView({ months }: SalesOverViewProps) {
-  const getMonthName = useGetMonth();
+  const getMonthName = useFormateDate({ month: "long" });
   months = months
     .map((val) => ({
       data: val.data,

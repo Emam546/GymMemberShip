@@ -100,7 +100,7 @@ export default function Page() {
     return {
       _id: {
         day: day.getDate(),
-        month: day.getMonth(),
+        month: day.getMonth() + 1,
         year: day.getFullYear(),
         currency: "EGP",
       },
@@ -143,9 +143,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div
-                dir="ltr"
-              >
+              <div dir="ltr">
                 <LineChart
                   loading={QueryCount.isLoading}
                   height={300}

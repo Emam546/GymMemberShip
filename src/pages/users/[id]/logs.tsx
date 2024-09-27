@@ -11,11 +11,15 @@ import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import { useTranslation } from "react-i18next";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getUser } from "@serv/routes/admin/users/[id]";
-import { MakeItSerializable } from "@src/utils";
+import { getDaysArray, getMonthsArray, MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
+import { getLogsCount } from "@serv/routes/admin/log";
+import { LineChart } from "@mui/x-charts";
+import { useFormateDate } from "@src/hooks";
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
+  logs: DataBase.Queries.Logs.LogsCount[];
 }
 const perLoad = 20;
 type Page = {
@@ -30,8 +34,12 @@ interface InfiniteQueryData {
   pages: Page[];
   pageParams: unknown[];
 }
-export default function Page({ doc }: Props) {
+
+export default function Page({ doc, logs: logsCount }: Props) {
+  const curDate = new Date();
+  const startAt = new Date(curDate.getFullYear(), curDate.getMonth() - 8, 0);
   const router = useRouter();
+  const getMonthName = useFormateDate({ month: "short" });
   const { t } = useTranslation("/users/[id]/logs");
   const { id } = router.query;
   const mutate = useMutation({
@@ -84,6 +92,26 @@ export default function Page({ doc }: Props) {
     QueryInfinity.data?.pages
       .map((page) => page.data)
       .reduce((acc, cur) => [...acc, ...cur], []) || [];
+  const data = getDaysArray(
+    startAt,
+    curDate
+  ).map<DataBase.Queries.Logs.LogsCount>((day) => {
+    const res = logsCount.find(
+      (val) =>
+        val._id.month == day.getMonth() + 1 &&
+        val._id.year == day.getFullYear() &&
+        val._id.day == day.getDate()
+    );
+    if (res) return res;
+    return {
+      _id: {
+        month: day.getMonth() + 1,
+        year: day.getFullYear(),
+        day: day.getDate(),
+      },
+      count: 0,
+    };
+  });
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -96,6 +124,46 @@ export default function Page({ doc }: Props) {
             error={QueryInfinity.error}
           />
           <CardTitle>{t("User Logs")}</CardTitle>
+          <div dir="ltr">
+            <LineChart
+              height={300}
+              series={[
+                {
+                  data: data.map((val) => val.count) || [],
+                  label: "Logs",
+                  area: true,
+                  type: "line",
+                  color: "#49BEFF",
+                  showMark: false,
+                  stack: "total",
+                },
+              ]}
+              slotProps={{ legend: { hidden: true } }}
+              yAxis={[
+                {
+                  min: 0,
+                  max: data.reduce(
+                    (acc, { count }) => (acc > count ? acc : count),
+                    10
+                  ),
+                },
+              ]}
+              xAxis={[
+                {
+                  scaleType: "point",
+                  data: data,
+                  valueFormatter({ _id }: DataBase.Queries.Logs.LogsCount) {
+                    const date = new Date();
+                    date.setMonth((_id.month || 0) - 1);
+                    return `${getMonthName(date)} ${_id.day}`;
+                  },
+                  tickInterval(value: DataBase.Queries.Logs.LogsCount) {
+                    return value._id.day == 1;
+                  },
+                },
+              ]}
+            />
+          </div>
           <div>
             <LogInfoGenerator
               page={0}
@@ -127,14 +195,35 @@ export default function Page({ doc }: Props) {
 }
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
+  const curDate = new Date();
+  const startAt = new Date(curDate.getFullYear(), curDate.getMonth() - 8, 0);
   try {
     const user = await getUser(ctx.params!.id as string);
+    const logsCount = await getLogsCount(
+      {
+        startAt: startAt.getTime().toString(),
+        endAt: curDate.getTime().toString(),
+        month: true,
+        year: true,
+        day: true,
+      },
+      {
+        userId: user._id,
+      },
+      {
+        userId: 1,
+        createdAt: -1,
+      }
+    );
+
     return {
       props: {
         doc: MakeItSerializable({ ...user.toJSON(), _id: user._id.toString() }),
+        logs: logsCount,
       },
     };
-  } catch {
+  } catch (err) {
+    console.error("Error", err);
     return {
       notFound: true,
     };

@@ -175,8 +175,8 @@ export function useLoadingPromiseQuery<T, Error = unknown>(
   });
   return [query.data || null, query.isLoading, query.error] as any;
 }
-export function useGetMonth() {
+export function useFormateDate(props: Intl.DateTimeFormatOptions) {
   const { i18n } = useTranslation();
   return (date: Date) =>
-    new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
+    new Intl.DateTimeFormat(i18n.language, props).format(date);
 }

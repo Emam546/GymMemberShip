@@ -24,7 +24,7 @@ declare global {
         model: {
           title: "Delete Level";
           desc: "Once you click delete, The Level and associated data will be permanently deleted and cannot be restored.";
-          accept: "Delete {{name} Plan";
+          accept: "Delete {{name}} Plan";
           deny: "Keep";
         };
       };

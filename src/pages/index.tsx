@@ -129,7 +129,7 @@ async function getLastMonthDays(last: number) {
           return {
             _id: {
               day: day.getDate(),
-              month: day.getMonth(),
+              month: day.getMonth() + 1,
               currency: "EGP",
             },
             profit: 0,
@@ -162,7 +162,7 @@ async function getLastMonthProfit() {
     return {
       _id: {
         day: day.getDate(),
-        month: day.getMonth(),
+        month: day.getMonth() + 1,
         currency: "EGP",
       },
       paymentCount: 0,

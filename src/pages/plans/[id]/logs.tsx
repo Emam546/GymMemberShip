@@ -103,7 +103,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
     return {
       _id: {
         day: day.getDate(),
-        month: day.getMonth(),
+        month: day.getMonth() + 1,
         year: day.getFullYear(),
         currency: "EGP",
       },

@@ -54,12 +54,19 @@ export function objectValues<T extends object>(val: T): Array<T[keyof T]> {
 }
 export function getDaysArray(start: Date, end: Date) {
   const arr = [];
-  const dt = new Date(start);
-
+  let dt = new Date(start);
   while (dt <= end) {
     arr.push(new Date(dt));
-    dt.setDate(dt.getDate() + 1);
+    dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 1);
   }
-
+  return arr;
+}
+export function getMonthsArray(start: Date, end: Date) {
+  const arr = [];
+  const dt = new Date(start);
+  while (dt <= end) {
+    arr.push(new Date(dt));
+    dt.setMonth(dt.getMonth() + 1);
+  }
   return arr;
 }

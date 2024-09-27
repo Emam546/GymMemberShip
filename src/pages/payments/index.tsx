@@ -97,7 +97,7 @@ export default function Page() {
     return {
       _id: {
         day: day.getDate(),
-        month: day.getMonth(),
+        month: day.getMonth() + 1,
         year: day.getFullYear(),
         currency: "EGP",
       },

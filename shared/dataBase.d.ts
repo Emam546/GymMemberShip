@@ -73,7 +73,7 @@ declare global {
             year?: number;
             day?: number;
             month?: number;
-            currency: string;
+
           };
           count:number;
         }
