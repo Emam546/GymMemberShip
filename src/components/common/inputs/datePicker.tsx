@@ -63,7 +63,11 @@ function CustomField(props: ButtonFieldProps) {
     </div>
   );
 }
-export default function DatePicker({ value, onChange, ...props }: Props) {
+export default function DatePicker({
+  value,
+  onChange,
+  ...props
+}: Props) {
   const [open, setOpen] = useState(false);
   return (
     <OrgDatePicker

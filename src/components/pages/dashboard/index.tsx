@@ -2,34 +2,18 @@ import {
   MonthlyEarnings,
   YearlyBreakUp,
   SalesOverView as SalesOverViewChart,
-} from "@src/components/pages/dashboard/charts";
+  Percent,
+} from "@src/components/common/charts";
 import "./locales";
-import { ComponentProps, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import i18n from "@src/i18n";
+import { useGetMonth } from "@src/hooks";
 export interface YearsAndMonthEarningsProps {
   yearsEarnings: DataBase.Queries.Payments.Profit[];
   monthEarnings: DataBase.Queries.Payments.Profit[];
   lastMonthEarning?: DataBase.Queries.Payments.Profit;
 }
-interface PercentProps extends ComponentProps<"p"> {
-  increasing: number;
-}
-export function Percent({ increasing, ...props }: PercentProps) {
-  return (
-    <div className="pb-1 d-flex align-items-center">
-      <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-        {increasing > 0 ? (
-          <i className="ti ti-arrow-up-left text-success" />
-        ) : (
-          <i className="ti ti-arrow-down-right text-danger" />
-        )}
-      </span>
-      <p className="mb-0 text-dark me-1 fs-3">+{increasing}%</p>
-      <p className="mb-0 fs-3" {...props} />
-    </div>
-  );
-}
+
 export function YearsAndMonthEarnings({
   yearsEarnings,
   monthEarnings,
@@ -65,7 +49,9 @@ export function YearsAndMonthEarnings({
               </h5>
               <div className="row align-items-center">
                 <div className="col-8">
-                  <h4 className="mb-3 fw-semibold">${currentYear?.profit || 0}</h4>
+                  <h4 className="mb-3 fw-semibold">
+                    ${currentYear?.profit || 0}
+                  </h4>
                   <Percent increasing={yearIncreasing}>
                     {t("last year")}
                   </Percent>
@@ -171,7 +157,10 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
                     <span className="flex-shrink-0 timeline-badge-border d-block" />
                   </div>
                   <div className="timeline-desc fs-3 text-dark mt-n1">
-                    {t("transactions.receivePayment", { name: val.userId.name, price: `${val.paid.num}${val.paid.type}` })}
+                    {t("transactions.receivePayment", {
+                      name: val.userId.name,
+                      price: `${val.paid.num}${val.paid.type}`,
+                    })}
                   </div>
                 </li>
               );
@@ -185,11 +174,7 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
 export interface SalesOverViewProps {
   months: { date: Date; data: DataBase.Queries.Payments.Profit[] }[];
 }
-function useGetMonth() {
-  const { i18n } = useTranslation();
-  return (date: Date) =>
-    new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
-}
+
 export function SalesOverView({ months }: SalesOverViewProps) {
   const getMonthName = useGetMonth();
   months = months
@@ -231,6 +216,7 @@ export function SalesOverView({ months }: SalesOverViewProps) {
             </div>
           </div>
           <SalesOverViewChart
+            valueFormatter={(val: number | null) => `${val}EGP`}
             data={
               months
                 .find((val) => val.date.getMonth() == curMonth)

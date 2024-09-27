@@ -2,7 +2,7 @@
     "th": {
         "Id": "Id",
         "User": "User",
-        "paymentLink": "paymentLink",
+        "paymentLink": "Payment Link",
         "Logged At": "Logged At",
         "Delete": "Delete",
         "Plan": "Plan"

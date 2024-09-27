@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import User from "./users";
 import Plans from "./plans";
 import Payment from "./payments";
@@ -27,6 +27,7 @@ const schema = new mongoose.Schema<DataBase.Models.Logs>(
   },
   { minimize: false }
 );
+schema.index({ createdAt: -1 });
 schema.index({ userId: 1, createdAt: -1 });
 schema.index({ planId: 1, createdAt: -1 });
 schema.index({ paymentId: 1, createdAt: -1 });

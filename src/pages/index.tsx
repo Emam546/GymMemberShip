@@ -19,8 +19,9 @@ import UsersTable, {
 import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
-import { MakeItSerializable } from "@src/utils";
+import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import { month } from "is";
 
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
@@ -94,17 +95,7 @@ export async function getLastUsers() {
     })
   );
 }
-function getDaysArray(start: Date, end: Date) {
-  const arr = [];
-  const dt = new Date(start);
 
-  while (dt <= end) {
-    arr.push(new Date(dt));
-    dt.setDate(dt.getDate() + 1);
-  }
-
-  return arr;
-}
 async function getLastMonthDays(last: number) {
   const currentDate = new Date();
   const LastMonthEarnings = await Promise.all(
@@ -150,25 +141,52 @@ async function getLastMonthDays(last: number) {
   );
   return LastMonthEarnings;
 }
+async function getLastMonthProfit() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+
+  const monthEarnings = await getPaymentsProfit({
+    startAt: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
+    day: true,
+    month: true,
+  });
+  const data = getDaysArray(
+    new Date(year, currentDate.getMonth() - 1, 1),
+    currentDate
+  ).map((day) => {
+    const res = monthEarnings?.find(
+      (val) =>
+        val._id.day == day.getDate() && val._id.month == day.getMonth() + 1
+    );
+    if (res) return res;
+    return {
+      _id: {
+        day: day.getDate(),
+        month: day.getMonth(),
+        currency: "EGP",
+      },
+      paymentCount: 0,
+      profit: 0,
+    };
+  });
+  return data;
+}
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
-
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const yearsEarnings = await getPaymentsProfit({
     startAt: new Date(year - 3, 0, 1).getTime().toString(),
     year: true,
   });
-  const monthEarnings = await getPaymentsProfit({
-    startAt: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
-    day: true,
-  });
+
   const LastMonthEarnings = await getPaymentsProfit({
     startAt: new Date(year, currentDate.getMonth() - 2, 1).getTime().toString(),
     endAt: new Date(year, currentDate.getMonth() - 1, 1).getTime().toString(),
   });
   const lastMonths = await getLastMonthDays(6);
   const users = await getLastUsers();
+  const monthEarnings = await getLastMonthProfit();
   const lastTransactions = await getPayments({ limit: 5 });
   ctx.res.setHeader(
     "Cache-Control",
@@ -190,6 +208,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
         months: MakeItSerializable(lastMonths),
       },
       users,
-    }
+    },
   };
 };

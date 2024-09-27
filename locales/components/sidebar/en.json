@@ -5,6 +5,7 @@
         "/plans": "Manage Plans",
         "/users": "Manage Users",
         "/users/add": "Add User",
-        "/payments": "Manage Payments"
+        "/payments": "Manage Payments",
+        "/logs": "Manage Logs"
     }
 }

@@ -52,3 +52,14 @@ export function objectKeys<T extends object>(val: T): Array<keyof T> {
 export function objectValues<T extends object>(val: T): Array<T[keyof T]> {
   return Object.values(val) as Array<T[keyof T]>;
 }
+export function getDaysArray(start: Date, end: Date) {
+  const arr = [];
+  const dt = new Date(start);
+
+  while (dt <= end) {
+    arr.push(new Date(dt));
+    dt.setDate(dt.getDate() + 1);
+  }
+
+  return arr;
+}

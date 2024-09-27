@@ -67,6 +67,17 @@ declare global {
           paymentCount: number;
         }
       }
+      namespace Logs {
+        interface LogsCount {
+          _id: {
+            year?: number;
+            day?: number;
+            month?: number;
+            currency: string;
+          };
+          count:number;
+        }
+      }
     }
   }
 }

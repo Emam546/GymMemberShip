@@ -1,4 +1,4 @@
-import "@locales/payments";
+import "@locales/logs";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -9,22 +9,24 @@ import TimeStartEndSelector, {
   DataType,
 } from "@src/components/pages/payments/filter";
 import { useState } from "react";
-import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
-import PrintUserPayments from "@src/components/pages/payments/print";
-import { MonthlyEarnings } from "@src/components/common/charts";
 import { useTranslation } from "react-i18next";
+import { LogInfoGenerator } from "@src/components/pages/logs/table";
+import PrintLogs from "@src/components/pages/logs/print";
+import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
 import { getDaysArray } from "@src/utils";
-import { LineChart } from "@mui/x-charts";
-
 const perLoad = 20;
-type Payment = DataBase.Populate<
+type LogDoc = DataBase.Populate<
   DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Payments>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
+    DataBase.Populate<
+      DataBase.WithId<DataBase.Models.Logs>,
+      "userId",
+      DataBase.WithId<DataBase.Models.User>
+    >,
+    "planId",
+    DataBase.WithId<DataBase.Models.Plans>
   >,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+  "paymentId",
+  DataBase.WithId<DataBase.Models.Payments>
 >;
 export default function Page() {
   const curDate = new Date();
@@ -36,11 +38,12 @@ export default function Page() {
     ),
     endAt: curDate,
   });
+  const diffTime = filter.endAt.getTime() - filter.startAt.getTime();
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "infinity", filter],
+    queryKey: ["logs", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
-      const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
-        `/api/admin/payments`,
+      const users = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
+        `/api/admin/logs`,
         {
           params: {
             ...filter,
@@ -59,12 +62,13 @@ export default function Page() {
       return undefined;
     },
   });
-  const QueryProfit = useQuery({
-    queryKey: ["payments", "total", filter],
+  const yearEnabled = diffTime > 1000 * 60 * 60 * 24 * 300;
+  const QueryCount = useQuery({
+    queryKey: ["logs", "total", filter],
     queryFn: async ({ signal }) => {
       const users = await requester.get<
-        Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
-      >(`/api/admin/payments/profit`, {
+        Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount[]>
+      >(`/api/admin/logs/logCount`, {
         params: {
           ...filter,
           day: true,
@@ -78,16 +82,15 @@ export default function Page() {
       return users.data.data;
     },
   });
-  const { t } = useTranslation("/payments");
-  const totalPrice =
-    QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
+  const { t } = useTranslation("/logs");
   const totalCount =
-    QueryProfit.data?.reduce((acc, val) => acc + val.paymentCount, 0) || 0;
-  const payments = QueryInfinity.data?.pages
+    QueryCount.data?.reduce((acc, val) => acc + val.count, 0) || 0;
+  const logs = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
+  //   const enableChart = filter.endAt - filter.startAt;
   const data = getDaysArray(filter.startAt, filter.endAt).map((day) => {
-    const res = QueryProfit.data?.find(
+    const res = QueryCount.data?.find(
       (val) =>
         val._id.day == day.getDate() &&
         val._id.month == day.getMonth() + 1 &&
@@ -101,13 +104,9 @@ export default function Page() {
         year: day.getFullYear(),
         currency: "EGP",
       },
-      profit: 0,
-      paymentCount: 0,
+      count: 0,
     };
   });
-  const diffTime = filter.endAt.getTime() - filter.startAt.getTime();
-  const yearEnabled = diffTime > 1000 * 60 * 60 * 24 * 300;
-
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -115,9 +114,9 @@ export default function Page() {
       </Head>
       <BigCard>
         <div className="tw-flex tw-justify-between">
-          <CardTitle>{t("Payments")}</CardTitle>
+          <CardTitle>{t("Logs")}</CardTitle>
           <div>
-            <PrintUserPayments
+            <PrintLogs
               query={{
                 ...filter,
                 startAt: filter.startAt.getTime(),
@@ -137,33 +136,22 @@ export default function Page() {
                   <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
                     <div>
                       <h5 className="card-title mb-9 fw-semibold">
-                        {t("Earnings")}
-                      </h5>
-                      <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
-                    </div>
-                    <div>
-                      <h5 className="card-title mb-9 fw-semibold">
                         {t("Total Count")}
                       </h5>
                       <h4 className="mb-3 fw-semibold">{totalCount}</h4>
                     </div>
                   </div>
-                  <div>
-                    <div className="d-flex justify-content-end">
-                      <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
-                        <i className="ti ti-currency-dollar fs-6" />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
-              <div dir="ltr">
+              <div
+                dir="ltr"
+              >
                 <LineChart
-                  loading={QueryProfit.isLoading}
+                  loading={QueryCount.isLoading}
                   height={300}
                   series={[
                     {
-                      data: data.map((val) => val.profit) || [],
+                      data: data.map((val) => val.count) || [],
                       label: "Logs",
                       area: true,
                       type: "line",
@@ -177,7 +165,7 @@ export default function Page() {
                     {
                       min: 0,
                       max: data.reduce(
-                        (acc, { profit }) => (acc > profit ? acc : profit),
+                        (acc, { count }) => (acc > count ? acc : count),
                         10
                       ),
                     },
@@ -205,17 +193,18 @@ export default function Page() {
             error={QueryInfinity.error}
           />
           <div>
-            {payments && (
-              <PaymentInfoGenerator
+            {logs && (
+              <LogInfoGenerator
                 page={0}
                 setPage={() => {}}
-                totalCount={payments.length}
-                payments={payments.map((payment, i) => ({
+                totalCount={logs.length}
+                logs={logs.map((payment, i) => ({
                   order: i,
-                  payment: {
+                  log: {
                     ...payment,
                     userId: payment.userId._id,
                     planId: payment.planId._id,
+                    paymentId: payment.paymentId._id,
                   },
                   plan: payment.planId,
                   user: payment.userId,
@@ -224,11 +213,9 @@ export default function Page() {
                   "order",
                   "user",
                   "plan",
-                  "paid",
-                  "link",
+                  "paymentLink",
                   "createdAt",
-                  "log",
-                  "endAt",
+                  "delete",
                 ]}
                 onDelete={() => {}}
               />

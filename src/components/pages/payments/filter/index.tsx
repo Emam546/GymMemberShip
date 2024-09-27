@@ -14,6 +14,7 @@ export interface Props {
 }
 import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 declare global {
   namespace I18ResourcesType {
     interface Resources {
@@ -27,7 +28,7 @@ declare global {
 i18n.addLoadUrl("/components/payments/filter", "payments:filter");
 
 export type DefaultData = DataType;
-export default function PaymentsFilter({ onData, values }: Props) {
+export default function TimeStartEndSelector({ onData, values }: Props) {
   const { handleSubmit, setValue, getValues, watch } = useForm<DataType>({
     defaultValues: values,
     values,
@@ -54,6 +55,7 @@ export default function PaymentsFilter({ onData, values }: Props) {
             onChange={(val) => {
               setValue("startAt", val);
             }}
+            maxDate={dayjs(new Date(getValues("endAt")))}
           />
         </WrapElem>
         <WrapElem label={t("End At")}>

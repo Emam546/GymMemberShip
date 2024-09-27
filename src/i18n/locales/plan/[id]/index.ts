@@ -6,6 +6,8 @@ declare global {
         "Update Plan Data": "Update Plan Data";
         Payments: "Payments";
         "Go To Plans": "Go To Plans";
+        "Go To Users Logs": "Go To User Logs";
+        "Go To Plan Payments": "Go To Plan Payments";
       };
     }
   }

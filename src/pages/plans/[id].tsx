@@ -14,7 +14,7 @@ import PaymentInfoGenerator from "@src/components/pages/plans/payments/table";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  doc: DataBase.WithIdOrg<DataBase.Models.Plans>;
+  doc: DataBase.WithId<DataBase.Models.Plans>;
 }
 export default function Page({ doc }: Props) {
   const { t } = useTranslation("/plan/[id]");
@@ -33,7 +33,7 @@ export default function Page({ doc }: Props) {
               prices: doc.prices,
             }}
             onData={async (data) => {
-              await requester.post(`/api/admin/plans/${doc.id}`, data);
+              await requester.post(`/api/admin/plans/${doc._id}`, data);
               alert(t("messages.updated", { ns: "translation" }));
             }}
             buttonName={t("buttons.update", { ns: "translation" })}
@@ -41,17 +41,18 @@ export default function Page({ doc }: Props) {
         </MainCard>
         <div className="tw-flex tw-items-center tw-justify-between">
           <CardTitle>{t("Payments")}</CardTitle>
-          <PrintPlanPayments id={doc.id} />
+          <PrintPlanPayments id={doc._id} />
         </div>
         <MainCard>
           <PaymentInfoGenerator
-            id={doc.id}
+            id={doc._id}
             perPage={20}
             headKeys={["createdAt", "delete", "paid", "user", "log", "link"]}
           />
         </MainCard>
       </BigCard>
       <div className="py-3">
+        <GoToButton label={t("Go To Users Logs")} href={`/plans/${doc._id}/logs`} />
         <GoToButton label={t("Go To Plans")} href="/plans" />
       </div>
     </div>
@@ -64,8 +65,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     return {
       props: {
         doc: MakeItSerializable({
-          id: plan._id.toString(),
           ...plan.toJSON(),
+          _id: plan._id.toString(),
         }),
       },
     };

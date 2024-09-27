@@ -63,6 +63,9 @@ function CreatorNavBar() {
       <LinkElem href="/payments" title={t("creator./payments")}>
         <i className="ti ti-credit-card"></i>
       </LinkElem>
+      <LinkElem href="/logs" title={t("creator./logs")}>
+        <i className="ti ti-login"></i>
+      </LinkElem>
     </>
   );
 }
@@ -109,12 +112,12 @@ declare global {
       sideBar: {
         creator: {
           label: "Creator";
-
           "/dashboard": "Dashboard";
           "/plans": "Manage Plans";
           "/users": "Manage Users";
           "/users/add": "Add User";
           "/payments": "Manage Payments";
+          "/logs": "Manage Logs";
         };
       };
     }

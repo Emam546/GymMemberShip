@@ -1,8 +1,6 @@
-import { MakeItSerializable, uuid } from "@src/utils";
-import { odd } from "is";
 import dynamic from "next/dynamic";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useEffect, useMemo, useState } from "react";
+import { ComponentProps } from "react";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface Chart {
   date: Date;
@@ -13,21 +11,29 @@ interface SalesOverViewProps {
     label: string;
     num: number;
   }[];
+  valueFormatter: (val: number | null) => string;
 }
-export function SalesOverView({ data }: SalesOverViewProps) {
+export function SalesOverView({ data, valueFormatter }: SalesOverViewProps) {
   return (
     <div dir="ltr">
       <BarChart
-        skipAnimation
         dataset={data}
         xAxis={[{ scaleType: "band", dataKey: "label" }]}
-        yAxis={[{ tickPlacement: "start" }]}
+        yAxis={[
+          {
+            tickPlacement: "start",
+            min: 0,
+            max: data.reduce((acc, { num }) => (acc > num ? acc : num), 10),
+          },
+        ]}
         series={[
           {
             dataKey: "num",
-            valueFormatter: (val: number | null) => `${val}EGP`,
+            label: "Profit",
+            valueFormatter,
           },
         ]}
+        slotProps={{ legend: { hidden: true } }}
         height={400}
       />
     </div>
@@ -153,5 +159,26 @@ export function MonthlyEarnings({
       type="area"
       height={height || 60}
     />
+  );
+}
+interface PercentProps extends ComponentProps<"p"> {
+  increasing: number;
+}
+export function Percent({ increasing, ...props }: PercentProps) {
+  return (
+    <div className="pb-1 d-flex align-items-center">
+      <p className="mb-0 text-dark me-1 fs-3">
+        {" "}
+        <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+          {increasing > 0 ? (
+            <i className="ti ti-arrow-up-left text-success" />
+          ) : (
+            <i className="ti ti-arrow-down-right text-danger" />
+          )}
+        </span>
+        +{increasing}%
+      </p>
+      <p className="mb-0 fs-3" {...props} />
+    </div>
   );
 }
