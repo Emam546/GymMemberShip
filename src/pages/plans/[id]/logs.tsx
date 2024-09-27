@@ -205,10 +205,8 @@ const Page: NextPage<Props> = function Page({ doc }) {
                   log: {
                     ...payment,
                     userId: payment.userId._id,
-                    planId: payment.planId._id,
                     paymentId: payment.paymentId._id,
                   },
-                  plan: payment.planId,
                   user: payment.userId,
                 }))}
                 headKeys={[
