@@ -1,13 +1,12 @@
 import "./ipc";
 import {
-  BrowserWindow,
   BrowserWindowConstructorOptions,
   shell,
 } from "electron";
 import path from "path";
 import { convertFunc } from "@app/main/utils/convert";
 
-import { isDev, isProd } from "@app/main/utils";
+import { isDev } from "@app/main/utils";
 import { Context } from "@src/types/api";
 import { MainWindow } from "./window";
 import EnvVars from "@app/main/declarations/major/EnvVars";
@@ -36,7 +35,7 @@ export const createMainWindow = async (
       Object.assign(state, getCurrentPosition());
     }
   };
-  const win = new BrowserWindow({
+  const win = new MainWindow({
     ...options,
     ...state,
     icon: "build/icon.ico",
