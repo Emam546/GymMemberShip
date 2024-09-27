@@ -11,8 +11,7 @@ import TimeStartEndSelector, {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
-import PrintLogs from "@src/components/pages/logs/print";
-import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
+import { LineChart } from "@mui/x-charts/LineChart";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getPlan } from "@serv/routes/admin/plans/[id]";
@@ -86,7 +85,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
       return users.data.data;
     },
   });
-  const { t } = useTranslation("/plans/[id]/logs");
+  const { t,i18n } = useTranslation("/plans/[id]/logs");
   const totalCount =
     QueryCount.data?.reduce((acc, val) => acc + val.count, 0) || 0;
   const logs = QueryInfinity.data?.pages
@@ -175,13 +174,18 @@ const Page: NextPage<Props> = function Page({ doc }) {
                   xAxis={[
                     {
                       scaleType: "point",
-                      data:
-                        data.map(
-                          ({ _id }) =>
-                            `${_id.day}:${_id.month} ${
-                              yearEnabled ? _id.year : ""
-                            }`
-                        ) || [],
+                      data: data,
+                      valueFormatter(
+                        { _id }: DataBase.Queries.Logs.LogsCount,
+                        context
+                      ) {
+                        const date = new Date(_id.year!, _id.month!, _id.day!);
+                        return `${date.toLocaleDateString(i18n.language, {
+                          day: "2-digit",
+                          month: "short",
+                          year: yearEnabled ? "numeric" : undefined,
+                        })}`;
+                      },
                     },
                   ]}
                 />

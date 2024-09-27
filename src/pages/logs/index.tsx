@@ -82,7 +82,7 @@ export default function Page() {
       return users.data.data;
     },
   });
-  const { t } = useTranslation("/logs");
+  const { t, i18n } = useTranslation("/logs");
   const totalCount =
     QueryCount.data?.reduce((acc, val) => acc + val.count, 0) || 0;
   const logs = QueryInfinity.data?.pages
@@ -171,13 +171,18 @@ export default function Page() {
                   xAxis={[
                     {
                       scaleType: "point",
-                      data:
-                        data.map(
-                          ({ _id }) =>
-                            `${_id.day}:${_id.month} ${
-                              yearEnabled ? _id.year : ""
-                            }`
-                        ) || [],
+                      data: data,
+                      valueFormatter(
+                        { _id }: DataBase.Queries.Logs.LogsCount,
+                        context
+                      ) {
+                        const date = new Date(_id.year!, _id.month!, _id.day!);
+                        return `${date.toLocaleDateString(i18n.language, {
+                          day: "2-digit",
+                          month: "short",
+                          year: yearEnabled ? "numeric" : undefined,
+                        })}`;
+                      },
                     },
                   ]}
                 />
