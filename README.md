@@ -2,6 +2,9 @@
 ![Screenshot](screenshots/1.png)
 ![Screenshot](screenshots/2.png)
 ![Screenshot](screenshots/3.png)
+
+## Live Demo
+You can access the live demo [here](https://radalata.onrender.com)
 ## Overview
 
 The Gym Membership Admin App is a powerful and versatile desktop application designed to simplify the management of gym businesses. Built with cutting-edge technologies such as Electron, Next.js, Express.js, and TypeScript, the app provides gym owners and administrators with an all-in-one solution to manage members, monitor fitness progress, handle payments, and organize membership plans.
