@@ -5,7 +5,13 @@ import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 import { planToDays } from "@src/utils/payment";
 
-export default function PrintPlanPayments({ id }: { id: string }) {
+export default function PrintPlanPayments({
+  id,
+  query,
+}: {
+  id: string;
+  query?: unknown;
+}) {
   return (
     <PrintButton
       fn={async () => {
@@ -22,7 +28,7 @@ export default function PrintPlanPayments({ id }: { id: string }) {
               >
             >[]
           >
-        >(`/api/admin/plans/${id}/payments`);
+        >(`/api/admin/plans/${id}/payments`, { params: query });
         const plan = res.data.data;
 
         const body = await Promise.all(

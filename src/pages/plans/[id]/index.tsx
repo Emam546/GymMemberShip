@@ -56,6 +56,10 @@ export default function Page({ doc }: Props) {
           label={t("Go To Users Logs")}
           href={`/plans/${doc._id}/logs`}
         />
+        <GoToButton
+          label={t("Go To Plan Payments")}
+          href={`/plans/${doc._id}/payments`}
+        />
         <GoToButton label={t("Go To Plans")} href="/plans" />
       </div>
     </div>

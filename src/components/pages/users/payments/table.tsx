@@ -97,10 +97,10 @@ export default function FullPaymentInfoGenerator({
   const queryNum = useQuery({
     queryKey: ["payments", "users", id, "count"],
     queryFn: async () => {
-      const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/users/${id}/payments/count`
-      );
-      return request.data.data;
+      const request = await requester.get<
+        Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
+      >(`/api/admin/users/${id}/payments/profit`);
+      return request.data.data[0].paymentCount;
     },
   });
   if (query.isLoading || queryNum.isLoading) return null;

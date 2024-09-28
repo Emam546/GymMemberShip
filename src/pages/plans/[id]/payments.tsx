@@ -1,4 +1,4 @@
-import "@locales/payments";
+import "@locales/plan/[id]/payments";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -12,9 +12,13 @@ import { useState } from "react";
 import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
 import PrintUserPayments from "@src/components/pages/payments/print";
 import { useTranslation } from "react-i18next";
-import { getDaysArray } from "@src/utils";
+import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { LineChart } from "@mui/x-charts";
-
+import EnvVars from "@serv/declarations/major/EnvVars";
+import { GetServerSideProps } from "next";
+import connect from "@serv/db/connect";
+import { getPlan } from "@serv/routes/admin/plans/[id]";
+import PrintPlanPayments from "@src/components/pages/plans/payments/print";
 const perLoad = 20;
 type Payment = DataBase.Populate<
   DataBase.Populate<
@@ -25,7 +29,7 @@ type Payment = DataBase.Populate<
   "planId",
   DataBase.WithId<DataBase.Models.Plans>
 >;
-export default function Page() {
+export default function Page({ doc }: Props) {
   const curDate = new Date();
   const [filter, setFilter] = useState<DataType>({
     startAt: new Date(
@@ -36,10 +40,10 @@ export default function Page() {
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "infinity", filter],
+    queryKey: ["payments", "plans", doc._id, "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
-        `/api/admin/payments`,
+        `/api/admin/plans/${doc._id}/payments`,
         {
           params: {
             ...filter,
@@ -59,11 +63,11 @@ export default function Page() {
     },
   });
   const QueryProfit = useQuery({
-    queryKey: ["payments", "total", filter],
+    queryKey: ["payments", "plans", doc._id, "total", filter],
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
-      >(`/api/admin/payments/profit`, {
+      >(`/api/admin/plans/${doc._id}/payments/profit`, {
         params: {
           ...filter,
           day: true,
@@ -77,7 +81,7 @@ export default function Page() {
       return users.data.data;
     },
   });
-  const { t, i18n } = useTranslation("/payments");
+  const { t, i18n } = useTranslation("/plans/[id]/payments");
   const totalPrice =
     QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
   const totalCount =
@@ -110,13 +114,14 @@ export default function Page() {
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>{t("title")}</title>
+        <title>{t("title", { name: doc.name })}</title>
       </Head>
       <BigCard>
         <div className="tw-flex tw-justify-between">
-          <CardTitle>{t("Payments")}</CardTitle>
+          <CardTitle>{t("Plan Payments")}</CardTitle>
           <div>
-            <PrintUserPayments
+            <PrintPlanPayments
+              id={doc._id}
               query={{
                 ...filter,
                 startAt: filter.startAt.getTime(),
@@ -249,3 +254,24 @@ export default function Page() {
     </div>
   );
 }
+interface Props {
+  doc: DataBase.WithId<DataBase.Models.Plans>;
+}
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  await connect(EnvVars.mongo.url);
+  try {
+    const plan = await getPlan(ctx.params!.id as string);
+    return {
+      props: {
+        doc: MakeItSerializable({
+          ...plan.toJSON(),
+          _id: plan._id.toString(),
+        }),
+      },
+    };
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
+};

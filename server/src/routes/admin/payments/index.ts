@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import "@serv/validator/database";
 import Payments from "@serv/models/payments";
@@ -42,12 +43,17 @@ const registerQuery = new Validator({
   limit: ["numeric"],
   ".": ["required"],
 });
-export async function getPayments(query: unknown) {
+export async function getPayments(
+  query: unknown,
+  match?: any,
+  hint: Record<string, unknown> = { createdAt: -1 },
+  populate: (keyof DataBase.Models.Logs)[] = ["planId", "userId"]
+) {
   const result = registerQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
   const { skip, limit, startAt, endAt } = result.data;
-  const matchQuery: Record<string, unknown> = {};
+  const matchQuery: Record<string, unknown> = { ...match };
   if (startAt || endAt) {
     matchQuery["createdAt"] = {
       $lte: parseInt(endAt as string) || Infinity,
@@ -55,12 +61,14 @@ export async function getPayments(query: unknown) {
     };
   }
 
-  const payments = await Payments.find(matchQuery)
-    .hint({ createdAt: -1 })
+  const queryMongo = Payments.find(matchQuery)
+    .hint(hint)
     .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity)
-    .populate("userId")
-    .populate("planId");
+    .limit(parseInt(limit as string) || Infinity);
+  const payments = await populate.reduce(
+    (query, val) => query.populate(val),
+    queryMongo
+  );
   return payments;
 }
 router.get("/", async (req, res) => {
@@ -74,7 +82,11 @@ const registerProfitQuery = new Validator({
   month: ["accepted"],
   day: ["accepted"],
 });
-export async function getPaymentsProfit(query: unknown) {
+export async function getPaymentsProfit(
+  query: unknown,
+  match?: any,
+  hint: Record<string, unknown> = { createdAt: -1 }
+) {
   const result = registerProfitQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalidData", result.errors);
@@ -83,7 +95,7 @@ export async function getPaymentsProfit(query: unknown) {
       $gte?: unknown;
       $lte?: unknown;
     };
-  } = {};
+  } = { ...match };
   const ID: Record<string, unknown> = {
     currency: "$paid.type",
   };
@@ -119,7 +131,7 @@ export async function getPaymentsProfit(query: unknown) {
         "_id.day": 1,
       },
     },
-  ]);
+  ]).hint(hint);
   return payments as DataBase.Queries.Payments.Profit[];
 }
 router.get("/profit", async (req, res) => {

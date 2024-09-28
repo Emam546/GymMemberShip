@@ -2,9 +2,9 @@ import { Router } from "express";
 import mongoose, { Document } from "mongoose";
 import Plans from "@serv/models/plans";
 import Validator from "validator-checker-js";
-import Payments from "@serv/models/payments";
 import { RouteError } from "@serv/declarations/classes";
 import logsRouter from "./logs";
+import paymentsRouter from "./payments";
 const router = Router();
 export async function getPlan(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
@@ -53,36 +53,7 @@ router.delete("/:id", async (req, res) => {
   const newPlan = await Plans.findByIdAndDelete(plan._id);
   res.status(200).sendSuccess(newPlan);
 });
-const registerQuery = new Validator({
-  skip: ["numeric"],
-  limit: ["numeric"],
-  ".": ["required"],
-});
-router.get("/:id/payments", async (req, res) => {
-  const result = registerQuery.passes(req.query);
-  if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
-  const { skip, limit } = result.data;
-  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
-  const payments = await Payments.find({ planId: plan._id })
-    .hint({
-      planId: 1,
-      createdAt: -1,
-    })
-    .populate("userId")
-    .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity);
 
-  res.status(200).sendSuccess(payments);
-});
-router.get("/:id/payments/count", async (req, res) => {
-  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
-  const count = await Payments.countDocuments({ planId: plan._id }).hint({
-    planId: 1,
-    createdAt: -1,
-  });
-
-  res.status(200).sendSuccess(count);
-});
 router.use("/:id", logsRouter);
+router.use("/:id", paymentsRouter);
 export default router;
