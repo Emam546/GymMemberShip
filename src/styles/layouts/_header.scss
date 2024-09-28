@@ -67,7 +67,7 @@
 }
 
 .nav-icon-hover {
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 
   &:hover {
     &::before {
@@ -80,7 +80,7 @@
       width: 2.5rem;
       z-index: -1;
       border-radius: 6.25rem;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
       background-color: $light-primary;
     }
   }
@@ -89,11 +89,9 @@
 .navbar-nav .dropdown-menu {
   position: absolute;
   min-width: 200px;
-
   .dropdown-item {
     border-radius: 8px;
   }
-
 }
 
 .notification {
@@ -114,6 +112,10 @@
         flex-direction: row;
       }
     }
+  }
+  :is([dir="rtl"] .navbar-nav .dropdown-menu) {
+    left: 0;
+    right: auto;
   }
 }
 
@@ -169,10 +171,11 @@
 }
 
 .dropdown-menu-animate-up {
-  -webkit-animation: animation-dropdown-menu-fade-in 0.5s ease 1, animation-dropdown-menu-move-up 0.5s ease-out 1;
-  animation: animation-dropdown-menu-fade-in 0.5s ease 1, animation-dropdown-menu-move-up 0.5s ease-out 1;
+  -webkit-animation: animation-dropdown-menu-fade-in 0.5s ease 1,
+    animation-dropdown-menu-move-up 0.5s ease-out 1;
+  animation: animation-dropdown-menu-fade-in 0.5s ease 1,
+    animation-dropdown-menu-move-up 0.5s ease-out 1;
 }
-
 
 @keyframes fadeInUp {
   from {

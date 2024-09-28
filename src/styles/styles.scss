@@ -1,9 +1,9 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap");
 
 @import "./variables/variables";
 
 // Import Bootstrap source files (Required file)
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 
 @import "./variables/theme-variables";
@@ -27,5 +27,3 @@
 
 // Pages style (Required file)
 @import "./pages/dashboard1";
-
-

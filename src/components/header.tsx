@@ -67,7 +67,7 @@ export default function Header({ OnOpen }: Props) {
                 </div>
               </span>
               <div
-                className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+                className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up tw-text-start"
                 aria-labelledby="drop2"
               >
                 <div className="message-body">
