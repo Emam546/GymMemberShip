@@ -55,7 +55,6 @@ export function YearlyBreakUp({
     chart: {
       width: 180,
       type: "donut",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
       foreColor: "#adb0bb",
     },
     plotOptions: {
@@ -96,12 +95,14 @@ export function YearlyBreakUp({
     },
   };
   return (
-    <Chart
-      options={chart}
-      series={chart.series}
-      type={chart.chart.type}
-      width={chart.chart.width}
-    />
+    <div dir="ltr">
+      <Chart
+        options={chart}
+        series={chart.series}
+        type={chart.chart.type}
+        width={chart.chart.width}
+      />
+    </div>
   );
 }
 export function MonthlyEarnings({
@@ -118,7 +119,6 @@ export function MonthlyEarnings({
         enabled: true,
       },
       group: "sparklines",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
       foreColor: "#adb0bb",
     },
     stroke: {
@@ -154,12 +154,14 @@ export function MonthlyEarnings({
   ];
 
   return (
-    <Chart
-      options={chartOptions}
-      series={series}
-      type="area"
-      height={height || 60}
-    />
+    <div dir="ltr">
+      <Chart
+        options={chartOptions}
+        series={series}
+        type="area"
+        height={height || 60}
+      />
+    </div>
   );
 }
 interface PercentProps extends ComponentProps<"p"> {
