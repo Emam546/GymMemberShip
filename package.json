@@ -1,6 +1,6 @@
 {
   "name": "gym-membership-admin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./out/main/index.js",
   "description": "An admin app for Gym business",
   "repository": "https://github.com/Emam546/GymMemberShip",
