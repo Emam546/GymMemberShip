@@ -1,7 +1,8 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import axios from "axios";
+import requester from "@src/utils/axios";
+
 export const langs = ["en", "ar"];
 import path from "path";
 i18n
@@ -13,7 +14,6 @@ i18n
     interpolation: {
       escapeValue: false, // React already does escaping
     },
-
     detection: {
       caches: ["cookie"],
       order: ["cookie"],
@@ -71,7 +71,7 @@ i18n.addLoadUrl = function (path, ns) {
       }
     } else {
       try {
-        const res = await axios.get(`locales/${filepath}`);
+        const res = await requester.get(`locales/${filepath}`);
         if (!res.data) return;
         this.addResourceBundle(lng, ns as string, res.data, true, true);
       } catch (error) {
