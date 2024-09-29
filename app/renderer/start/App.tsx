@@ -8,7 +8,9 @@ import image from "../../../build/icon.png";
 function App(): JSX.Element {
   const ref = useMergeRefs<ComponentRef<"div">>(
     useOnResizeObserve(() => {
-      window.api.send("center");
+      setTimeout(() => {
+        window.api.send("center");
+      });
     }, []),
     useFitWindow<ComponentRef<"div">>([], "width")
   );
