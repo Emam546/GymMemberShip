@@ -57,8 +57,8 @@ export default function AddUserPayment({ plans, onData }: Props) {
   const planPrice = plan?.prices[paidType];
   useEffect(() => {
     if (!planPrice) return;
-    setValue("paid.num", numberOfDays * planPrice.num);
-    setValue("paid.type", planPrice.type);
+    setValue("paid", numberOfDays * planPrice);
+    
   }, [paidType, planId, numberOfDays]);
   return (
     <form onSubmit={handleSubmit(onData)} autoComplete="off">
@@ -110,7 +110,7 @@ export default function AddUserPayment({ plans, onData }: Props) {
           <BudgetInput
             label={t("paid.label")}
             priceProps={{
-              ...register("paid.num", {
+              ...register("paid", {
                 required: t("paid.label"),
                 valueAsNumber: true,
                 min: 0,
@@ -118,23 +118,15 @@ export default function AddUserPayment({ plans, onData }: Props) {
               placeholder: t("paid.placeholder"),
               type: "number",
             }}
-            unitProps={{
-              ...register("paid.type", {
-                required: t("paid.required.currency"),
-                value: "EGP",
-              }),
-            }}
-            err={
-              (formState.errors.paid?.num ||
-                formState.errors.paid?.type) as FieldError
-            }
+            unitProps={{}}
+            err={formState.errors.paid}
           />
           {planPrice && (
             <p className="tw-mb-0">
               {t("paid.paragraph", {
                 val: `${
-                  numberOfDays * planPrice.num
-                }${planPrice.type.toLocaleUpperCase()}`,
+                  numberOfDays * planPrice
+                }EGP`,
               })}
             </p>
           )}

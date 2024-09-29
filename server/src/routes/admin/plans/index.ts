@@ -6,10 +6,7 @@ const router = Router();
 const registerValidator = new Validator({
   name: ["string"],
   prices: [
-    {
-      type: ["string", "required"],
-      num: ["integer", "required"],
-    },
+    ["integer"],
     "object",
     {
       ".": ["required"],
@@ -26,7 +23,7 @@ router.post("/", async (req, res) => {
     return res.status(400).SendFailed("invalid Data", result.errors);
   const plan = new Plans({
     ...result.data,
-  } as DataBase.Models.Plans);
+  });
   const SavedPlan = await plan.save();
   res.status(200).sendSuccess(SavedPlan);
 });

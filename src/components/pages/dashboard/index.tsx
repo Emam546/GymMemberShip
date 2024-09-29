@@ -159,7 +159,7 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
                   <div className="timeline-desc fs-3 text-dark mt-n1">
                     {t("transactions.receivePayment", {
                       name: val.userId.name,
-                      price: `${val.paid.num}${val.paid.type}`,
+                      price: `${val.paid}EGP`,
                     })}
                   </div>
                 </li>

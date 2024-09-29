@@ -22,13 +22,7 @@ router.get("/:id", (req, res) => {
 });
 const registerUpdate = new Validator({
   name: ["string"],
-  prices: [
-    {
-      type: ["string", "required"],
-      num: ["integer", "required"],
-    },
-    "object",
-  ],
+  prices: [["integer"], "object"],
   details: {
     desc: ["string"],
   },

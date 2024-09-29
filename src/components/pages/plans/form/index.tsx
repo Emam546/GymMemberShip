@@ -19,7 +19,7 @@ export interface Props {
   defaultData?: DefaultData;
   onData: (data: DataType) => Promise<any> | any;
   buttonName: React.ReactNode;
-} 
+}
 export type DefaultData = DataType;
 export default function PlanInfoForm({
   defaultData,
@@ -44,7 +44,7 @@ export default function PlanInfoForm({
         <BudgetInput
           label={t("Day Price")}
           priceProps={{
-            ...register("prices.day.num", {
+            ...register("prices.day", {
               required: "Please set the price or set it to 0",
               valueAsNumber: true,
               min: 0,
@@ -52,21 +52,13 @@ export default function PlanInfoForm({
             placeholder: "eg.120",
             type: "number",
           }}
-          unitProps={{
-            ...register("prices.day.type", {
-              required: "Please select a currency",
-              value: "EGP",
-            }),
-          }}
-          err={
-            (formState.errors.prices?.day?.num ||
-              formState.errors.prices?.day?.type) as FieldError
-          }
+          unitProps={{}}
+          err={formState.errors.prices?.day}
         />
         <BudgetInput
           label={t("Month Price")}
           priceProps={{
-            ...register("prices.month.num", {
+            ...register("prices.month", {
               required: t("errors.price"),
               valueAsNumber: true,
               min: 0,
@@ -74,22 +66,14 @@ export default function PlanInfoForm({
             placeholder: "eg.120",
             type: "number",
           }}
-          unitProps={{
-            ...register("prices.month.type", {
-              required: t("errors.currency"),
-              value: "EGP",
-            }),
-          }}
-          err={
-            (formState.errors.prices?.month?.num ||
-              formState.errors.prices?.month?.type) as FieldError
-          }
+          unitProps={{}}
+          err={formState.errors.prices?.month}
         />
 
         <BudgetInput
           label={t("Year Price")}
           priceProps={{
-            ...register("prices.year.num", {
+            ...register("prices.year", {
               required: t("errors.price"),
               valueAsNumber: true,
               min: 0,
@@ -97,16 +81,8 @@ export default function PlanInfoForm({
             placeholder: "eg.120",
             type: "number",
           }}
-          unitProps={{
-            ...register("prices.year.type", {
-              required: t("errors.currency"),
-              value: "EGP",
-            }),
-          }}
-          err={
-            (formState.errors.prices?.year?.num ||
-              formState.errors.prices?.year?.type) as FieldError
-          }
+          unitProps={{}}
+          err={formState.errors.prices?.year as FieldError}
         />
       </Grid2>
       <div className="tw-mt-4">

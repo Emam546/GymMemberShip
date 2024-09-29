@@ -12,11 +12,7 @@ const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
   userId: ["required", { existedId: { path: Users.modelName } }],
   separated: ["boolean", "required"],
-  paid: {
-    type: ["string", "required"],
-    num: ["integer", "required"],
-    ".": ["required"],
-  },
+  paid: ["integer", "required"],
   plan: {
     type: ["string", { in: ["day", "year", "month"] }, "required"],
     num: ["integer", "required"],
@@ -120,7 +116,7 @@ export async function getPaymentsProfit(
     {
       $group: {
         _id: ID,
-        profit: { $sum: "$paid.num" },
+        profit: { $sum: "$paid" },
         paymentCount: { $sum: 1 },
       },
     },

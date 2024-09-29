@@ -5,10 +5,7 @@ declare global {
     };
     type WithId<T> = T & { _id: string };
     type WithIdOrg<T> = T & { id: string };
-    interface Price {
-      num: number;
-      type: "EGP";
-    }
+    type Price = number;
     type PlansType = "day" | "year" | "month";
     namespace Models {
       interface User {
@@ -73,9 +70,8 @@ declare global {
             year?: number;
             day?: number;
             month?: number;
-
           };
-          count:number;
+          count: number;
         }
       }
     }

@@ -112,7 +112,7 @@ export default function PaymentInfoForm({
             <BudgetInput
               label={t2("paid.label")}
               priceProps={{
-                ...register("paid.num", {
+                ...register("paid", {
                   required: t2("paid.required.num"),
                   valueAsNumber: true,
                   min: 0,
@@ -120,23 +120,13 @@ export default function PaymentInfoForm({
                 placeholder: "eg.120",
                 type: "number",
               }}
-              unitProps={{
-                ...register("paid.type", {
-                  required: t2("paid.required.num"),
-                  value: "EGP",
-                }),
-              }}
-              err={
-                (formState.errors.paid?.num ||
-                  formState.errors.paid?.type) as FieldError
-              }
+              unitProps={{}}
+              err={formState.errors.paid}
             />
             {planPrice && (
               <p className="tw-mb-0">
                 {t2("paid.paragraph", {
-                  val: `${
-                    numberOfDays * planPrice.num
-                  }${planPrice.type.toLocaleUpperCase()}`,
+                  val: `${numberOfDays * planPrice}EGP`,
                 })}
               </p>
             )}

@@ -4,7 +4,7 @@ import Plans from "./plans";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
-    paid: { type: Object, required: true },
+    paid: { type: Number, required: true },
     separated: { type: Boolean, default: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

@@ -40,7 +40,7 @@ export default function PrintPlanPayments({
             return [
               (i + 1).toString(),
               doc.userId.name || "",
-              `${doc.paid.num} ${doc.paid.type}`,
+              `${doc.paid}EGP`,
               formateDate(new Date(doc.createdAt)),
               formateDate(new Date(endAt)),
             ];

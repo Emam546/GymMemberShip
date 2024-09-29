@@ -186,7 +186,7 @@ function Shower({
           </td>
         </E>
         <E val="paid" heads={headKeys}>
-          <td>{`${payment.paid.num} ${payment.paid.type}`}</td>
+          <td>{`${payment.paid}EGP`}</td>
         </E>
         <E val="createdAt" heads={headKeys}>
           <td>
