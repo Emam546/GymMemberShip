@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ComponentProps } from "react";
+import { useTranslation } from "react-i18next";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface Chart {
   date: Date;
@@ -165,20 +166,20 @@ interface PercentProps extends ComponentProps<"p"> {
   increasing: number;
 }
 export function Percent({ increasing, ...props }: PercentProps) {
+  const { t } = useTranslation("dashboard");
   return (
-    <div className="pb-1 d-flex align-items-center">
-      <p className="mb-0 text-dark me-1 fs-3">
-        {" "}
-        <span className="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
+    <div className="pb-1 tw-flex tw-items-center tw-gap-2">
+      <p className="tw-flex tw-items-center tw-gap-1">
+        <span className="rounded-circle bg-light-success round-20 tw-inline-flex align-items-center justify-content-center">
           {increasing > 0 ? (
             <i className="ti ti-arrow-up-left text-success" />
           ) : (
             <i className="ti ti-arrow-down-right text-danger" />
           )}
         </span>
-        +{increasing}%
+        <span>{t("percent.num", { val: increasing })}</span>
       </p>
-      <p className="mb-0 fs-3" {...props} />
+      <p {...props} />
     </div>
   );
 }

@@ -49,19 +49,19 @@ export function YearsAndMonthEarnings({
               </h5>
               <div className="row align-items-center">
                 <div className="col-8">
-                  <h4 className="mb-3 fw-semibold">
-                    ${currentYear?.profit || 0}
+                  <h4 className="mb-3 fw-semibold rtl:tw-text-end" dir="ltr">
+                    {currentYear?.profit || 0} EGP
                   </h4>
                   <Percent increasing={yearIncreasing}>
                     {t("last year")}
                   </Percent>
-                  <div className="d-flex align-items-center">
-                    <div className="me-4">
-                      <span className="round-8 bg-primary rounded-circle me-2 d-inline-block" />
+                  <div className="d-flex align-items-center tw-gap-4">
+                    <div>
+                      <span className="round-8 bg-primary rounded-circle ltr:tw-mr-2 rtl:tw-ml-2 d-inline-block" />
                       <span className="fs-2">{new Date().getFullYear()}</span>
                     </div>
                     <div>
-                      <span className="round-8 bg-light-primary rounded-circle me-2 d-inline-block" />
+                      <span className="round-8 bg-light-primary rounded-circle ltr:tw-mr-2 rtl:tw-ml-2 d-inline-block" />
                       <span className="fs-2">
                         {new Date().getFullYear() - 1}
                       </span>
@@ -91,7 +91,9 @@ export function YearsAndMonthEarnings({
                   <h5 className="card-title mb-9 fw-semibold">
                     {t("Monthly Earnings")}
                   </h5>
-                  <h4 className="mb-3 fw-semibold">${totalMonthEarnings}</h4>
+                  <h4 className="mb-3 fw-semibold rtl:tw-text-end" dir="ltr">
+                    {totalMonthEarnings} EGP
+                  </h4>
                   <Percent increasing={monthIncreasing}>
                     {t("last month")}
                   </Percent>

@@ -8,6 +8,9 @@ declare global {
         "last year": "last year";
         "Monthly Earnings": "Monthly Earnings";
         "last month": "last month";
+        percent: {
+          num: "{{val}}%";
+        };
       };
     }
   }

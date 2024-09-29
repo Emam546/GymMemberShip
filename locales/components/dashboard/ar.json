@@ -3,5 +3,8 @@
   "Yearly Breakup": "الأرباح السنويه",
   "last year": "العام الماضي",
   "Monthly Earnings": "الأرباح الشهرية",
-  "last month": "الشهر الماضي"
+  "last month": "الشهر الماضي",
+  "percent": {
+    "num": "%{{val}}"
+  }
 }

@@ -21,7 +21,6 @@ import Plans from "@serv/models/plans";
 import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
-import { month } from "is";
 
 export interface Props {
   earnings: YearsAndMonthEarningsProps;

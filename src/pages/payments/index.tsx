@@ -138,7 +138,12 @@ export default function Page() {
                       <h5 className="card-title mb-9 fw-semibold">
                         {t("Earnings")}
                       </h5>
-                      <h4 className="mb-3 fw-semibold">${totalPrice}</h4>
+                      <h4
+                        className="mb-3 fw-semibold rtl:tw-text-end"
+                        dir="ltr"
+                      >
+                        {totalPrice} EGP
+                      </h4>
                     </div>
                     <div>
                       <h5 className="card-title mb-9 fw-semibold">
