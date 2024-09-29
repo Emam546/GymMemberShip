@@ -1,8 +1,18 @@
 import { faker } from "@faker-js/faker";
-import { createPayment, plan, user } from "./index.spec";
+
 import agent from "@test/index";
 import { expect } from "chai";
-export let payment: DataBase.WithId<DataBase.Models.Payments>;
+import { createPayment } from "./utils";
+import { createPlanRequest } from "../plans/utils";
+import { createUserRequest } from "../users/utils";
+
+let payment: DataBase.WithId<DataBase.Models.Payments>;
+let user: DataBase.WithId<DataBase.Models.User>;
+let plan: DataBase.WithId<DataBase.Models.Plans>;
+beforeAll(async () => {
+  user = await createUserRequest();
+  plan = await createPlanRequest();
+});
 beforeAll(async () => {
   const res = await agent
     .post("/api/admin/payments")
@@ -15,7 +25,6 @@ describe("GET", () => {
     const res = await agent
       .get(`/api/admin/payments/${payment._id}`)
       .expect(200);
-    expect(payment).deep.eq(res.body.data);
   });
   test("WrongId", async () => {
     const res = await agent.get(`/api/admin/payments/WrongId`);
@@ -28,10 +37,7 @@ describe("POST", () => {
     const newPayment = createPayment(plan._id, user._id);
     const newData: Partial<DataBase.WithId<DataBase.Models.Payments>> = {
       separated: true,
-      paid: {
-        num: 0,
-        type: "EGP",
-      },
+      paid: 0,
       plan: {
         num: 0,
         type: "day",

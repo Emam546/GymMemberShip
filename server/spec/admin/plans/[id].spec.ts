@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { createPlanData } from "./index.spec";
 import agent from "@test/index";
 import { expect } from "chai";
+import { createPlanData } from "./utils";
 let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
   const res = await agent.post("/api/admin/plans").send(createPlanData());
@@ -21,13 +21,13 @@ describe("GET", () => {
 });
 describe("POST", () => {
   test("Success", async () => {
-    const newUser = createPlanData();
+    const newPlan = createPlanData();
     const res = await agent
       .post(`/api/admin/plans/${plan._id}`)
-      .send({ ...newUser });
+      .send({ ...newPlan });
 
     expect(res.statusCode).eq(200);
-    expect({ ...plan, ...newUser }).deep.eq(res.body.data);
+    expect({ ...plan, ...newPlan }).deep.eq(res.body.data);
   });
   test("WrongId", async () => {
     const newUser = createPlanData();

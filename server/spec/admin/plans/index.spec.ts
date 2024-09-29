@@ -1,40 +1,6 @@
 import agent from "@test/index";
-import { faker } from "@faker-js/faker";
 import { expect } from "chai";
-export function createPlanData(): Omit<
-  DataBase.Models.Plans,
-  "createdAt" | "createdBy"
-> {
-  return {
-    name: faker.person.fullName(),
-    prices: {
-      day: {
-        num: faker.number.int({ min: 10, max: 50 }),
-        type: "EGP",
-      },
-      month: {
-        num: faker.number.int({ min: 50, max: 300 }),
-        type: "EGP",
-      },
-      year: {
-        num: faker.number.int({ min: 50, max: 300 }),
-        type: "EGP",
-      },
-    },
-    details: {
-      desc: faker.lorem.text(),
-    },
-  };
-}
-export async function createPlanRequest(
-  data?: ReturnType<typeof createPlanData>
-): Promise<DataBase.WithId<DataBase.Models.Plans>> {
-  const res = await agent
-    .post("/api/admin/plans")
-    .send(data || createPlanData())
-    .expect(200);
-  return res.body.data;
-}
+import { createPlanData } from "./utils";
 describe("POST", () => {
   test("success", async () => {
     const plan = createPlanData();

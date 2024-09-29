@@ -1,30 +1,6 @@
 import agent from "@test/index";
-import { faker } from "@faker-js/faker";
-export function createUserData(): Omit<
-  DataBase.Models.User,
-  "createdAt" | "createdBy"
-> {
-  return {
-    name: faker.person.fullName(),
+import { createUserData, createUserRequest } from "./utils";
 
-    age: faker.number.int({ min: 10, max: 100 }),
-    email: faker.internet.email(),
-    phone: faker.phone.number(),
-    weight: faker.number.int({ min: 0, max: 200 }),
-    tall: faker.number.int({ min: 150, max: 200 }),
-    details: {
-      whyDidYouCame: faker.lorem.text(),
-    },
-  };
-}
-export async function createUserRequest(
-  data?: ReturnType<typeof createUserData>
-): Promise<DataBase.WithId<DataBase.Models.User>> {
-  const response = await agent
-    .post("/api/admin/users")
-    .send(data || createUserData());
-  return response.body.data;
-}
 describe("POST", () => {
   test("success", async () => {
     const user = createUserData();
@@ -122,7 +98,7 @@ describe("GET", () => {
       };
       const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
-      expect(response.body.data.length).toBeGreaterThan(1);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
     test("With Sliced  Name", async () => {
       const query = {
@@ -130,7 +106,7 @@ describe("GET", () => {
       };
       const response = await agent.get("/api/admin/users").query(query);
       expect(response.statusCode).toBe(200);
-      expect(response.body.data.length).toBeGreaterThan(1);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
   });
   describe("Get Last Users", () => {

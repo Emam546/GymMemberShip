@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { createUserData } from "./index.spec";
 import agent from "@test/index";
 import { expect } from "chai";
+import { createUserData } from "./utils";
 let user: DataBase.WithId<DataBase.Models.User>;
 beforeAll(async () => {
   const res = await agent.post("/api/admin/users").send(createUserData());

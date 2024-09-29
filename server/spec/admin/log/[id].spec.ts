@@ -1,10 +1,19 @@
 import { faker } from "@faker-js/faker";
-import { createLog } from "./index.spec";
-import { user, plan } from "../payments/index.spec";
-import { payment } from "../payments/[id].spec";
+import { createLog } from "./utils";
 import agent from "@test/index";
 import { expect } from "chai";
+import { createPaymentRequest } from "../payments/utils";
+import { createPlanRequest } from "../plans/utils";
+import { createUserRequest } from "../users/utils";
 let log: DataBase.WithId<DataBase.Models.Logs>;
+let user: DataBase.WithId<DataBase.Models.User>;
+let plan: DataBase.WithId<DataBase.Models.Plans>;
+let payment: DataBase.WithId<DataBase.Models.Payments>;
+beforeAll(async () => {
+  user = await createUserRequest();
+  plan = await createPlanRequest();
+  payment = await createPaymentRequest(plan._id, user._id);
+});
 beforeAll(async () => {
   const res = await agent
     .post("/api/admin/logs")

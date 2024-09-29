@@ -1,38 +1,12 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 import { expect } from "chai";
-import { createUserRequest } from "../users/index.spec";
-import { createPlanData, createPlanRequest } from "../plans/index.spec";
-export function createPayment(
-  planId: string,
-  userId: string
-): Omit<DataBase.Models.Payments, "createdAt" | "createdBy"> {
-  return {
-    separated: faker.datatype.boolean(),
-    paid: {
-      type: "EGP",
-      num: faker.number.int(100),
-    },
-    plan: {
-      type: (["day", "month", "year"] as Array<DataBase.PlansType>)[
-        faker.number.int(2)
-      ],
-      num: faker.number.int(100),
-    },
-    planId,
-    userId,
-  };
-}
-export async function createPaymentRequest(
-  planId: string,
-  userId: string
-): Promise<DataBase.WithId<DataBase.Models.Payments>> {
-  const payment = createPayment(planId, userId);
-  const res = await agent.post("/api/admin/payments").send(payment);
-  return res.body.data;
-}
-export let user: DataBase.WithId<DataBase.Models.User>;
-export let plan: DataBase.WithId<DataBase.Models.Plans>;
+import { createPayment, createPaymentRequest } from "./utils";
+import { createPlanRequest } from "../plans/utils";
+import { createUserRequest } from "../users/utils";
+
+let user: DataBase.WithId<DataBase.Models.User>;
+let plan: DataBase.WithId<DataBase.Models.Plans>;
 beforeAll(async () => {
   user = await createUserRequest();
   plan = await createPlanRequest();
@@ -193,9 +167,9 @@ describe("Plan method", () => {
     });
     test("Success", async () => {
       const res = await agent
-        .get(`/api/admin/plans/${plan._id}/payments/count`)
+        .get(`/api/admin/plans/${plan._id}/payments/profit`)
         .expect(200);
-      expect(res.body.data).eq(1);
+      expect(res.body.data[0].paymentCount).eq(1);
     });
   });
 
