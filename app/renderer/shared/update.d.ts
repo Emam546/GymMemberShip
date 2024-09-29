@@ -1,5 +1,10 @@
-import { ConnectionStatus } from "./progress";
 
+export type ConnectionStatus =
+  | "receiving"
+  | "pause"
+  | "connecting"
+  | "completed"
+  | "rebuilding";
 export interface Context {
   curSize: number;
   fileSize: number;

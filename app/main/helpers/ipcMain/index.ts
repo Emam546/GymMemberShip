@@ -43,6 +43,16 @@ export const OnMethods: OnMethodsType = {
     if (!window) return;
     window.setContentSize(window.getSize()[0], height);
   },
+  setContentWidth: function (event, width: number): void {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+    window.setContentSize(width, window.getSize()[1]);
+  },
+  center: function (event): void {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+    window.center();
+  },
   minimizeWindow: function (event): void {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;

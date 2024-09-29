@@ -19,9 +19,11 @@ export namespace ApiMain {
     setTitle(name: string): void;
     closeWindow(): void;
     setContentHeight(height: number): void;
+    setContentWidth(width: number): void;
     minimizeWindow(): void;
     hideWindow(): void;
     quitApp(): void;
+    center(): void;
     alert(message: string, title?: string): any;
   }
   interface OnceMethods {}

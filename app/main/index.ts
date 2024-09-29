@@ -6,8 +6,9 @@ import { app } from "electron";
 import { electronApp } from "@electron-toolkit/utils";
 import { lunchArgs } from "./helpers/launchHelpers";
 import path from "path";
-import { MainWindow } from "./lib/main/window";
-import { RunServer } from "./express";
+import { ExpressServer } from "./express";
+import { createStartWindow } from "./lib/start";
+const expressProcess = new ExpressServer();
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
     app.setAsDefaultProtocolClient("gymMemberShip", process.execPath, [
@@ -24,18 +25,6 @@ async function createWindow(args: string[]) {
   return await createMainWindow({}, data || {});
 }
 
-app.whenReady().then(async () => {
-  console.log("start server");
-  const expressProcess = await RunServer();
-  console.log("server started");
-  console.log("start app");
-  await createWindow(process.argv);
-  console.log("app started");
-  app.once("quit", () => {
-    console.log("server killed");
-    if (!expressProcess.killed) expressProcess.kill();
-  });
-});
 electronApp.setAppUserModelId("com.gymMemberShip");
 
 const gotSingleInstanceLock = app.requestSingleInstanceLock();
@@ -46,16 +35,19 @@ else
     //argv has the process.argv arguments of the second instance.
     if (!app.hasSingleInstanceLock()) return;
     createWindow(argv);
-    // if (MainWindow.Window) {
-    //   if (MainWindow.Window.isMinimized()) MainWindow.Window.restore();
-    //   MainWindow.Window.focus();
-    // } else createWindow(argv);
   });
-
 app.on("window-all-closed", () => {
   app.quit();
 });
-
+app.whenReady().then(async () => {
+  const win = await createStartWindow({ preloadData: {} });
+  const state = await expressProcess.runServer();
+  if (!state) return;
+  console.log("start app");
+  await createWindow(process.argv);
+  win.close();
+  console.log("app started");
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });

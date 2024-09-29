@@ -40,6 +40,7 @@ export default defineConfig({
       rollupOptions: {
         input: {
           update: resolve(__dirname, "app/renderer/update.html"),
+          start: resolve(__dirname, "app/renderer/start.html"),
         },
       },
     },
