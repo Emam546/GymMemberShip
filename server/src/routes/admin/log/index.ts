@@ -18,15 +18,14 @@ router.post("/", async (req, res) => {
   const result = await registerValidator.asyncPasses(req.body);
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
-
   const log = new Logs({
     ...result.data,
-    createdBy: { type: "Admin" },
+    adminId: req.user?._id,
+    createdBy: "Admin",
   } as DataBase.Models.Logs);
   const logSave = await log.save();
   res.status(200).sendSuccess(logSave);
 });
-
 const registerGetQuery = new Validator({
   startAt: ["numeric"],
   endAt: ["numeric"],
@@ -38,7 +37,12 @@ export async function getLogs(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 },
-  populate: (keyof DataBase.Models.Logs)[] = ["planId", "userId", "paymentId"]
+  populate: (keyof DataBase.Models.Logs)[] = [
+    "planId",
+    "userId",
+    "paymentId",
+    "adminId",
+  ]
 ) {
   const result = registerGetQuery.passes(query);
   if (!result.state)

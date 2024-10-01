@@ -4,8 +4,9 @@
 import mongoose from "mongoose";
 
 const schema = new mongoose.Schema<DataBase.Models.Admins>({
-  name: String,
-  password: String,
+  name: { type: String, required: true },
+  password: { type: String, required: true },
+  email: String,
   type: String,
 });
 export default ((mongoose.models && mongoose.models.admins) ||

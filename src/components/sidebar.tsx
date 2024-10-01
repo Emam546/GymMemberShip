@@ -5,6 +5,7 @@ import { ComponentProps } from "react";
 import { useTranslation } from "react-i18next";
 import SimpleBar from "simplebar-react";
 import i18n from "@src/i18n";
+import { IsAdminComp } from "./wrappers";
 interface HeaderNavProps {
   title: string;
 }
@@ -47,11 +48,11 @@ function ManageUsersNavBar() {
   const { t } = useTranslation("sideBar");
   return (
     <>
-      <HeaderNav title={t("creator.label")} />
-      <LinkElem href="/users" title={t("creator./users")}>
+      <HeaderNav title={t("assistant.label")} />
+      <LinkElem href="/users/search" title={t("assistant./users/search")}>
         <i className="ti ti-users"></i>
       </LinkElem>
-      <LinkElem href="/users/add" title={t("creator./users/add")}>
+      <LinkElem href="/users/add" title={t("assistant./users/add")}>
         <i className="ti ti-user-plus"></i>
       </LinkElem>
     </>
@@ -62,7 +63,7 @@ function ManageSystem() {
   return (
     <>
       <HeaderNav title={t("creator.label")} />
-      <LinkElem href="/" title={t("creator./dashboard")}>
+      <LinkElem href="/dashboard" title={t("creator./dashboard")}>
         <i className="ti ti-layout-dashboard" />
       </LinkElem>
       <LinkElem href="/plans" title={t("creator./plans")}>
@@ -73,6 +74,9 @@ function ManageSystem() {
       </LinkElem>
       <LinkElem href="/logs" title={t("creator./logs")}>
         <i className="ti ti-login"></i>
+      </LinkElem>
+      <LinkElem href="/admins" title={t("creator./admins")}>
+        <i className="ti ti-user-exclamation"></i>
       </LinkElem>
     </>
   );
@@ -102,7 +106,9 @@ export default function SideBar({ onClose: onToggle }: Props) {
           <nav className="sidebar-nav">
             <ul id="sidebarnav">
               <ManageUsersNavBar />
-              <ManageSystem />
+              <IsAdminComp>
+                <ManageSystem />
+              </IsAdminComp>
             </ul>
           </nav>
         </SimpleBar>
@@ -117,14 +123,19 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       sideBar: {
+        assistant: {
+          label: "login";
+          "/users/add": "Add User";
+          "/users/search": "Search for a User";
+        };
         creator: {
           label: "Creator";
           "/dashboard": "Dashboard";
           "/plans": "Manage Plans";
           "/users": "Manage Users";
-          "/users/add": "Add User";
           "/payments": "Manage Payments";
           "/logs": "Manage Logs";
+          "/admins": "Manage Admins";
         };
       };
     }

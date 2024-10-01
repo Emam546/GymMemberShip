@@ -5,7 +5,8 @@
         "paymentLink": "Payment Link",
         "Logged At": "Logged At",
         "Delete": "Delete",
-        "Plan": "Plan"
+        "Plan": "Plan",
+        "admin": "المنشي"
     },
     "td": {
         "deleted": "Deleted",

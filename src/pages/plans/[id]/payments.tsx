@@ -175,7 +175,7 @@ export default function Page({ doc }: Props) {
                     series={[
                       {
                         data: data.map((val) => val.profit) || [],
-                        label: "Logs",
+                        label: t("Earnings"),
                         area: true,
                         type: "line",
                         color: "#49BEFF",
@@ -249,6 +249,7 @@ export default function Page({ doc }: Props) {
                     "createdAt",
                     "log",
                     "endAt",
+                    "admin",
                   ]}
                   onDelete={() => {}}
                 />

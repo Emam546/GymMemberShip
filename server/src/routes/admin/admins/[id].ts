@@ -5,7 +5,7 @@ import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
 
 const router = Router();
-export async function getUser(id: string) {
+export async function getAdmin(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "The admin id is not valid");
   const user = await Admins.findById(id);
@@ -13,7 +13,7 @@ export async function getUser(id: string) {
   return user;
 }
 router.use("/:id", async (req, res, next) => {
-  res.locals.user = await getUser(req.params.id);
+  res.locals.user = await getAdmin(req.params.id);
   next();
 });
 router.get("/:id", (req, res) => {

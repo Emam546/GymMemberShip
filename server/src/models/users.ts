@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import mongoose from "mongoose";
-
+import Admins from "./admins";
 const schema = new mongoose.Schema<DataBase.Models.User>(
   {
     age: Number,
@@ -17,6 +17,10 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
     blocked: { type: Boolean, default: false },
     emailVerified: { type: Boolean, default: false },
     createdBy: String,
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Admins.modelName,
+    } as never,
     provider_type: String,
     providerId: String,
   },

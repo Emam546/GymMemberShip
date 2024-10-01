@@ -1,0 +1,20 @@
+{
+    "td": {
+        "Deleted": "Deleted",
+        "block.label": "block",
+        "delete": {
+            "title": "Delete User",
+            "desc": "Once you click Delete, The user will be blocked form the database and he will have no more access on the server",
+            "accept": "Delete {{name}}",
+            "deny": "Keep"
+        }
+    },
+    "th": {
+        "id": ID,
+        "name": "Name",
+        "phone": "Phone",
+        "email": "email",
+        "delete": "delete"
+    },
+    "noData": "There is no admins so far"
+}

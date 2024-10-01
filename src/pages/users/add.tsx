@@ -6,8 +6,8 @@ import { GoToButton } from "@src/components/common/inputs/addButton";
 import Head from "next/head";
 import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
-import { ObjectEntries } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import { IsAdminComp } from "@src/components/wrappers";
 
 export default function Page() {
   const router = useRouter();
@@ -38,9 +38,10 @@ export default function Page() {
         </MainCard>
       </BigCard>
       <div className="tw-mt-3">
-        <GoToButton label={t("Go To Users")} href={"/users"} />
+        <IsAdminComp>
+          <GoToButton label={t("Go To Users")} href={"/users"} />
+        </IsAdminComp>
       </div>
     </>
   );
 }
-

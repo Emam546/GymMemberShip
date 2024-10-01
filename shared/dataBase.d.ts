@@ -11,6 +11,7 @@ declare global {
       interface User {
         createdAt: Date;
         createdBy: "admin";
+        adminId: string;
         blocked?: boolean;
         name?: string;
         age?: number;
@@ -29,6 +30,7 @@ declare global {
       interface Plans {
         name: string;
         createdAt: Date;
+        adminId: string;
         prices: Record<PlansType, Price>;
         details: {
           desc?: string;
@@ -39,7 +41,8 @@ declare global {
         userId: string;
         paymentId: string;
         planId: string;
-        createdBy: { type: "Admin" };
+        createdBy: "Admin";
+        adminId: string;
       }
       interface Payments {
         planId: string;
@@ -48,7 +51,8 @@ declare global {
         plan: { type: PlansType; num: number };
         createdAt: Date;
         startAt: Date;
-        createdBy: { type: "Admin" };
+        createdBy: "Admin";
+        adminId: string;
         paid: Price;
         remaining: Price;
       }

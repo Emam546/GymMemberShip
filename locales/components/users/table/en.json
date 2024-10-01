@@ -12,6 +12,7 @@
     "th": {
         "Id": "Id",
         "Name": "Name",
+        "admin": "Creator",
         "Age/Tall/Weight": "Age/Tall/Weight",
         "Plan": "Plan",
         "Created At": "Created At",

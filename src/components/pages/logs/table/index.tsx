@@ -10,6 +10,7 @@ export interface ElemProps {
   log: Omit<DataBase.WithId<DataBase.Models.Logs>, "userId" | "planId">;
   user?: DataBase.WithId<DataBase.Models.User>;
   plan?: DataBase.WithId<DataBase.Models.Plans>;
+  admin?: DataBase.WithId<DataBase.Models.Admins>;
   onDelete?: () => any;
 }
 export type HeadKeys =
@@ -18,7 +19,8 @@ export type HeadKeys =
   | "plan"
   | "createdAt"
   | "delete"
-  | "paymentLink";
+  | "paymentLink"
+  | "admin";
 const formatDate = (date: Date) => {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
@@ -37,6 +39,7 @@ function Shower({
   log,
   onDelete,
   plan,
+  admin,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation("logs:table");
@@ -61,6 +64,15 @@ function Shower({
           <td className="tw-w-full">
             {plan ? (
               <Link href={`/plans/${plan._id}`}>{plan.name}</Link>
+            ) : (
+              t("td.deleted")
+            )}
+          </td>
+        </E>
+        <E val="admin" heads={headKeys}>
+          <td className="tw-w-full">
+            {admin ? (
+              <Link href={`/admins/${admin._id}`}>{admin.name}</Link>
             ) : (
               t("td.deleted")
             )}
@@ -162,6 +174,9 @@ export function LogInfoGenerator({
                   <E heads={headKeys} val="plan">
                     <TH>{t("th.Plan")}</TH>
                   </E>
+                  <E heads={headKeys} val="admin">
+                    <TH>{t("th.admin")}</TH>
+                  </E>
                   <E heads={headKeys} val="paymentLink">
                     <TH>{t("th.paymentLink")}</TH>
                   </E>
@@ -219,6 +234,7 @@ declare global {
           "Logged At": "Logged At";
           Delete: "Delete";
           Plan: "Plan";
+          admin: string;
         };
         td: {
           deleted: "Deleted";

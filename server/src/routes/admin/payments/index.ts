@@ -6,7 +6,7 @@ import Validator from "validator-checker-js";
 import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import IdRouter from "./[id]";
-import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
+import { RouteErrorHasError } from "@serv/declarations/classes";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
@@ -27,7 +27,8 @@ router.post("/", async (req, res) => {
 
   const plan = new Payments({
     ...result.data,
-    createdBy: { type: "Admin" },
+    adminId: req.user?._id,
+    createdBy: "Admin",
   } as DataBase.Models.Payments);
   const Payment = await plan.save();
   res.status(200).sendSuccess(Payment);
@@ -43,7 +44,7 @@ export async function getPayments(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 },
-  populate: (keyof DataBase.Models.Logs)[] = ["planId", "userId"]
+  populate: (keyof DataBase.Models.Logs)[] = ["planId", "userId", "adminId"]
 ) {
   const result = registerQuery.passes(query);
   if (!result.state)

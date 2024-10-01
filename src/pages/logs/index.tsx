@@ -152,7 +152,7 @@ export default function Page() {
                     series={[
                       {
                         data: data.map((val) => val.count) || [],
-                        label: "Logs",
+                        label: t("Logs"),
                         area: true,
                         type: "line",
                         color: "#49BEFF",
@@ -225,6 +225,7 @@ export default function Page() {
                     "paymentLink",
                     "createdAt",
                     "delete",
+                    "admin",
                   ]}
                   onDelete={() => {}}
                 />

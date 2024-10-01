@@ -155,7 +155,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
                     series={[
                       {
                         data: data.map((val) => val.count) || [],
-                        label: "Logs",
+                        label: t("Plan Logs"),
                         area: true,
                         type: "line",
                         color: "#49BEFF",
@@ -225,6 +225,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
                     "paymentLink",
                     "createdAt",
                     "delete",
+                    "admin"
                   ]}
                   onDelete={() => {}}
                 />

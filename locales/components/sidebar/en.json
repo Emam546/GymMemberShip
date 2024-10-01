@@ -1,11 +1,16 @@
 {
+    "assistant": {
+        "label": "login",
+        "/users/add": "Add User",
+        "/users/search": "Search for a User"
+    },
     "creator": {
         "label": "Creator",
         "/dashboard": "Dashboard",
         "/plans": "Manage Plans",
         "/users": "Manage Users",
-        "/users/add": "Add User",
         "/payments": "Manage Payments",
-        "/logs": "Manage Logs"
+        "/logs": "Manage Logs",
+        "/admins": "Manage Admins"
     }
 }

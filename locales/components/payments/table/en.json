@@ -12,7 +12,8 @@
     "A/R/T": "A/R/T",
     "Separated": "Separated",
     "Attend": "Attend",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "admin": "Creator"
   },
   "There is no payments": "There is no payments"
 }

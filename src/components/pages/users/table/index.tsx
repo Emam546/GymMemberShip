@@ -1,4 +1,3 @@
-import "./locale"
 import DeleteDialog from "@src/components/common/AlertDialog";
 import { formateDate, hasOwnProperty } from "@src/utils";
 import { Pagination } from "@mui/material";
@@ -11,6 +10,7 @@ import { useTranslation } from "react-i18next";
 interface ElemProps {
   order: number;
   user: DataBase.WithId<DataBase.Models.User>;
+  admin?: DataBase.WithId<DataBase.Models.Admins>;
   lastPlan?: DataBase.WithId<DataBase.Models.Plans>;
 }
 type HeadKeys =
@@ -19,10 +19,12 @@ type HeadKeys =
   | "plan"
   | "age/tall/weight"
   | "createdAt"
-  | "blocked";
+  | "blocked"
+  | "admin";
 
 function UserShower({
   user,
+  admin,
   lastPlan,
   order,
   headKeys,
@@ -40,7 +42,7 @@ function UserShower({
       setBlocked(val);
     },
   });
-  const { t } = useTranslation("table:users")
+  const { t } = useTranslation("table:users");
   return (
     <>
       <tr>
@@ -56,6 +58,17 @@ function UserShower({
             </Link>
           </td>
         </E>
+        <E val="admin" heads={headKeys}>
+          <td className="tw-w-full">
+            {admin ? (
+              <Link href={`/admins/${admin._id}`} className="tw-block">
+                {admin.name}
+              </Link>
+            ) : (
+              t("td.Deleted")
+            )}
+          </td>
+        </E>
         <E val="age/tall/weight" heads={headKeys}>
           <td>
             <span>{`${user.weight || 0}KG`}</span>,
@@ -65,7 +78,9 @@ function UserShower({
         </E>
         <E val="plan" heads={headKeys}>
           <td>
-            <p className="mb-0 fw-normal">{lastPlan?.name || t("td.Deleted")}</p>
+            <p className="mb-0 fw-normal">
+              {lastPlan?.name || t("td.Deleted")}
+            </p>
           </td>
         </E>
         <E val="createdAt" heads={headKeys}>
@@ -146,7 +161,7 @@ export default function UsersTable({
   setPage,
   headKeys,
 }: Props) {
-  const { t } = useTranslation("table:users")
+  const { t } = useTranslation("table:users");
   const pageNum = Math.ceil(totalUsers / users.length);
   return (
     <div>
@@ -161,6 +176,9 @@ export default function UsersTable({
                   </E>
                   <E heads={headKeys} val="name">
                     <TH>{t("th.Name")}</TH>
+                  </E>
+                  <E heads={headKeys} val="admin">
+                    <TH>{t("th.admin")}</TH>
                   </E>
                   <E heads={headKeys} val="age/tall/weight">
                     <TH>{t("th.Age/Tall/Weight")}</TH>
@@ -202,7 +220,39 @@ export default function UsersTable({
           )}
         </>
       )}
-      {totalUsers == 0 && <p className="tw-mb-0">{t("There is no users so far")}</p>}
+      {totalUsers == 0 && (
+        <p className="tw-mb-0">{t("There is no users so far")}</p>
+      )}
     </div>
   );
 }
+import i18n from "@src/i18n";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "table:users": {
+        td: {
+          Deleted: "Deleted";
+          "block.label": "block";
+          delete: {
+            title: "Block User";
+            desc: "Once you click Block, The user will be blocked form the courses and he will have no more access on teh server";
+            accept: "Block {{name}}";
+            deny: "Keep";
+          };
+        };
+        th: {
+          Id: "Id";
+          Name: "Name";
+          "Age/Tall/Weight": "Age/Tall/Weight";
+          Plan: "Plan";
+          "Created At": "Created At";
+          Blocked: "Blocked";
+          admin: string;
+        };
+        "There is no users so far": "There is no users so far";
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/components/users/table", "table:users");

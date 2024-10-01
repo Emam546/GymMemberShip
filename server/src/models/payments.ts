@@ -1,6 +1,7 @@
 import mongoose, { Model } from "mongoose";
 import User from "./users";
 import Plans from "./plans";
+import Admins from "./admins";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
@@ -17,7 +18,12 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
       required: true,
     } as never,
     plan: { type: Object, required: true },
-    createdBy: { type: Object },
+    createdBy: String,
+    remaining: { type: Number, required: true },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Admins.modelName,
+    } as never,
   },
   { minimize: false }
 );

@@ -1,4 +1,4 @@
-import "@src/i18n/locales/payments/[id]"
+import "@src/i18n/locales/payments/[id]";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
 import { useState } from "react";
@@ -13,7 +13,6 @@ import PaymentInfoForm from "@src/components/pages/payments/info";
 import DeletePaymentForm from "@src/components/pages/payments/info/deleteForm";
 import LogsPaymentInfo from "@src/components/pages/payments/logs";
 import { useTranslation } from "react-i18next";
-
 
 interface Props {
   doc: DataBase.WithId<
@@ -33,13 +32,16 @@ interface Props {
 }
 export default function Page({ doc: initData, plans }: Props) {
   const [doc, setDoc] = useState(initData);
-  const { t } = useTranslation("/payments/[id]")
+  const { t } = useTranslation("/payments/[id]");
+  
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
-        <title>{t("title", {
-          val: doc.userId.name
-        })}</title>
+        <title>
+          {t("title", {
+            val: doc.userId.name,
+          })}
+        </title>
       </Head>
       <BigCard>
         <CardTitle>{t("Update Payment Data")}</CardTitle>

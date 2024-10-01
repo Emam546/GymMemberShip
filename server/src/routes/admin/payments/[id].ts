@@ -79,7 +79,8 @@ router.post("/:id/logs", async (req, res) => {
     paymentId: payment._id.toString(),
     planId: payment.planId,
     userId: payment.userId,
-    createdBy: { type: "Admin" },
+    adminId: req.user?._id,
+    createdBy: "Admin",
   });
   const logSave = await log.save();
   res.status(200).sendSuccess(logSave);

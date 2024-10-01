@@ -66,6 +66,8 @@ export default function Page() {
                   "createdAt",
                   "blocked",
                   "age/tall/weight",
+                  "admin",
+                  "admin"
                 ]}
               />
             )}
@@ -81,4 +83,3 @@ export default function Page() {
     </div>
   );
 }
-

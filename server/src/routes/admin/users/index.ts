@@ -27,6 +27,7 @@ router.post("/", async (req, res) => {
   const user = new Users({
     ...result.data,
     createdBy: "admin",
+    adminId: req.user?._id,
   } as DataBase.Models.User);
   const savedUser = await user.save();
   res.status(200).sendSuccess(savedUser);
@@ -83,7 +84,8 @@ router.get("/", async (req, res) => {
       createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity);
+    .limit(parseInt(limit as string) || Infinity)
+    .populate("adminId");
   res.status(200).sendSuccess(results);
 });
 router.use(IdRouter);

@@ -22,13 +22,18 @@ interface Props {
   logs: DataBase.Queries.Logs.LogsCount[];
 }
 const perLoad = 20;
-type Page = {
-  page: number;
-  data: DataBase.Populate<
+type LogDoc = DataBase.Populate<
+  DataBase.Populate<
     DataBase.WithId<DataBase.Models.Logs>,
     "planId",
     DataBase.WithId<DataBase.Models.Plans>
-  >[];
+  >,
+  "paymentId",
+  DataBase.WithId<DataBase.Models.Payments>
+>;
+type Page = {
+  page: number;
+  data: LogDoc[];
 };
 interface InfiniteQueryData {
   pages: Page[];
@@ -65,21 +70,16 @@ export default function Page({ doc, logs: logsCount }: Props) {
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["logs", "users", id, "infinity"],
     queryFn: async ({ pageParam = 0, signal }) => {
-      const users = await requester.get<
-        Routes.ResponseSuccess<
-          DataBase.Populate<
-            DataBase.WithId<DataBase.Models.Logs>,
-            "planId",
-            DataBase.WithId<DataBase.Models.Plans>
-          >[]
-        >
-      >(`/api/admin/users/${id}/logs`, {
-        params: {
-          skip: perLoad * pageParam,
-          limit: perLoad,
-        },
-        signal,
-      });
+      const users = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
+        `/api/admin/users/${id}/logs`,
+        {
+          params: {
+            skip: perLoad * pageParam,
+            limit: perLoad,
+          },
+          signal,
+        }
+      );
       return { page: pageParam, data: users.data.data };
     },
     enabled: typeof id == "string",
@@ -130,7 +130,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
               series={[
                 {
                   data: data.map((val) => val.count) || [],
-                  label: "Logs",
+                  label: t("User Logs"),
                   area: true,
                   type: "line",
                   color: "#49BEFF",
@@ -171,10 +171,21 @@ export default function Page({ doc, logs: logsCount }: Props) {
               totalCount={logs.length}
               logs={logs.map((log, i) => ({
                 order: i,
-                log,
+                log: {
+                  ...log,
+                  planId: log.planId._id,
+                  paymentId: log.paymentId._id,
+                },
                 plan: log.planId,
               }))}
-              headKeys={["order", "delete", "paymentLink", "plan", "createdAt"]}
+              headKeys={[
+                "order",
+                "delete",
+                "paymentLink",
+                "plan",
+                "createdAt",
+                "admin",
+              ]}
               onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
             />
           </div>

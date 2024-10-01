@@ -17,6 +17,7 @@ export interface ElemProps {
   payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
   user?: DataBase.WithId<DataBase.Models.User>;
   plan?: DataBase.WithId<DataBase.Models.Plans>;
+  admin?: DataBase.WithId<DataBase.Models.Admins>;
   onDelete?: () => any;
 }
 export type HeadKeys =
@@ -31,7 +32,8 @@ export type HeadKeys =
   | "endAt"
   | "daysLogged"
   | "addLog"
-  | "link";
+  | "link"
+  | "admin";
 
 function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
   const query = useQuery({
@@ -147,6 +149,7 @@ function Shower({
   headKeys,
   onDelete,
   plan,
+  admin,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
   const endAt = new Date(
@@ -175,6 +178,15 @@ function Shower({
           <td className="tw-w-full">
             {plan ? (
               <Link href={`/plans/${plan._id}`}>{plan.name}</Link>
+            ) : (
+              t("Deleted")
+            )}
+          </td>
+        </E>
+        <E val="admin" heads={headKeys}>
+          <td className="tw-w-full">
+            {admin ? (
+              <Link href={`/admins/${admin._id}`}>{admin.name}</Link>
             ) : (
               t("Deleted")
             )}
@@ -298,6 +310,9 @@ export function PaymentInfoGenerator({
                   <E heads={headKeys} val="plan">
                     <TH>{t("head.Plan")}</TH>
                   </E>
+                  <E heads={headKeys} val="admin">
+                    <TH>{t("head.admin")}</TH>
+                  </E>
                   <E heads={headKeys} val="link">
                     <TH>{t("head.Link")}</TH>
                   </E>
@@ -376,6 +391,7 @@ declare global {
           Separated: "Separated";
           Attend: "Attend";
           Delete: "Delete";
+          admin: string;
         };
         "There is no payments": "There is no payments";
       };

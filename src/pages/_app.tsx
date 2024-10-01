@@ -20,10 +20,8 @@ import { Provider as ReduxProvider } from "react-redux";
 import store from "@src/store";
 import i18n from "@src/i18n";
 import { ObjectEntries } from "@src/utils";
-import axios from "axios";
-import { IncomingMessage } from "http";
-import EnvVars from "@serv/declarations/major/EnvVars";
 import { UserProvider } from "@src/components/UserProvider";
+import { loadAuthData } from "@src/utils/loadAuth";
 
 config.autoAddCss = false;
 
@@ -82,36 +80,7 @@ const App = function ({ Component, pageProps, translations, user }: AppG) {
     </Provider>
   );
 };
-async function loadAuthData(req?: IncomingMessage) {
-  if (typeof window != "undefined") {
-    const response = await axios.get(`/api/admin/admins/auth/check`, {
-      validateStatus(status) {
-        return status < 500;
-      },
-      withCredentials: true,
-    });
-    const data = response.data;
-    if (!data.status) return null;
-    else return data.data as Express.User;
-  } else if (req) {
-    const protocol = req.headers.referer
-      ? req.headers.referer.split(":")[0]
-      : "http";
-    const response = await axios.get(
-      `${protocol}://localhost:${EnvVars.port}/api/admin/admins/auth/check`,
-      {
-        validateStatus(status) {
-          return status < 500;
-        },
-        headers: req.headers,
-      }
-    );
-    const data = response.data;
-    if (!data.status) return null;
-    else return data.data as Express.User;
-  }
-  return null;
-}
+
 App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   // Retrieve language from cookies on the server side
   const cookies = ctx.req?.headers.cookie || "";

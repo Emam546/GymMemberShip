@@ -170,7 +170,7 @@ export default function Page() {
                     series={[
                       {
                         data: data.map((val) => val.profit) || [],
-                        label: "Logs",
+                        label: t("Earnings"),
                         area: true,
                         type: "line",
                         color: "#49BEFF",
@@ -244,6 +244,8 @@ export default function Page() {
                     "createdAt",
                     "log",
                     "endAt",
+                    "admin",
+                    "admin"
                   ]}
                   onDelete={() => {}}
                 />

@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import User from "./users";
 import Plans from "./plans";
 import Payment from "./payments";
+import Admins from "./admins";
 const schema = new mongoose.Schema<DataBase.Models.Logs>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
@@ -23,7 +24,11 @@ const schema = new mongoose.Schema<DataBase.Models.Logs>(
       ref: Payment.modelName,
       required: true,
     } as never,
-    createdBy: { type: Object, required: true },
+    createdBy: String,
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Admins.modelName,
+    } as never,
   },
   { minimize: false }
 );

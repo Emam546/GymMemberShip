@@ -1,4 +1,3 @@
-import "./locale";
 import PrimaryButton from "@src/components/button";
 import { Grid2 } from "@src/components/grid";
 import MainInput from "@src/components/common/inputs/main";
@@ -7,6 +6,7 @@ import { useForm } from "react-hook-form";
 import React from "react";
 import { ObjectEntries } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import i18n from "@src/i18n";
 
 export interface DataType {
   blocked?: boolean;
@@ -103,3 +103,18 @@ export default function UserInfoForm({
     </form>
   );
 }
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "form:user": {
+        "User Name": "User Name";
+        Phone: "Phone";
+        Age: "Age";
+        "Tall in centimeter": "Tall in centimeter";
+        "Weight in Kg": "Weight in Kg";
+        "Why did you come": "Why did you come";
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/components/users/form", "form:user");

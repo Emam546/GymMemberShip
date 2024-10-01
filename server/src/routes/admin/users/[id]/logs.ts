@@ -10,7 +10,7 @@ router.get("/logs", async (req, res) => {
     req.query,
     { userId: user._id },
     { userId: 1, createdAt: -1 },
-    ["planId", "paymentId"]
+    ["planId", "paymentId", "adminId"]
   );
   res.status(200).sendSuccess(logs);
 });

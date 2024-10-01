@@ -1,6 +1,4 @@
-import { BigCard, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
-import Head from "next/head";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
@@ -81,7 +79,7 @@ export default function LogsPaymentInfo({ id }: Props) {
           order: i,
           log,
         }))}
-        headKeys={["order", "delete", "createdAt"]}
+        headKeys={["order", "delete", "createdAt", "admin"]}
         onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
       />
       <TriggerOnVisible

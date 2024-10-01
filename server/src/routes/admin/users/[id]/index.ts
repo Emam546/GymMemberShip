@@ -5,7 +5,6 @@ import Logs from "@serv/models/log";
 import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
-import { getLogs } from "@serv/routes/admin/log";
 import paymentsRouter from "./payments";
 import logsRouter from "./logs";
 const router = Router();

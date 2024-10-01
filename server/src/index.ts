@@ -2,6 +2,7 @@ import "./pre-start"; // Must be the first import
 import "./validator";
 import logger from "jet-logger";
 import EnvVars from "@serv/declarations/major/EnvVars";
+import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import server from "./server";
 import next from "next";
 import { serverStart } from "./command";
@@ -41,4 +42,3 @@ connect(EnvVars.mongo.url).then(() => {
   process.on("SIGTERM", shutDown);
   process.on("SIGINT", shutDown);
 });
-
