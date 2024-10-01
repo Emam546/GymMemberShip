@@ -15,7 +15,8 @@ router.get("/", async (req, res) => {
 const registerValidator = new Validator({
   name: ["string", "required"],
   password: ["string", "required"],
-  email: ["string", "required"],
+  email: ["string"],
+  phone: ["string"],
   type: ["string", { in: ["admin", "assistant"] }, "required"],
 });
 router.post("/", async (req, res) => {

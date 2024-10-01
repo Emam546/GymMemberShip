@@ -12,7 +12,7 @@ interface ElemProps {
   admin: DataBase.WithId<DataBase.Models.Admins>;
   onDelete?: () => any;
 }
-type HeadKeys = "order" | "name" | "phone" | "email" | "delete";
+type HeadKeys = "order" | "name" | "phone" | "email" | "delete" | "type";
 
 function UserShower({
   admin,
@@ -26,7 +26,7 @@ function UserShower({
       await onDelete?.();
     },
   });
-  const { t } = useTranslation("table:users");
+  const { t } = useTranslation("table:admins");
   return (
     <>
       <tr>
@@ -42,11 +42,14 @@ function UserShower({
             </Link>
           </td>
         </E>
+        <E heads={headKeys} val="type">
+          <td className="tw-text-center">{admin.type}</td>
+        </E>
         <E val="phone" heads={headKeys}>
-          <td className="tw-w-full">{admin.phone}</td>
+          <td>{admin.phone}</td>
         </E>
         <E val="email" heads={headKeys}>
-          <td className="tw-w-full">{admin.email}</td>
+          <td>{admin.email}</td>
         </E>
         <E val="delete" heads={headKeys}>
           <td className="tw-flex tw-justify-center">
@@ -124,6 +127,9 @@ export default function AdminsTable({
                   <E heads={headKeys} val="name">
                     <TH>{t("th.name")}</TH>
                   </E>
+                  <E heads={headKeys} val="type">
+                    <TH>{t("th.type")}</TH>
+                  </E>
                   <E heads={headKeys} val="email">
                     <TH>{t("th.email")}</TH>
                   </E>
@@ -190,6 +196,7 @@ declare global {
           phone: "Phone";
           email: "email";
           delete: "delete";
+          type: "Type";
         };
         noData: "There is no admins so far";
       };

@@ -10,11 +10,12 @@
         }
     },
     "th": {
-        "id": ID,
+        "id": "ID",
         "name": "Name",
         "phone": "Phone",
         "email": "email",
-        "delete": "delete"
+        "delete": "delete",
+        "type": "Type"
     },
     "noData": "There is no admins so far"
 }

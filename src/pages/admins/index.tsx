@@ -25,10 +25,14 @@ export default function Page({ admins: initAdmins }: Props) {
       >(`/api/admin/admins`, data);
       return request.data.data;
     },
+    onSuccess(data) {
+      setAdmins([...admins, data]);
+      alert(t("messages.added", { ns: "translation" }));
+    },
   });
   const deleteAdmin = useMutation({
     async mutationFn(data: DataBase.WithId<DataBase.Models.Admins>) {
-      const request = await requester.delete<
+      await requester.delete<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Admins>>
       >(`/api/admin/admins/${data._id}`);
     },
@@ -66,7 +70,7 @@ export default function Page({ admins: initAdmins }: Props) {
             }}
             totalCount={admins.length}
             setPage={() => {}}
-            headKeys={["delete", "email", "name", "order", "phone"]}
+            headKeys={["delete", "email", "name", "order", "phone", "type"]}
           />
         </MainCard>
       </BigCard>
