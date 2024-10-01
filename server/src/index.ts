@@ -7,6 +7,7 @@ import server from "./server";
 import next from "next";
 import { serverStart } from "./command";
 import connect from "./db/connect";
+import { InitDataBase } from "./db/init";
 // **** Start server **** //
 const dev = EnvVars.nodeEnv == "development";
 const app = next({ dev, dir: EnvVars.dir });
@@ -15,7 +16,8 @@ logger.info(`NEXT PATH ${EnvVars.dir}`);
 const handle = app.getRequestHandler();
 // **** Start server **** //
 logger.info(`${EnvVars.nodeEnv}`);
-connect(EnvVars.mongo.url).then(() => {
+connect(EnvVars.mongo.url).then(async () => {
+  await InitDataBase();
   app
     .prepare()
     .then(() => {
