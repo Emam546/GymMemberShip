@@ -1,4 +1,5 @@
 /* eslint-disable node/no-process-env */
+import { SignOptions } from "jsonwebtoken";
 
 export default {
   nodeEnv: process.env.NODE_ENV ?? "",
@@ -20,7 +21,7 @@ export default {
   },
   jwt: {
     secret: process.env.JWT_SECRET ?? "",
-    exp: process.env.COOKIE_EXP ?? "", // exp at the same time as the cookie
+    options: { expiresIn: process.env.COOKIE_EXP ?? "" } as SignOptions,
   },
   dir: process.env.DIR,
 } as const;

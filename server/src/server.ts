@@ -10,18 +10,26 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import { NodeEnvs } from "@serv/declarations/enums";
 import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
-import path from "path";
+import passport from "./passport.config";
+import session from "express-session";
 // **** Init express **** //
 
 const app = express();
 
 // **** Set basic express settings **** //
 //Cross origins
-
+app.use(
+  session({
+    secret: EnvVars.cookieProps.secret,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(EnvVars.cookieProps.secret));
-
+app.use(passport.initialize());
+app.use(passport.session());
 // Show routes called in console during development
 if (EnvVars.nodeEnv === NodeEnvs.Dev) {
   // app.use(morgan("dev"));
