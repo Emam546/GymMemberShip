@@ -12,6 +12,7 @@ import { getPlan } from "@serv/routes/admin/plans/[id]";
 import PrintPlanPayments from "@src/components/pages/plans/payments/print";
 import PaymentInfoGenerator from "@src/components/pages/plans/payments/table";
 import { useTranslation } from "react-i18next";
+import { IsAdminComp } from "@src/components/wrappers";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.Plans>;
@@ -39,28 +40,32 @@ export default function Page({ doc }: Props) {
             buttonName={t("buttons.update", { ns: "translation" })}
           />
         </MainCard>
-        <div className="tw-flex tw-items-center tw-justify-between">
-          <CardTitle>{t("Payments")}</CardTitle>
-          <PrintPlanPayments id={doc._id} />
-        </div>
-        <MainCard>
-          <PaymentInfoGenerator
-            id={doc._id}
-            perPage={20}
-            headKeys={["createdAt", "delete", "paid", "user", "log", "link"]}
-          />
-        </MainCard>
+        <IsAdminComp>
+          <div className="tw-flex tw-items-center tw-justify-between">
+            <CardTitle>{t("Payments")}</CardTitle>
+            <PrintPlanPayments id={doc._id} />
+          </div>
+          <MainCard>
+            <PaymentInfoGenerator
+              id={doc._id}
+              perPage={20}
+              headKeys={["createdAt", "delete", "paid", "user", "log", "link"]}
+            />
+          </MainCard>
+        </IsAdminComp>
       </BigCard>
       <div className="py-3">
-        <GoToButton
-          label={t("Go To Users Logs")}
-          href={`/plans/${doc._id}/logs`}
-        />
-        <GoToButton
-          label={t("Go To Plan Payments")}
-          href={`/plans/${doc._id}/payments`}
-        />
-        <GoToButton label={t("Go To Plans")} href="/plans" />
+        <IsAdminComp>
+          <GoToButton
+            label={t("Go To Users Logs")}
+            href={`/plans/${doc._id}/logs`}
+          />
+          <GoToButton
+            label={t("Go To Plan Payments")}
+            href={`/plans/${doc._id}/payments`}
+          />
+          <GoToButton label={t("Go To Plans")} href="/plans" />
+        </IsAdminComp>
       </div>
     </div>
   );

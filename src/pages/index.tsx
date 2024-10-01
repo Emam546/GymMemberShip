@@ -21,6 +21,7 @@ import Plans from "@serv/models/plans";
 import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
@@ -35,40 +36,42 @@ export default function Page({ earnings, payments, users, sales }: Props) {
       <Head>
         <title>Home</title>
       </Head>
-      <BigCard>
-        <div>
-          <div className="row">
-            <SalesOverView {...sales} />
-            <YearsAndMonthEarnings {...earnings} />
-          </div>
-          <div className="row">
-            <RecentPayments {...payments} />
-            <div className="col-lg-8 d-flex align-items-stretch">
-              <div className="card w-100">
-                <div className="p-4 card-body">
-                  <h5 className="mb-4 card-title fw-semibold">
-                    {t("Recent Users")}
-                  </h5>
-                  <UsersTable
-                    page={0}
-                    setPage={() => {}}
-                    totalUsers={users.length}
-                    users={users}
-                    headKeys={[
-                      "createdAt",
-                      "name",
-                      "blocked",
-                      "age/tall/weight",
-                      "plan",
-                      "order",
-                    ]}
-                  />
+      <RedirectIfNotAdmin>
+        <BigCard>
+          <div>
+            <div className="row">
+              <SalesOverView {...sales} />
+              <YearsAndMonthEarnings {...earnings} />
+            </div>
+            <div className="row">
+              <RecentPayments {...payments} />
+              <div className="col-lg-8 d-flex align-items-stretch">
+                <div className="card w-100">
+                  <div className="p-4 card-body">
+                    <h5 className="mb-4 card-title fw-semibold">
+                      {t("Recent Users")}
+                    </h5>
+                    <UsersTable
+                      page={0}
+                      setPage={() => {}}
+                      totalUsers={users.length}
+                      users={users}
+                      headKeys={[
+                        "createdAt",
+                        "name",
+                        "blocked",
+                        "age/tall/weight",
+                        "plan",
+                        "order",
+                      ]}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </BigCard>
+        </BigCard>
+      </RedirectIfNotAdmin>
     </>
   );
 }

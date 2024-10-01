@@ -8,5 +8,5 @@ const schema = new mongoose.Schema<DataBase.Models.Admins>({
   password: String,
   type: String,
 });
-export default ((mongoose.models && mongoose.models.user) ||
+export default ((mongoose.models && mongoose.models.admins) ||
   mongoose.model("admins", schema)) as mongoose.Model<DataBase.Models.Admins>;

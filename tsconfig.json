@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,13 +19,27 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@src/*": ["./src/*"],
-      "@serv/*": ["./server/src/*"],
-      "@shared/*": ["./shared/*"],
-      "@utils/*": ["./utils/*"],
-      "@app/*": ["./app/*"],
-      "@shared/renderer/*": ["./app/renderer/shared/*"],
-      "@locales/*": ["./src/i18n/locales/*"]
+      "@src/*": [
+        "./src/*"
+      ],
+      "@serv/*": [
+        "./server/src/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@app/*": [
+        "./app/*"
+      ],
+      "@shared/renderer/*": [
+        "./app/renderer/shared/*"
+      ],
+      "@locales/*": [
+        "./src/i18n/locales/*"
+      ]
     },
     "skipLibCheck": true,
     "plugins": [
@@ -30,6 +48,14 @@
       }
     ]
   },
-  "include": ["src", "server/src", "shared", "utils", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "server/src",
+    "shared",
+    "utils",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -18,6 +18,7 @@ import { getPlan } from "@serv/routes/admin/plans/[id]";
 import connect from "@serv/db/connect";
 import { GetServerSideProps, NextPage } from "next";
 import PrintPlanLogs from "@src/components/pages/plans/logs/print";
+import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
 interface Props {
   doc: DataBase.WithId<DataBase.Models.Plans>;
@@ -85,7 +86,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
       return users.data.data;
     },
   });
-  const { t,i18n } = useTranslation("/plans/[id]/logs");
+  const { t, i18n } = useTranslation("/plans/[id]/logs");
   const totalCount =
     QueryCount.data?.reduce((acc, val) => acc + val.count, 0) || 0;
   const logs = QueryInfinity.data?.pages
@@ -114,124 +115,130 @@ const Page: NextPage<Props> = function Page({ doc }) {
       <Head>
         <title>{t("title", { name: doc.name })}</title>
       </Head>
-      <BigCard>
-        <div className="tw-flex tw-justify-between">
-          <CardTitle>{t("Plan Logs")}</CardTitle>
-          <div>
-            <PrintPlanLogs
-              id={doc._id}
-              query={{
-                ...filter,
-                startAt: filter.startAt.getTime(),
-                endAt: filter.endAt.getTime(),
-              }}
-            />
+      <RedirectIfNotAdmin>
+        <BigCard>
+          <div className="tw-flex tw-justify-between">
+            <CardTitle>{t("Plan Logs")}</CardTitle>
+            <div>
+              <PrintPlanLogs
+                id={doc._id}
+                query={{
+                  ...filter,
+                  startAt: filter.startAt.getTime(),
+                  endAt: filter.endAt.getTime(),
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <div className="tw-my-4">
-          <TimeStartEndSelector values={filter} onData={setFilter} />
-        </div>
-        <div>
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="tw-flex tw-justify-between tw-gap-x-4">
-                  <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
-                    <div>
-                      <h5 className="card-title mb-9 fw-semibold">
-                        {t("Total Count")}
-                      </h5>
-                      <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+          <div className="tw-my-4">
+            <TimeStartEndSelector values={filter} onData={setFilter} />
+          </div>
+          <div>
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="tw-flex tw-justify-between tw-gap-x-4">
+                    <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
+                      <div>
+                        <h5 className="card-title mb-9 fw-semibold">
+                          {t("Total Count")}
+                        </h5>
+                        <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div dir="ltr">
-                <LineChart
-                  loading={QueryCount.isLoading}
-                  height={300}
-                  series={[
-                    {
-                      data: data.map((val) => val.count) || [],
-                      label: "Logs",
-                      area: true,
-                      type: "line",
-                      color: "#49BEFF",
-                      showMark: false,
-                      stack: "total",
-                    },
-                  ]}
-                  slotProps={{ legend: { hidden: true } }}
-                  yAxis={[
-                    {
-                      min: 0,
-                      max: data.reduce(
-                        (acc, { count }) => (acc > count ? acc : count),
-                        10
-                      ),
-                    },
-                  ]}
-                  xAxis={[
-                    {
-                      scaleType: "point",
-                      data: data,
-                      valueFormatter(
-                        { _id }: DataBase.Queries.Logs.LogsCount,
-                        context
-                      ) {
-                        const date = new Date(_id.year!, _id.month!, _id.day!);
-                        return `${date.toLocaleDateString(i18n.language, {
-                          day: "2-digit",
-                          month: "short",
-                          year: yearEnabled ? "numeric" : undefined,
-                        })}`;
+                <div dir="ltr">
+                  <LineChart
+                    loading={QueryCount.isLoading}
+                    height={300}
+                    series={[
+                      {
+                        data: data.map((val) => val.count) || [],
+                        label: "Logs",
+                        area: true,
+                        type: "line",
+                        color: "#49BEFF",
+                        showMark: false,
+                        stack: "total",
                       },
-                    },
-                  ]}
-                />
+                    ]}
+                    slotProps={{ legend: { hidden: true } }}
+                    yAxis={[
+                      {
+                        min: 0,
+                        max: data.reduce(
+                          (acc, { count }) => (acc > count ? acc : count),
+                          10
+                        ),
+                      },
+                    ]}
+                    xAxis={[
+                      {
+                        scaleType: "point",
+                        data: data,
+                        valueFormatter(
+                          { _id }: DataBase.Queries.Logs.LogsCount,
+                          context
+                        ) {
+                          const date = new Date(
+                            _id.year!,
+                            _id.month!,
+                            _id.day!
+                          );
+                          return `${date.toLocaleDateString(i18n.language, {
+                            day: "2-digit",
+                            month: "short",
+                            year: yearEnabled ? "numeric" : undefined,
+                          })}`;
+                        },
+                      },
+                    ]}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <MainCard className="p-4 tw-mt-3">
-          <ErrorShower
-            loading={QueryInfinity.isLoading}
-            error={QueryInfinity.error}
-          />
-          <div>
-            {logs && (
-              <LogInfoGenerator
-                page={0}
-                setPage={() => {}}
-                totalCount={logs.length}
-                logs={logs.map((payment, i) => ({
-                  order: i,
-                  log: {
-                    ...payment,
-                    userId: payment.userId._id,
-                    paymentId: payment.paymentId._id,
-                  },
-                  user: payment.userId,
-                }))}
-                headKeys={[
-                  "order",
-                  "user",
-                  "paymentLink",
-                  "createdAt",
-                  "delete",
-                ]}
-                onDelete={() => {}}
-              />
-            )}
-          </div>
-          <TriggerOnVisible
-            onVisible={async () => {
-              if (!QueryInfinity.isFetching && QueryInfinity.hasNextPage)
-                QueryInfinity.fetchNextPage();
-            }}
-          />
-        </MainCard>
-      </BigCard>
+          <MainCard className="p-4 tw-mt-3">
+            <ErrorShower
+              loading={QueryInfinity.isLoading}
+              error={QueryInfinity.error}
+            />
+            <div>
+              {logs && (
+                <LogInfoGenerator
+                  page={0}
+                  setPage={() => {}}
+                  totalCount={logs.length}
+                  logs={logs.map((payment, i) => ({
+                    order: i,
+                    log: {
+                      ...payment,
+                      userId: payment.userId._id,
+                      paymentId: payment.paymentId._id,
+                    },
+                    user: payment.userId,
+                  }))}
+                  headKeys={[
+                    "order",
+                    "user",
+                    "paymentLink",
+                    "createdAt",
+                    "delete",
+                  ]}
+                  onDelete={() => {}}
+                />
+              )}
+            </div>
+            <TriggerOnVisible
+              onVisible={async () => {
+                if (!QueryInfinity.isFetching && QueryInfinity.hasNextPage)
+                  QueryInfinity.fetchNextPage();
+              }}
+            />
+          </MainCard>
+        </BigCard>
+      </RedirectIfNotAdmin>
     </div>
   );
 };

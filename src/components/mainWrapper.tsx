@@ -4,11 +4,13 @@ import Header from "@src/components/header";
 
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "./UserProvider";
 
 function MainApp({ children: children }: { children: React.ReactNode }) {
   const mainWrapper = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
   const router = useRouter();
+  const user = useAuth();
   useEffect(() => {
     function setSideBar() {
       const wrapper = mainWrapper.current;
@@ -42,6 +44,10 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.body.dir = i18n.language === "ar" ? "rtl" : "ltr";
   }, [i18n.language]);
+  useEffect(() => {
+    if (!user) router.replace("/login");
+  }, [user]);
+  if (!user) return null;
   return (
     <>
       <div
@@ -79,5 +85,7 @@ export default function MainWrapper({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  if (router.pathname == "/login") return children;
   return <MainApp>{children}</MainApp>;
 }

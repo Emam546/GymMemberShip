@@ -1,14 +1,14 @@
-import { useAppSelector } from "@src/store";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useAuth } from "../UserProvider";
 
 export function RedirectIfState({
   children,
-  href,
+  href = "/",
   state,
 }: {
   children: React.ReactNode;
-  href: string;
+  href?: string;
   state?: boolean;
 }) {
   const router = useRouter();
@@ -25,21 +25,22 @@ export function useRedirectIfState(href: string, state: boolean) {
   }, [href]);
   return state;
 }
-export function useRedirectIfNotCreator(href: string) {
-  const user = useAppSelector((state) => state.auth.user!);
-  const state = !(user.type == "creator" || user.type == "admin");
+export function useRedirectIfNotAdmin(href = "/") {
+  const user = useAuth();
+  const state = user?.type != "admin";
 
   return useRedirectIfState(href, state);
 }
-export function RedirectIfNotCreator({
+export function RedirectIfNotAdmin({
   children,
   href,
 }: {
   children: React.ReactNode;
-  href: string;
+  href?: string;
 }) {
-  const user = useAppSelector((state) => state.auth.user!);
-  const state = !(user.type == "creator" || user.type == "admin");
+  const user = useAuth();
+
+  const state = user?.type != "admin";
   return (
     <RedirectIfState state={state} href={href}>
       {children}

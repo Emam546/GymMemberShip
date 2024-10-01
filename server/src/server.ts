@@ -1,7 +1,6 @@
 import cookieParser from "cookie-parser";
 import "./express";
 import "express-async-errors";
-import morgan from "morgan";
 import helmet from "helmet";
 import express, { NextFunction, Request, Response } from "express";
 import baseRoute from "./routes/index";
@@ -13,7 +12,6 @@ import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
 import passport from "./passport.config";
 import session from "express-session";
 // **** Init express **** //
-
 const app = express();
 
 // **** Set basic express settings **** //
@@ -22,14 +20,14 @@ app.use(
   session({
     secret: EnvVars.cookieProps.secret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
+app.use(cookieParser(EnvVars.cookieProps.secret));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(EnvVars.cookieProps.secret));
-app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.initialize());
 // Show routes called in console during development
 if (EnvVars.nodeEnv === NodeEnvs.Dev) {
   // app.use(morgan("dev"));

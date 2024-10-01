@@ -14,6 +14,7 @@ import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import PrintLogs from "@src/components/pages/logs/print";
 import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
 import { getDaysArray } from "@src/utils";
+import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
 type LogDoc = DataBase.Populate<
   DataBase.Populate<
@@ -112,126 +113,132 @@ export default function Page() {
       <Head>
         <title>{t("title")}</title>
       </Head>
-      <BigCard>
-        <div className="tw-flex tw-justify-between">
-          <CardTitle>{t("Logs")}</CardTitle>
-          <div>
-            <PrintLogs
-              query={{
-                ...filter,
-                startAt: filter.startAt.getTime(),
-                endAt: filter.endAt.getTime(),
-              }}
-            />
+      <RedirectIfNotAdmin>
+        <BigCard>
+          <div className="tw-flex tw-justify-between">
+            <CardTitle>{t("Logs")}</CardTitle>
+            <div>
+              <PrintLogs
+                query={{
+                  ...filter,
+                  startAt: filter.startAt.getTime(),
+                  endAt: filter.endAt.getTime(),
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <div className="tw-my-4">
-          <TimeStartEndSelector values={filter} onData={setFilter} />
-        </div>
-        <div>
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="tw-flex tw-justify-between tw-gap-x-4">
-                  <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
-                    <div>
-                      <h5 className="card-title mb-9 fw-semibold">
-                        {t("Total Count")}
-                      </h5>
-                      <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+          <div className="tw-my-4">
+            <TimeStartEndSelector values={filter} onData={setFilter} />
+          </div>
+          <div>
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="tw-flex tw-justify-between tw-gap-x-4">
+                    <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
+                      <div>
+                        <h5 className="card-title mb-9 fw-semibold">
+                          {t("Total Count")}
+                        </h5>
+                        <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div dir="ltr">
-                <LineChart
-                  loading={QueryCount.isLoading}
-                  height={300}
-                  series={[
-                    {
-                      data: data.map((val) => val.count) || [],
-                      label: "Logs",
-                      area: true,
-                      type: "line",
-                      color: "#49BEFF",
-                      showMark: false,
-                      stack: "total",
-                    },
-                  ]}
-                  slotProps={{ legend: { hidden: true } }}
-                  yAxis={[
-                    {
-                      min: 0,
-                      max: data.reduce(
-                        (acc, { count }) => (acc > count ? acc : count),
-                        10
-                      ),
-                    },
-                  ]}
-                  xAxis={[
-                    {
-                      scaleType: "point",
-                      data: data,
-                      valueFormatter(
-                        { _id }: DataBase.Queries.Logs.LogsCount,
-                        context
-                      ) {
-                        const date = new Date(_id.year!, _id.month!, _id.day!);
-                        return `${date.toLocaleDateString(i18n.language, {
-                          day: "2-digit",
-                          month: "short",
-                          year: yearEnabled ? "numeric" : undefined,
-                        })}`;
+                <div dir="ltr">
+                  <LineChart
+                    loading={QueryCount.isLoading}
+                    height={300}
+                    series={[
+                      {
+                        data: data.map((val) => val.count) || [],
+                        label: "Logs",
+                        area: true,
+                        type: "line",
+                        color: "#49BEFF",
+                        showMark: false,
+                        stack: "total",
                       },
-                    },
-                  ]}
-                />
+                    ]}
+                    slotProps={{ legend: { hidden: true } }}
+                    yAxis={[
+                      {
+                        min: 0,
+                        max: data.reduce(
+                          (acc, { count }) => (acc > count ? acc : count),
+                          10
+                        ),
+                      },
+                    ]}
+                    xAxis={[
+                      {
+                        scaleType: "point",
+                        data: data,
+                        valueFormatter(
+                          { _id }: DataBase.Queries.Logs.LogsCount,
+                          context
+                        ) {
+                          const date = new Date(
+                            _id.year!,
+                            _id.month!,
+                            _id.day!
+                          );
+                          return `${date.toLocaleDateString(i18n.language, {
+                            day: "2-digit",
+                            month: "short",
+                            year: yearEnabled ? "numeric" : undefined,
+                          })}`;
+                        },
+                      },
+                    ]}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <MainCard className="p-4 tw-mt-3">
-          <ErrorShower
-            loading={QueryInfinity.isLoading}
-            error={QueryInfinity.error}
-          />
-          <div>
-            {logs && (
-              <LogInfoGenerator
-                page={0}
-                setPage={() => {}}
-                totalCount={logs.length}
-                logs={logs.map((payment, i) => ({
-                  order: i,
-                  log: {
-                    ...payment,
-                    userId: payment.userId._id,
-                    planId: payment.planId._id,
-                    paymentId: payment.paymentId._id,
-                  },
-                  plan: payment.planId,
-                  user: payment.userId,
-                }))}
-                headKeys={[
-                  "order",
-                  "user",
-                  "plan",
-                  "paymentLink",
-                  "createdAt",
-                  "delete",
-                ]}
-                onDelete={() => {}}
-              />
-            )}
-          </div>
-          <TriggerOnVisible
-            onVisible={async () => {
-              if (!QueryInfinity.isFetching && QueryInfinity.hasNextPage)
-                QueryInfinity.fetchNextPage();
-            }}
-          />
-        </MainCard>
-      </BigCard>
+          <MainCard className="p-4 tw-mt-3">
+            <ErrorShower
+              loading={QueryInfinity.isLoading}
+              error={QueryInfinity.error}
+            />
+            <div>
+              {logs && (
+                <LogInfoGenerator
+                  page={0}
+                  setPage={() => {}}
+                  totalCount={logs.length}
+                  logs={logs.map((payment, i) => ({
+                    order: i,
+                    log: {
+                      ...payment,
+                      userId: payment.userId._id,
+                      planId: payment.planId._id,
+                      paymentId: payment.paymentId._id,
+                    },
+                    plan: payment.planId,
+                    user: payment.userId,
+                  }))}
+                  headKeys={[
+                    "order",
+                    "user",
+                    "plan",
+                    "paymentLink",
+                    "createdAt",
+                    "delete",
+                  ]}
+                  onDelete={() => {}}
+                />
+              )}
+            </div>
+            <TriggerOnVisible
+              onVisible={async () => {
+                if (!QueryInfinity.isFetching && QueryInfinity.hasNextPage)
+                  QueryInfinity.fetchNextPage();
+              }}
+            />
+          </MainCard>
+        </BigCard>
+      </RedirectIfNotAdmin>
     </div>
   );
 }

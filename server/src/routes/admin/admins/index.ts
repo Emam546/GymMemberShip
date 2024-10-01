@@ -30,6 +30,6 @@ router.post("/", async (req, res) => {
   res.status(200).sendSuccess(savedUser);
 });
 
+router.use("/auth", LoginRouter);
 router.use(IdRouter);
-router.use("auth", LoginRouter);
 export default router;

@@ -9,6 +9,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 
 export interface Props {
   plans: DataBase.WithIdOrg<DataBase.Models.Plans>[];
@@ -17,18 +18,20 @@ export default function Page({ plans: levels }: Props) {
   const { t } = useTranslation("/plan");
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
-      <Head>
-        <title>{t("title")}</title>
-      </Head>
-      <BigCard>
-        <CardTitle>{t("Plans")}</CardTitle>
-        <MainCard>
-          <PlansInfoGetter plans={levels} />
-        </MainCard>
-      </BigCard>
-      <div className="tw-py-3">
-        <AddButton label={t("Add Plan")} href="/plans/add" />
-      </div>
+      <RedirectIfNotAdmin>
+        <Head>
+          <title>{t("title")}</title>
+        </Head>
+        <BigCard>
+          <CardTitle>{t("Plans")}</CardTitle>
+          <MainCard>
+            <PlansInfoGetter plans={levels} />
+          </MainCard>
+        </BigCard>
+        <div className="tw-py-3">
+          <AddButton label={t("Add Plan")} href="/plans/add" />
+        </div>
+      </RedirectIfNotAdmin>
     </div>
   );
 }

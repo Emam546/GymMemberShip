@@ -47,8 +47,17 @@ declare global {
         separated: boolean;
         plan: { type: PlansType; num: number };
         createdAt: Date;
+        startAt: Date;
         createdBy: { type: "Admin" };
         paid: Price;
+        remaining: Price;
+      }
+      interface Admins {
+        name: string;
+        password: string;
+        email?: string;
+        phone?: string;
+        type: "admin" | "assistant";
       }
     }
     namespace Queries {

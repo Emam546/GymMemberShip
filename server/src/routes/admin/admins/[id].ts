@@ -7,9 +7,9 @@ import { RouteError } from "@serv/declarations/classes";
 const router = Router();
 export async function getUser(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
-    throw new RouteError(404, "The user id is not valid");
+    throw new RouteError(404, "The admin id is not valid");
   const user = await Admins.findById(id);
-  if (!user) throw new RouteError(404, "The user is not found");
+  if (!user) throw new RouteError(404, "The admin is not found");
   return user;
 }
 router.use("/:id", async (req, res, next) => {

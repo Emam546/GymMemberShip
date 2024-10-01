@@ -43,7 +43,21 @@ export interface Props {
   onClose?: (this: HTMLElement) => any;
 }
 
-function CreatorNavBar() {
+function ManageUsersNavBar() {
+  const { t } = useTranslation("sideBar");
+  return (
+    <>
+      <HeaderNav title={t("creator.label")} />
+      <LinkElem href="/users" title={t("creator./users")}>
+        <i className="ti ti-users"></i>
+      </LinkElem>
+      <LinkElem href="/users/add" title={t("creator./users/add")}>
+        <i className="ti ti-user-plus"></i>
+      </LinkElem>
+    </>
+  );
+}
+function ManageSystem() {
   const { t } = useTranslation("sideBar");
   return (
     <>
@@ -53,12 +67,6 @@ function CreatorNavBar() {
       </LinkElem>
       <LinkElem href="/plans" title={t("creator./plans")}>
         <i className="ti ti-calendar-plus"></i>
-      </LinkElem>
-      <LinkElem href="/users" title={t("creator./users")}>
-        <i className="ti ti-users"></i>
-      </LinkElem>
-      <LinkElem href="/users/add" title={t("creator./users/add")}>
-        <i className="ti ti-user-plus"></i>
       </LinkElem>
       <LinkElem href="/payments" title={t("creator./payments")}>
         <i className="ti ti-credit-card"></i>
@@ -93,9 +101,8 @@ export default function SideBar({ onClose: onToggle }: Props) {
         <SimpleBar className="scroll-sidebar">
           <nav className="sidebar-nav">
             <ul id="sidebarnav">
-              {/* <AdminNavBar /> */}
-              <CreatorNavBar />
-              {/* <AssistantNavBar /> */}
+              <ManageUsersNavBar />
+              <ManageSystem />
             </ul>
           </nav>
         </SimpleBar>
