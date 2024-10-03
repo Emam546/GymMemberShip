@@ -57,7 +57,7 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
       >
         <Header />
         <div className="body-wrapper tw-flex tw-flex-col tw-w-full">
-          <div className="px-4 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
+          <div className="px-4 py-0 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
             {children}
           </div>
         </div>

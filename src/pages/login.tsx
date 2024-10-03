@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import requester from "@src/utils/axios";
 import Logo from "@sources/src/logo.png";
 import { useLogUser } from "@src/components/UserProvider";
+import ImagesBg from "@src/components/bg";
 export interface FormValues {
   id: string;
   password: string;
@@ -40,15 +41,22 @@ export default function Login({ admins }: Props) {
       });
     },
   });
+  const image = ImagesBg[new Date().getDay() % ImagesBg.length];
   const router = useRouter();
   return (
-    <div className="body-wrapper" data-layout="vertical">
+    <div
+      className="body-wrapper tw-bg-cover tw-bg-no-repeat tw-bg-center"
+      data-layout="vertical"
+      style={{
+        backgroundImage: `url("${image.src}")`,
+      }}
+    >
       <div className="overflow-hidden position-relative min-vh-100 d-flex align-items-center justify-content-center tw-py-6">
         <div className="d-flex align-items-center justify-content-center w-100">
           <div className="row justify-content-center w-100">
             <div className="col-md-8 col-lg-6 col-xxl-3">
               <div className="mb-0 card">
-                <div className="card-body">
+                <div className="card-body tw-bg-black/90">
                   <div className="py-3 text-center text-nowrap logo-img d-block w-100">
                     <img src={Logo.src} width={180} alt="logo" />
                   </div>
