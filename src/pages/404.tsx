@@ -5,7 +5,7 @@ function Page() {
   return (
     <>
       <Head>404</Head>
-      <Page404 message="The Page url is not exist" />;
+      <Page404 message="The Page url is not exist" />
     </>
   );
 }

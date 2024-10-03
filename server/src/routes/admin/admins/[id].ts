@@ -22,7 +22,8 @@ router.get("/:id", (req, res) => {
 const registerUpdate = new Validator({
   name: ["string"],
   password: ["string"],
-  email: ["string"],
+  email: ["string", "email"],
+  phone: ["string"],
   type: ["string", { in: ["admin", "assistant"] }],
 });
 router.post("/:id", async (req, res) => {
@@ -30,8 +31,7 @@ router.post("/:id", async (req, res) => {
   const result = registerUpdate.passes(req.body);
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
-
-  const newUser = await Admins.findOneAndUpdate(
+  const newUser = await Admins.findByIdAndUpdate(
     user._id,
     {
       $set: { ...result.data },

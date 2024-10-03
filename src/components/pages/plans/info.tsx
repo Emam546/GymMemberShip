@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfoGetter, { CreateElem } from "../../InsertCommonData";
 import { Elem as OrgElem } from "../../InsertCommonData/Elem";
 import Link from "next/link";
@@ -33,18 +33,20 @@ declare global {
 }
 
 export interface Props {
-  plans: DataBase.WithIdOrg<DataBase.Models.Plans>[];
+  plans: DataBase.WithId<DataBase.Models.Plans>[];
+  setPlans: (plans: DataBase.WithId<DataBase.Models.Plans>[]) => void;
 }
-export default function PlansInfoGetter({ plans: initPlans }: Props) {
+export default function PlansInfoGetter({ plans, setPlans }: Props) {
   const [curDel, setCurDel] = useState<T>();
   const { t } = useTranslation("plan:info");
-  const [plans, setLevels] = useState(initPlans);
+
   const mutate = useMutation({
     async mutationFn(id: string) {
       await requester.delete(`/api/admin/plans/${id}`);
     },
     onSuccess(_, id, context) {
-      setLevels(plans.filter((val) => val.id != id));
+      setPlans(plans.filter((val) => val._id != id));
+
       setCurDel(undefined);
     },
   });
@@ -54,7 +56,7 @@ export default function PlansInfoGetter({ plans: initPlans }: Props) {
         {plans.length > 0 && (
           <InfoGetter
             Elem={Elem}
-            data={plans}
+            data={plans.map((plan) => ({ ...plan, id: plan._id }))}
             onDeleteElem={(elem) => setCurDel(elem)}
           />
         )}

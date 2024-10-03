@@ -7,9 +7,9 @@ import { useEffect } from "react";
 import CheckInput from "@src/components/common/checkInput";
 import SelectPlan from "./selectPlan";
 import { formateDate } from "@src/utils";
-import { planToDays } from "@src/utils/payment";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
+import { getDefaultDays, paidType } from "@src/utils/payment";
 
 export interface FormData {
   planId: string;
@@ -19,6 +19,7 @@ export interface FormData {
   };
   separated: boolean;
   paid: DataBase.Price;
+  remaining: DataBase.Price;
 }
 export interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -41,6 +42,7 @@ declare global {
           paragraph: "The amount to be paid is {{val}}";
           placeholder: "eg.120";
         };
+        remaining: string;
         separated: "separated";
       };
     }
@@ -49,17 +51,27 @@ declare global {
 export default function AddUserPayment({ plans, onData }: Props) {
   const { handleSubmit, register, formState, getValues, setValue, watch } =
     useForm<FormData>();
-  const paidType = watch("plan.type");
+  const planType = watch("plan.type");
   const numberOfDays = watch("plan.num");
   const planId = watch("planId");
   const { t } = useTranslation("payment:add");
   const plan = plans.find((val) => val._id == planId);
-  const planPrice = plan?.prices[paidType];
+  const planPrice = plan?.prices[planType];
+  const paidAmount = watch("paid");
   useEffect(() => {
     if (!planPrice) return;
-    setValue("paid", numberOfDays * planPrice);
-    
-  }, [paidType, planId, numberOfDays]);
+    console.log(paidType(getValues("plan"), planPrice));
+    setValue("paid", paidType(getValues("plan"), planPrice));
+  }, [planType, planId, numberOfDays]);
+  useEffect(() => {
+    if (!planType) return;
+    setValue("plan.num", getDefaultDays(planType));
+  }, [planType]);
+  useEffect(() => {
+    if (!planPrice) return;
+    const TheMust = paidType(getValues("plan"), planPrice);
+    setValue("remaining", TheMust - paidAmount);
+  }, [paidAmount]);
   return (
     <form onSubmit={handleSubmit(onData)} autoComplete="off">
       <Grid2>
@@ -77,7 +89,6 @@ export default function AddUserPayment({ plans, onData }: Props) {
           <PlanTypeInput
             priceProps={register("plan.num", {
               required: true,
-              value: 1,
               valueAsNumber: true,
             })}
             unitProps={register("plan.type", { required: true })}
@@ -86,20 +97,12 @@ export default function AddUserPayment({ plans, onData }: Props) {
                 formState.errors.plan?.type) as FieldError
             }
           />
-          {paidType && numberOfDays && (
+          {planType && numberOfDays && (
             <p className="tw-mb-0">
               {t("payment.endAt", {
                 val: formateDate(
                   new Date(
-                    new Date().getTime() +
-                      planToDays({
-                        type: paidType,
-                        num: numberOfDays,
-                      }) *
-                        1000 *
-                        24 *
-                        60 *
-                        60
+                    new Date().getTime() + numberOfDays * 1000 * 24 * 60 * 60
                   )
                 ),
               })}
@@ -124,18 +127,30 @@ export default function AddUserPayment({ plans, onData }: Props) {
           {planPrice && (
             <p className="tw-mb-0">
               {t("paid.paragraph", {
-                val: `${
-                  numberOfDays * planPrice
-                }EGP`,
+                val: `${paidType(getValues("plan"), planPrice)}EGP`,
               })}
             </p>
           )}
         </div>
+        <BudgetInput
+          label={t("remaining")}
+          priceProps={{
+            ...register("remaining", {
+              required: t("paid.required.num"),
+              valueAsNumber: true,
+              min: 0,
+              value: 0,
+            }),
+            placeholder: "eg.120",
+            type: "number",
+          }}
+          unitProps={{}}
+          err={formState.errors.paid}
+        />
         <div className="tw-self-stretch tw-flex tw-items-end tw-max-h-[4.4rem]">
           <CheckInput
             label={t("separated")}
             id={"separated-input"}
-            className="tw-mx-0.5 tw-h-4 tw-w-4 tw-rounded tw-overflow-hidden"
             {...register("separated")}
           />
         </div>

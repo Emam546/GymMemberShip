@@ -13,7 +13,8 @@ import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
 import PrintUserPayments from "@src/components/pages/payments/print";
 import { useTranslation } from "react-i18next";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
-import { LineChart } from "@mui/x-charts";
+import { LineChart } from "@src/components/common/charts";
+
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { GetServerSideProps } from "next";
 import connect from "@serv/db/connect";

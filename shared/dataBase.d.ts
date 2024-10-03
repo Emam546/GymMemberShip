@@ -71,7 +71,6 @@ declare global {
             year?: number;
             day?: number;
             month?: number;
-            currency: string;
           };
           profit: number;
           paymentCount: number;

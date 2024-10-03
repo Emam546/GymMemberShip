@@ -18,6 +18,7 @@ const registerValidator = new Validator({
     num: ["integer", "required"],
     ".": ["required"],
   },
+  remaining: ["integer", "required"],
   ".": ["required"],
 });
 router.post("/", async (req, res) => {

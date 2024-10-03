@@ -11,7 +11,8 @@ import TimeStartEndSelector, {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
-import { LineChart } from "@mui/x-charts/LineChart";
+import { LineChart } from "@src/components/common/charts";
+
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getPlan } from "@serv/routes/admin/plans/[id]";

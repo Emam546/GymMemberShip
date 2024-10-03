@@ -12,5 +12,6 @@
         "paragraph": "المبلغ الواجب دفعه هو {{val}}",
         "placeholder": "على سبيل المثال.120"
     },
-    "separated": "منفصل"
+    "separated": "منفصل",
+    "remaining": "متبقي"
 }

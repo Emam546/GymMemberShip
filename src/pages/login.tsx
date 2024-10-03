@@ -3,14 +3,14 @@ import { ErrorInputShower } from "@src/components/common/inputs/main";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import Admins from "@serv/models/admins";
-import SelectInput from "@src/components/common/inputs/select";
 import { StyledSelect } from "@src/components/common/inputs/styles";
 import connect from "@serv/db/connect";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import requester from "@src/utils/axios";
-
+import Logo from "@sources/src/logo.png";
+import { useLogUser } from "@src/components/UserProvider";
 export interface FormValues {
   id: string;
   password: string;
@@ -23,42 +23,34 @@ export default function Login({ admins }: Props) {
   const { register, handleSubmit, formState, setError } = useForm<FormValues>({
     criteriaMode: "firstError",
   });
+  const login = useLogUser();
   const mutate = useMutation({
     async mutationFn(data: FormValues) {
-      await requester.post("/api/admin/admins/auth/login", data);
+      const response = await requester.post(
+        "/api/admin/admins/auth/login",
+        data
+      );
+      const user = response.data.data;
+      await login.mutateAsync(user);
+      await router.replace("/");
     },
     onError(err: AxiosError<any>) {
       setError("root", {
         message: err.response?.data.msg || err.message || "",
       });
     },
-    onSuccess() {
-      router.replace("/");
-    },
   });
   const router = useRouter();
   return (
-    <div
-      className="page-wrapper"
-      id="main-wrapper"
-      data-layout="vertical"
-      data-navbarbg="skin6"
-      data-sidebartype="full"
-      data-sidebar-position="fixed"
-      data-header-position="fixed"
-    >
-      <div className="overflow-hidden position-relative radial-gradient min-vh-100 d-flex align-items-center justify-content-center tw-py-6">
+    <div className="body-wrapper" data-layout="vertical">
+      <div className="overflow-hidden position-relative min-vh-100 d-flex align-items-center justify-content-center tw-py-6">
         <div className="d-flex align-items-center justify-content-center w-100">
           <div className="row justify-content-center w-100">
             <div className="col-md-8 col-lg-6 col-xxl-3">
               <div className="mb-0 card">
                 <div className="card-body">
                   <div className="py-3 text-center text-nowrap logo-img d-block w-100">
-                    <img
-                      src="/images/logos/dark-logo.svg"
-                      width={180}
-                      alt="logo"
-                    />
+                    <img src={Logo.src} width={180} alt="logo" />
                   </div>
                   <p className="text-center">Login</p>
                   <form

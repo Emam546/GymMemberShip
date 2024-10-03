@@ -3,7 +3,8 @@
     "submit": "ارسل",
     "update": "تحديث",
     "print": "اطبع",
-    "activate": "فعل"
+    "activate": "فعل",
+    "add": "اضف"
   },
   "messages": {
     "updated": "تم تحديث المستند بنجاح",

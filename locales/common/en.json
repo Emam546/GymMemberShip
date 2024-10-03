@@ -3,7 +3,8 @@
     "submit": "Submit",
     "update": "Update",
     "print": "Print",
-    "activate": "Activate"
+    "activate": "Activate",
+    "add": "Add"
   },
   "messages": {
     "updated": "the document updated successfully",

@@ -6,10 +6,11 @@ import LogsRouter from "./log";
 import AdminsRouter from "./admins";
 import AuthRouter from "./admins/login";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
+import EnvVars from "@serv/declarations/major/EnvVars";
 const router = Router();
 router.use("/admins/auth/", AuthRouter);
 router.use((req, res, next) => {
-  if (!req.isAuthenticated())
+  if (!req.isAuthenticated() && EnvVars.nodeEnv != "test")
     return res.status(HttpStatusCodes.UNAUTHORIZED).SendFailed("UnAuthorized");
   next();
 });

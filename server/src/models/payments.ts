@@ -20,6 +20,7 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
     plan: { type: Object, required: true },
     createdBy: String,
     remaining: { type: Number, required: true },
+
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Admins.modelName,

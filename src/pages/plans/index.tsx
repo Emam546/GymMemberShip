@@ -10,12 +10,23 @@ import Head from "next/head";
 import { MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
+import requester from "@src/utils/axios";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import PlansInfoForm from "@src/components/pages/plans/form";
 
 export interface Props {
-  plans: DataBase.WithIdOrg<DataBase.Models.Plans>[];
+  plans: DataBase.WithId<DataBase.Models.Plans>[];
 }
-export default function Page({ plans: levels }: Props) {
+export default function Page({ plans: initPlans }: Props) {
+  const [plans, setPlans] = useState(initPlans);
   const { t } = useTranslation("/plan");
+  const mutate = useMutation({
+    async mutationFn(data: unknown) {
+      const res = await requester.post(`/api/admin/plans`, data);
+      return res.data.data as DataBase.WithId<DataBase.Models.Plans>;
+    },
+  });
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <RedirectIfNotAdmin>
@@ -23,9 +34,19 @@ export default function Page({ plans: levels }: Props) {
           <title>{t("title")}</title>
         </Head>
         <BigCard>
+          <CardTitle>{t("Add Plan")}</CardTitle>
+          <MainCard>
+            <PlansInfoForm
+              onData={async (data) => {
+                const doc = await mutate.mutateAsync(data);
+                setPlans([...plans, doc]);
+              }}
+              buttonName={t("buttons.add", { ns: "translation" })}
+            />
+          </MainCard>
           <CardTitle>{t("Plans")}</CardTitle>
           <MainCard>
-            <PlansInfoGetter plans={levels} />
+            <PlansInfoGetter plans={plans} setPlans={setPlans} />
           </MainCard>
         </BigCard>
         <div className="tw-py-3">
@@ -42,8 +63,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     props: {
       plans: plans.map((doc) => {
         return {
-          id: doc._id.toString(),
           ...MakeItSerializable(doc),
+          _id: doc._id.toString(),
         };
       }),
     },

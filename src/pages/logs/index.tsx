@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import PrintLogs from "@src/components/pages/logs/print";
-import { LineChart, lineElementClasses } from "@mui/x-charts/LineChart";
+import { LineChart } from "@src/components/common/charts";
 import { getDaysArray } from "@src/utils";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;

@@ -12,7 +12,7 @@ export interface DataType {
   password: string;
   phone?: string;
   email?: string;
-  type: string;
+  type: "assistant" | "admin";
 }
 export interface Props {
   defaultData?: DefaultData;
@@ -61,18 +61,12 @@ export default function AdminInfoForm({
         <MainInput
           id={"age-input"}
           title={t("email")}
-          {...register("email", {
-            valueAsNumber: true,
-          })}
+          {...register("email")}
           err={formState.errors.email}
         />
-        <SelectInput
-          title={t("type")}
-          id="type-input"
-          {...register("type", {})}
-        >
+        <SelectInput title={t("type")} id="type-input" {...register("type")}>
           <option value="admin">Admin</option>
-          <option value="user">User</option>
+          <option value="assistant">User</option>
         </SelectInput>
       </Grid2>
       <div className="tw-mt-4 tw-flex tw-justify-end">

@@ -2,6 +2,9 @@ import dynamic from "next/dynamic";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ComponentProps } from "react";
 import { useTranslation } from "react-i18next";
+import React from "react"
+import { axisClasses } from "@mui/x-charts/ChartsAxis";
+import { LineChartProps, LineChart as OrgLineChart } from "@mui/x-charts";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface Chart {
   date: Date;
@@ -14,16 +17,28 @@ interface SalesOverViewProps {
   }[];
   valueFormatter: (val: number | null) => string;
 }
+const style = {
+  [`.${axisClasses.root}`]: {
+    [`.${axisClasses.tick}, .${axisClasses.line}`]: {
+      stroke: "white",
+    },
+    [`.${axisClasses.tickLabel}`]: {
+      fill: "white",
+    },
+  },
+};
 export function SalesOverView({ data, valueFormatter }: SalesOverViewProps) {
   return (
-    <div dir="ltr">
+    <div dir="ltr" className="tw-max-w-full">
       <BarChart
+        sx={style}
         dataset={data}
         xAxis={[{ scaleType: "band", dataKey: "label" }]}
         yAxis={[
           {
             tickPlacement: "start",
             min: 0,
+
             max: data.reduce((acc, { num }) => (acc > num ? acc : num), 10),
           },
         ]}
@@ -40,6 +55,12 @@ export function SalesOverView({ data, valueFormatter }: SalesOverViewProps) {
     </div>
   );
 }
+
+export const LineChart = React.forwardRef<unknown, LineChartProps>(
+  (props, ref) => {
+    return <OrgLineChart {...props} ref={ref} sx={style} />;
+  }
+);
 export function YearlyBreakUp({
   series,
 }: {

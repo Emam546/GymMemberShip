@@ -11,5 +11,4 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.disconnect();
 });
-jest.setTimeout(10000);
 export default agent;

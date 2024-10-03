@@ -38,7 +38,7 @@ export default function InfoGetter<T extends PSchema>({
     <>
       <div
         className={classNames({
-          "pl-5": !noDragging,
+          "ltr:tw-pl-5 rtl:tw-pr-5": !noDragging,
         })}
       >
         <ElemGenerator

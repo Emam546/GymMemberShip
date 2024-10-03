@@ -151,14 +151,14 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
                   key={val._id}
                   className="overflow-hidden timeline-item d-flex position-relative"
                 >
-                  <div className="flex-shrink-0 timeline-time text-dark text-end">
+                  <div className="flex-shrink-0 timeline-time text-end">
                     {formatTimeToString(date)}
                   </div>
                   <div className="timeline-badge-wrap d-flex flex-column align-items-center">
                     <span className="flex-shrink-0 my-8 border border-2 timeline-badge border-primary" />
                     <span className="flex-shrink-0 timeline-badge-border d-block" />
                   </div>
-                  <div className="timeline-desc fs-3 text-dark mt-n1">
+                  <div className="timeline-desc fs-3 mt-n1">
                     {t("transactions.receivePayment", {
                       name: val.userId.name,
                       price: `${val.paid}EGP`,
@@ -185,7 +185,14 @@ export function SalesOverView({ months }: SalesOverViewProps) {
       date: new Date(val.date),
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
-  const [curMonth, setCurMonth] = useState(new Date().getMonth());
+  const curDate = new Date();
+  const [curMonth, setCurMonth] = useState(
+    new Date(
+      curDate.getFullYear(),
+      curDate.getMonth(),
+      curDate.getDay() - 8
+    ).getMonth()
+  );
   const { t } = useTranslation("dashboard");
   return (
     <div className="col-lg-8 d-flex align-items-strech">

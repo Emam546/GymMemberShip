@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import agent from "@test/index";
+import { admin } from "../admin/utils";
 
 export function createUserData(): Omit<
   DataBase.Models.User,
@@ -7,7 +8,7 @@ export function createUserData(): Omit<
 > {
   return {
     name: faker.person.fullName(),
-
+    adminId: admin._id,
     age: faker.number.int({ min: 10, max: 100 }),
     email: faker.internet.email(),
     phone: faker.phone.number(),

@@ -1,5 +1,6 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
+import { admin } from "../admin/utils";
 export function createPayment(
   planId: string,
   userId: string
@@ -15,7 +16,10 @@ export function createPayment(
     },
     planId,
     userId,
-  };
+    adminId: admin._id,
+    remaining: faker.number.int(100),
+    
+  } as any;
 }
 export async function createPaymentRequest(
   planId: string,

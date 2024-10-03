@@ -5,6 +5,8 @@ import Link from "next/link";
 import React, { ComponentProps, useState } from "react";
 import { DeleteButton } from "@src/components/common/deleteButton";
 import classNames from "classnames";
+import { E, TH } from "@src/components/common/table";
+
 export interface ElemProps {
   order: number;
   log: Omit<DataBase.WithId<DataBase.Models.Logs>, "userId" | "planId">;
@@ -120,25 +122,7 @@ function Shower({
     </>
   );
 }
-export function TH({ children, className, ...props }: ComponentProps<"th">) {
-  return (
-    <th className={classNames("border-bottom-0", className)} {...props}>
-      <h6 className="mb-0 fw-semibold">{children}</h6>
-    </th>
-  );
-}
-function E({
-  val,
-  heads,
-  children,
-}: {
-  val: HeadKeys;
-  heads: HeadKeys[];
-  children: React.ReactNode;
-}) {
-  if (!heads.includes(val)) return null;
-  return <>{children}</>;
-}
+
 export interface PaymentProps {
   page: number;
   logs: ElemProps[];

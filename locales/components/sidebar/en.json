@@ -1,16 +1,35 @@
 {
-    "assistant": {
-        "label": "login",
+    "user": {
+        "label": "User",
         "/users/add": "Add User",
-        "/users/search": "Search for a User"
+        "/users/search": "Search for User"
     },
-    "creator": {
-        "label": "Creator",
-        "/dashboard": "Dashboard",
+    "sell": {
+        "label": "Sell"
+    },
+    "payments": {
+        "label": "Payments"
+    },
+    "whatsapp": {
+        "label": "whatsapp"
+    },
+    "dashboard": {
+        "label": "dashboard"
+    },
+    "trainers": {
+        "label": "Trainers"
+    },
+    "setting": {
+        "label": "Settings",
+        "/admins": "Manage Admins",
+        "/products": "Manage Products"
+    },
+    "logout": {
+        "label": "LogOut"
+    },
+    "plans": {
+        "label": "Plans",
         "/plans": "Manage Plans",
-        "/users": "Manage Users",
-        "/payments": "Manage Payments",
-        "/logs": "Manage Logs",
-        "/admins": "Manage Admins"
+        "/plans/add": "Add Plan"
     }
 }

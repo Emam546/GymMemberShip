@@ -8,6 +8,7 @@ declare global {
           update: "Update";
           print: "Print";
           activate: "Activate";
+          add: string;
         };
         messages: {
           updated: "the document updated successfully";

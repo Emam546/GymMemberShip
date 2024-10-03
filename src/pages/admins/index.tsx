@@ -12,11 +12,14 @@ import { useState } from "react";
 import { getAdmins } from "@serv/routes/admin/admins";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import connect from "@serv/db/connect";
+import { useAuth, useLogUser } from "@src/components/UserProvider";
 interface Props {
   admins: DataBase.WithId<DataBase.Models.Admins>[];
 }
 export default function Page({ admins: initAdmins }: Props) {
   const [admins, setAdmins] = useState(initAdmins);
+  const auth = useAuth();
+  const login = useLogUser();
   const { t } = useTranslation("/admins");
   const mutate = useMutation({
     async mutationFn(data: unknown) {
@@ -36,9 +39,6 @@ export default function Page({ admins: initAdmins }: Props) {
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Admins>>
       >(`/api/admin/admins/${data._id}`);
     },
-    onSuccess(data, variables, context) {
-      setAdmins((pre) => pre.filter((c) => c._id != variables._id));
-    },
   });
 
   return (
@@ -52,8 +52,10 @@ export default function Page({ admins: initAdmins }: Props) {
           <AdminInfoForm
             onData={async (data) => {
               const user = await mutate.mutateAsync(data);
+              setAdmins([...admins, user]);
+              alert(t("messages.added", { ns: "translation" }));
             }}
-            buttonName={t("buttons.submit", { ns: "translation" })}
+            buttonName={t("buttons.add", { ns: "translation" })}
           />
         </MainCard>
         <MainCard>
@@ -67,6 +69,8 @@ export default function Page({ admins: initAdmins }: Props) {
             })}
             onDelete={async (admin) => {
               await deleteAdmin.mutateAsync(admin);
+              setAdmins((pre) => pre.filter((c) => c._id != admin._id));
+              if (auth?._id == admin._id) login.mutate(null);
             }}
             totalCount={admins.length}
             setPage={() => {}}

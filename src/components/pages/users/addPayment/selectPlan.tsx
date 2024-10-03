@@ -14,7 +14,7 @@ const SelectPlan = React.forwardRef<ComponentRef<"select">, Props>(
     return (
       <div>
         <SelectInput ref={ref} {...props}>
-          <option value="">{t("default")}</option>;
+          <option value="">{t("default")}</option>
           {plans.map((val) => {
             return (
               <option value={val._id} key={val._id}>

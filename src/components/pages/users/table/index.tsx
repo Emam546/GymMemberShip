@@ -7,6 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import CheckInput from "@src/components/common/checkInput";
 import { useTranslation } from "react-i18next";
+import { E, TH } from "@src/components/common/table";
+
 interface ElemProps {
   order: number;
   user: DataBase.WithId<DataBase.Models.User>;
@@ -128,25 +130,7 @@ function UserShower({
     </>
   );
 }
-export function TH({ children }: { children: string }) {
-  return (
-    <th className="border-bottom-0">
-      <h6 className="mb-0 fw-semibold">{children}</h6>
-    </th>
-  );
-}
-function E({
-  val,
-  heads,
-  children,
-}: {
-  val: HeadKeys;
-  heads: HeadKeys[];
-  children: React.ReactNode;
-}) {
-  if (!heads.includes(val)) return null;
-  return <>{children}</>;
-}
+
 export interface Props {
   page: number;
   users: ElemProps[];

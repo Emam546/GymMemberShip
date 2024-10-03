@@ -15,7 +15,7 @@ import { getDaysArray, getMonthsArray, MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
 import { getLogsCount } from "@serv/routes/admin/log";
-import { LineChart } from "@mui/x-charts";
+import { LineChart } from "@src/components/common/charts";
 import { useFormateDate } from "@src/hooks";
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;

@@ -41,7 +41,7 @@ router.post("/:id", async (req, res) => {
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
 
-  const newUser = await Users.findOneAndUpdate(
+  const newUser = await Users.findByIdAndUpdate(
     user._id,
     {
       $set: { ...result.data },

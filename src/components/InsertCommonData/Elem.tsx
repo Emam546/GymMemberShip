@@ -7,7 +7,7 @@ import DraggableComp from "@src/components/common/drag";
 import React from "react";
 import { PrimaryProps } from "./EleGen";
 import { CircularProgress } from "@mui/material";
-
+import { DeleteButton } from "../common/deleteButton";
 export interface DraggableItem extends PrimaryProps {
   children: React.ReactNode;
   disabled?: boolean;
@@ -80,17 +80,11 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                 </span>
               )}
               {deleteSelf && (
-                <button
-                  type="button"
-                  className="hover:tw-text-red-600 disabled:tw-text-neutral-600 tw-border-0 tw-bg-transparent"
+                <DeleteButton
                   onClick={() => {
                     if (parentDiv) deleteSelf.call(parentDiv);
                   }}
-                  aria-label="delete"
-                  disabled={disabled}
-                >
-                  <FontAwesomeIcon icon={faTrashCan} />
-                </button>
+                />
               )}
             </div>
           </div>

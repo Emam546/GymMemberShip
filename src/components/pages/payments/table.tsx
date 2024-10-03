@@ -6,12 +6,14 @@ import React, { ComponentProps, useState } from "react";
 import { DeleteButton } from "@src/components/common/deleteButton";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
-import { remainingDays, planToDays } from "@src/utils/payment";
+import { remainingDays } from "@src/utils/payment";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import queryClient from "@src/queryClient";
 import { useTranslation } from "react-i18next";
+import { E, TH } from "@src/components/common/table";
+
 export interface ElemProps {
   order: number;
   payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
@@ -47,7 +49,7 @@ function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
   });
   if (query.isLoading) return <p>Loading...</p>;
   if (query.isError) return <p>{JSON.stringify(query.error)}</p>;
-  const TotalDays = planToDays(payment.plan);
+  const TotalDays = payment.plan.num;
   const rDays = remainingDays(payment, query.data);
   return (
     <div>
@@ -154,7 +156,7 @@ function Shower({
   const [open, setOpen] = useState(false);
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-      planToDays(payment.plan) * 1000 * 24 * 60 * 60
+      payment.plan.num * 1000 * 24 * 60 * 60
   );
   const { t } = useTranslation("table:payments");
   return (
@@ -225,7 +227,7 @@ function Shower({
           </td>
         </E>
         <E val="addLog" heads={headKeys}>
-          <td className="tw-flex tw-justify-center">
+          <td>
             <div className="tw-flex tw-justify-center">
               <AddLog payment={payment} />
             </div>
@@ -256,25 +258,7 @@ function Shower({
     </>
   );
 }
-export function TH({ children, className, ...props }: ComponentProps<"th">) {
-  return (
-    <th className={classNames("border-bottom-0", className)} {...props}>
-      <h6 className="mb-0 fw-semibold">{children}</h6>
-    </th>
-  );
-}
-function E({
-  val,
-  heads,
-  children,
-}: {
-  val: HeadKeys;
-  heads: HeadKeys[];
-  children: React.ReactNode;
-}) {
-  if (!heads.includes(val)) return null;
-  return <>{children}</>;
-}
+
 export interface PaymentProps {
   page: number;
   payments: ElemProps[];

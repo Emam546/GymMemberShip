@@ -29,45 +29,24 @@ interface ButtonFieldProps
 }
 function CustomField(props: ButtonFieldProps) {
   return (
-    <div
-      ref={props.InputProps?.ref}
-      aria-disabled={props.disabled}
-      className={classNames(
-        "form-control tw-py-0 hover:tw-border-gray-900 focus-within:tw-border-gray-900",
-        "aria-disabled:tw-bg-[#EAEFF4] aria-disabled:hover:tw-border-transparent aria-disabled:tw-cursor-default"
-      )}
-      style={{
-        paddingTop: 0,
-        paddingBottom: 0,
-      }}
-    >
-      <div className="tw-flex tw-items-center tw-h-9">
-        <p
-          aria-disabled={props.disabled}
-          className={classNames(
-            "tw-py-2 tw-text-gray-900 tw-m-0 tw-flex-1",
-            "aria-disabled:tw-text-gray-800"
-          )}
-        >
-          {formateDate(props.value!.toDate(), "/")}
-        </p>
-        <button
-          disabled={props.disabled}
-          onClick={() => props.setOpen?.(true)}
-          type="button"
-          className="tw-border-none tw-p-2 tw-text-gray-400 tw-bg-inherit tw-text-xl"
-        >
-          <FontAwesomeIcon icon={faCalendarDays} />
-        </button>
-      </div>
+    <div ref={props.InputProps?.ref} className={"tw-relative"}>
+      <input
+        disabled={props.disabled}
+        className={"form-control"}
+        value={formateDate(props.value!.toDate(), "/")}
+      />
+      <button
+        disabled={props.disabled}
+        onClick={() => props.setOpen?.(true)}
+        type="button"
+        className="tw-border-none tw-text-gray-400 disabled:tw-text-gray-100 tw-bg-inherit tw-text-xl tw-absolute tw-left-4 tw-top-1/2 -tw-translate-y-1/2 tw-z-10"
+      >
+        <FontAwesomeIcon icon={faCalendarDays} />
+      </button>
     </div>
   );
 }
-export default function DatePicker({
-  value,
-  onChange,
-  ...props
-}: Props) {
+export default function DatePicker({ value, onChange, ...props }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <OrgDatePicker

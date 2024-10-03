@@ -1,6 +1,6 @@
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import requester from "@src/utils/axios";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { MakeItSerializable } from "@src/utils";
@@ -18,6 +18,11 @@ interface Props {
 export default function Page({ doc: initData }: Props) {
   const [doc, setDoc] = useState(initData);
   const { t } = useTranslation("/admins/[id]");
+  const auth = useAuth();
+  const login = useLogUser();
+  useEffect(() => {
+    if (auth?._id == doc._id) login.mutate(doc);
+  }, [doc]);
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -33,6 +38,7 @@ export default function Page({ doc: initData }: Props) {
                 email: doc.email,
                 phone: doc.phone,
                 name: doc.name,
+                type: doc.type,
               }}
               onData={async (data) => {
                 await requester.post(`/api/admin/admins/${doc._id}`, data);
@@ -42,10 +48,7 @@ export default function Page({ doc: initData }: Props) {
               buttonName={t("buttons.update", { ns: "translation" })}
             />
           </MainCard>
-          {/* <div className="tw-flex tw-items-center tw-justify-between">
-            <CardTitle>{t("payments.title")}</CardTitle>
-            <PrintUsersPayments id={doc._id} />
-          </div> */}
+ 
         </BigCard>
       </IsAdminComp>
     </div>
@@ -67,6 +70,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   }
 };
 import i18n from "@src/i18n";
+import { useAuth, useLogUser } from "@src/components/UserProvider";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

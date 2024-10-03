@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import CheckInput from "@src/components/common/checkInput";
 import { useTranslation } from "react-i18next";
+import { E, TH } from "@src/components/common/table";
 interface ElemProps {
   order: number;
   admin: DataBase.WithId<DataBase.Models.Admins>;
@@ -45,15 +46,17 @@ function UserShower({
         <E heads={headKeys} val="type">
           <td className="tw-text-center">{admin.type}</td>
         </E>
-        <E val="phone" heads={headKeys}>
-          <td>{admin.phone}</td>
-        </E>
         <E val="email" heads={headKeys}>
           <td>{admin.email}</td>
         </E>
+        <E val="phone" heads={headKeys}>
+          <td>{admin.phone}</td>
+        </E>
         <E val="delete" heads={headKeys}>
-          <td className="tw-flex tw-justify-center">
-            <DeleteButton onClick={() => setOpen(true)} />
+          <td>
+            <div className="tw-flex tw-justify-center">
+              <DeleteButton onClick={() => setOpen(true)} />
+            </div>
           </td>
         </E>
       </tr>
@@ -76,25 +79,7 @@ function UserShower({
     </>
   );
 }
-export function TH({ children }: { children: string }) {
-  return (
-    <th className="border-bottom-0">
-      <h6 className="mb-0 fw-semibold">{children}</h6>
-    </th>
-  );
-}
-function E({
-  val,
-  heads,
-  children,
-}: {
-  val: HeadKeys;
-  heads: HeadKeys[];
-  children: React.ReactNode;
-}) {
-  if (!heads.includes(val)) return null;
-  return <>{children}</>;
-}
+
 export interface Props {
   page: number;
   admins: ElemProps[];

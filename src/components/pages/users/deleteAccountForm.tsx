@@ -40,7 +40,7 @@ export default function DeleteAccountForm({ id }: { id: string }) {
   return (
     <div>
       <div className="tw-flex tw-justify-between">
-        <p className="tw-text-neutral-500 tw-text-base">{t("paragraph")}</p>
+        <p className="text-muted tw-text-base">{t("paragraph")}</p>
         <DangerButton type="button" onClick={() => setOpen(true)}>
           {t("Delete Account")}
         </DangerButton>

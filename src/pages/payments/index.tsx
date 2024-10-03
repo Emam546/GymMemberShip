@@ -13,7 +13,8 @@ import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
 import PrintUserPayments from "@src/components/pages/payments/print";
 import { useTranslation } from "react-i18next";
 import { getDaysArray } from "@src/utils";
-import { LineChart } from "@mui/x-charts";
+import { LineChart } from "@src/components/common/charts";
+
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 
 const perLoad = 20;

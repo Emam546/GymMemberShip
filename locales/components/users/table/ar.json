@@ -1,6 +1,6 @@
 {
     "td": {
-        "Deleted": "تم الحذف",
+        "Deleted": "محذوف",
         "block.label": "احظر",
         "delete": {
             "title": "حظر المستخدم",
@@ -12,7 +12,7 @@
     "th": {
         "Id": "Id",
         "Name": "اسم",
-        "admin":"المنشي",
+        "admin": "المنشي",
         "Age/Tall/Weight": "العمر/الطول/الوزن",
         "Plan": "الخطه",
         "Created At": "تم الإنشاء في",

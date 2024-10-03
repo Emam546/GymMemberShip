@@ -63,7 +63,7 @@ export default function Page({ earnings, payments, users, sales }: Props) {
                         "age/tall/weight",
                         "plan",
                         "order",
-                        "admin"
+                        "admin",
                       ]}
                     />
                   </div>
@@ -133,7 +133,7 @@ async function getLastMonthDays(last: number) {
             _id: {
               day: day.getDate(),
               month: day.getMonth() + 1,
-              currency: "EGP",
+              year: day.getFullYear(),
             },
             profit: 0,
             paymentCount: 0,
@@ -172,6 +172,7 @@ async function getLastMonthProfit() {
       profit: 0,
     };
   });
+
   return data;
 }
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {

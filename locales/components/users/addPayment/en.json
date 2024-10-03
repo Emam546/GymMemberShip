@@ -10,7 +10,8 @@
             "num": "Please set the course price or set it to 0"
         },
         "paragraph": "The amount to be paid is {{val}}",
-        "placeholder":"eg.120"
+        "placeholder": "eg.120"
     },
-    "separated": "separated"
+    "separated": "separated",
+    "remaining": "Remaining"
 }

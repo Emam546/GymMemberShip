@@ -9,15 +9,17 @@ import PlanTypeInput from "@src/components/common/inputs/planType";
 import CheckInput from "@src/components/common/checkInput";
 import BudgetInput from "@src/components/common/inputs/budget";
 import Link from "next/link";
-import { planToDays } from "@src/utils/payment";
 import { formateDate } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
+import { useEffect } from "react";
+import { getDefaultDays, paidType } from "@src/utils/payment";
 
 export type DataType = {
   plan: DataBase.Models.Payments["plan"];
   paid: DataBase.Models.Payments["paid"];
   separated: DataBase.Models.Payments["separated"];
+  remaining: DataBase.Models.Payments["remaining"];
 };
 type FormData = DataBase.Models.Payments;
 export interface Props {
@@ -50,25 +52,30 @@ export default function PaymentInfoForm({
     useForm<FormData>({
       values: payment,
     });
-  const paidType = watch("plan.type");
-  const numberOfDays = watch("plan.num");
   const planId = watch("planId");
   const plan = plans.find((val) => val._id == planId);
-  const planPrice = plan?.prices[paidType];
+  const planPrice = plan?.prices[getValues("plan.type")];
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-      planToDays(payment.plan) * 1000 * 24 * 60 * 60
+      payment.plan.num * 1000 * 24 * 60 * 60
   );
   const { t: t1 } = useTranslation("payment:form:update");
   const { t: t2 } = useTranslation("payment:add");
+
+  useEffect(() => {
+    const planType = getValues("plan.type");
+    if (!planType) return;
+    setValue("plan.num", getDefaultDays(planType));
+  }, [watch("plan.type")]);
   return (
     <>
       <form
-        onSubmit={handleSubmit(({ paid, plan, separated }) => {
+        onSubmit={handleSubmit(({ paid, plan, separated, remaining }) => {
           onData({
             paid,
             plan,
             separated,
+            remaining,
           });
         })}
         autoComplete="off"
@@ -89,7 +96,7 @@ export default function PaymentInfoForm({
           <SelectPlan
             plans={plans}
             planId={planId}
-            id={"phone-input"}
+            id={"plan-input"}
             title={t1("Plan")}
             {...register("planId", { disabled: true })}
             err={formState.errors.planId}
@@ -126,12 +133,28 @@ export default function PaymentInfoForm({
             {planPrice && (
               <p className="tw-mb-0">
                 {t2("paid.paragraph", {
-                  val: `${numberOfDays * planPrice}EGP`,
+                  val: `${paidType(getValues("plan"), planPrice)}EGP`,
                 })}
               </p>
             )}
           </div>
-
+          <div>
+            <BudgetInput
+              label={t2("remaining")}
+              priceProps={{
+                ...register("remaining", {
+                  required: t2("paid.required.num"),
+                  valueAsNumber: true,
+                  min: 0,
+                  value: 0,
+                }),
+                placeholder: "eg.120",
+                type: "number",
+              }}
+              unitProps={{}}
+              err={formState.errors.paid}
+            />
+          </div>
           <WrapElem label={t1("createdAt.label")}>
             <DatePicker disabled value={new Date(getValues("createdAt"))} />
             <p className="tw-mb-0">
@@ -142,7 +165,6 @@ export default function PaymentInfoForm({
             <CheckInput
               label={t2("separated")}
               id={"separated-input"}
-              className="tw-mx-0.5 tw-h-4 tw-w-4 tw-rounded tw-overflow-hidden"
               {...register("separated")}
             />
           </div>

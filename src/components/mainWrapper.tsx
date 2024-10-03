@@ -1,6 +1,6 @@
-import SideBar from "@src/components/sidebar";
+import Header from "@src/components/sidebar";
 import { useEffect, useRef } from "react";
-import Header from "@src/components/header";
+// import Header from "@src/components/header";
 
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -51,26 +51,12 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
   return (
     <>
       <div
-        className="page-wrapper tw-flex tw-flex-1 tw-items-stretch tw-justify-stretch"
-        id="main-wrapper"
-        data-layout="vertical"
-        data-navbarbg="skin6"
-        data-sidebartype="full"
-        data-sidebar-position="fixed"
-        data-header-position="fixed"
+        className="tw-flex tw-flex-1 tw-items-stretch tw-justify-stretch tw-flex-col tw-px-4"
+        // id="main-wrapper"
         ref={mainWrapper}
       >
-        <SideBar onClose={onClose} />
+        <Header />
         <div className="body-wrapper tw-flex tw-flex-col tw-w-full">
-          <Header
-            OnOpen={() => {
-              const wrapper = mainWrapper.current;
-              if (!wrapper) return;
-              wrapper.classList.remove("mini-sidebar");
-              wrapper.classList.add("show-sidebar");
-              wrapper.setAttribute("data-sidebartype", "full");
-            }}
-          />
           <div className="px-4 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
             {children}
           </div>

@@ -1,3 +1,3 @@
-export { getServerSideProps } from "./dashboard";
-import Page from "./dashboard";
-export default Page;
+export default function Page() {
+  return <h1>Home</h1>;
+}

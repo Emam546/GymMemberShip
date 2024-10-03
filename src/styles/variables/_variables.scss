@@ -2,51 +2,49 @@
 // Variables Style
 // ----------------------------------------------
 
-
 // colors
 $white: #fff !default;
-$gray-100: #F6F9FC !default;
-$gray-200: #EAEFF4 !default;
-$gray-300: #DFE5EF !default;
-$gray-400: #7C8FAC !default;
-$gray-500: #5A6A85 !default;
-$gray-600: #2A3547 !default;
-$black: #000 !default;
+$gray-100: #f6f9fc !default;
+$gray-200: #eaeff4 !default;
+$gray-300: #dfe5ef !default;
+$gray-400: #7c8fac !default;
+$gray-500: #5a6a85 !default;
+$gray-600: #2a3547 !default;
+$black: #11110f !default;
 
 // Color
-$blue: #5D87FF !default;
+$blue: #4592f7 !default;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #d63384 !default;
-$red: #FA896B !default;
+$red: #da0000 !default;
 $orange: #fd7e14 !default;
-$yellow: #FFAE1F !default;
-$green: #13DEB9 !default;
-$teal: #20c997 !default;
-$cyan: #539BFF !default;
+$yellow: #ffcf12 !default;
+$green: #13deb9 !default;
+$teal: #27ecb1 !default;
+$cyan: #539bff !default;
 
 // Main Colors
 $primary: $blue !default;
-$secondary: #49BEFF !default;
+$secondary: #dabc47 !default;
 $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
 $light: $gray-100 !default;
-$muted: $gray-500 !default;
+$muted: rgb(185, 185, 185) !default;
 $dark: $gray-600 !default;
 $dark-light: $gray-600 !default;
 $light-gray: $gray-100 !default;
 
 // light colors
-$light-primary: #ECF2FF;
-$light-secondary: #E8F7FF;
-$light-info: #EBF3FE;
-$light-success: #E6FFFA;
-$light-warning: #FEF5E5;
-$light-danger: #FBF2EF;
-$light-indigo: #EBF3FE;
-
+$light-primary: #ecf2ff;
+$light-secondary: #e8f7ff;
+$light-info: #ebf3fe;
+$light-success: #e6fffa;
+$light-warning: #fef5e5;
+$light-danger: #fbf2ef;
+$light-indigo: #ebf3fe;
 
 // Theme Colorss
 $theme-colors: (
@@ -69,7 +67,7 @@ $theme-colors: (
   "light-indigo": $light-indigo,
   "dark-light": $dark-light,
   "light-gray": $light-gray,
-  ) !default;
+) !default;
 
 // Spacer
 $spacer: 1rem !default;
@@ -84,7 +82,7 @@ $spacers: (
   7: 30px,
   8: 10px,
   9: 20px,
-  ) !default;
+) !default;
 
 // Common
 $min-contrast-ratio: 1.7 !default;
@@ -126,7 +124,7 @@ $font-sizes: (
   5: 18px,
   6: 20px,
   8: 30px,
-  ) !default;
+) !default;
 $font-size-base: 0.875rem !default;
 
 // Line Heght
@@ -135,26 +133,28 @@ $line-height-sm: 1.25 !default;
 $line-height-lg: 2 !default;
 
 // Body
-$body-bg: $white !default;
-$body-color: #5A6A85 !default;
+$body-bg: $black !default;
+$body-color: $white !default;
 
 // Heading
-$headings-color: $dark !default;
+$headings-color: $white !default;
 $headings-font-weight: 500 !default;
 
 // Border Color
 $border-color: #ebf1f6 !default;
 
 // Card
-$card-title-color: $dark !default;
-$card-subtitle-color: $dark !default;
+$card-title-color: $white !default;
+$card-color: $white !default;
+$card-bg: transparent;
+$card-subtitle-color: $white !default;
 $card-spacer-y: 30px !default;
 $card-spacer-x: 30px !default;
 $card-border-width: 0px !default;
 $card-border-color: #ebf1f6 !default;
 $card-border-radius: 7px;
-$card-box-shadow: rgb(145 158 171 / 20%) 0px 0px 2px 0px,
-  rgb(145 158 171 / 12%) 0px 12px 24px -4px !default;
+$card-box-shadow: rgba(155, 171, 185, 0.2) 0px 0px 2px 0px,
+  rgba(166, 179, 194, 0.12) 0px 12px 24px -4px !default;
 
 // Border Radius
 $border-radius: 7px !default;
@@ -169,7 +169,6 @@ $badge-padding-y: 5px !default;
 $badge-padding-x: 10px !default;
 $badge-border-radius: 4px;
 
-
 // Table
 $table-cell-padding-y: 16px !default;
 $table-cell-padding-x: 16px !default;
@@ -178,25 +177,30 @@ $table-striped-bg: $gray-200 !default;
 $table-hover-bg: $gray-100 !default;
 $table-border-color: $border-color !default;
 
-
 // Input
-$form-label-color: $gray-600;
+$input-color: $white !default;
+$form-label-color: $white;
 $form-label-font-weight: 600;
 $form-select-indicator-padding: 38px;
 $form-select-border-radius: 7px !default;
 $form-select-box-shadow: unset !default;
+$form-select-bg: $black !default;
+$form-select-indicator-color: $input-color !default;
 $input-border-radius: 7px !default;
-$input-group-addon-bg: $gray-200 !default;
-$input-group-addon-border-color: $light !default;
-$input-border-color: #DFE5EF !default;
+$input-group-addon-bg: $yellow !default;
+$input-group-addon-border-color: $blue !default;
+$input-border-color: $gray-200 !default;
+$input-focus-border-color: $blue;
 $input-bg: transparent !default;
-$input-color: $gray-500 !default;
 $input-padding-y: 8px;
 $input-padding-x: 16px;
 $form-check-input-width: 1.188em;
 $form-check-min-height: 1.188em;
-$form-check-input-border: 1.25px solid #dfe5ef;
-
+$form-check-input-border: 1.25px solid $gray-200;
+$input-disabled-bg: rgba(246, 249, 252, 0.596);
+$form-select-disabled-bg: $input-disabled-bg;
+// $input-disabled-color: red;
+// $form-select-disabled-color: $input-disabled-color !default;
 // Dropdown
 $dropdown-width: 360px !default;
 $dropdown-border-color: transparent !default;
@@ -215,3 +219,6 @@ $navbar-light-color: rgba($gray-600, 1) !default;
 $navbar-light-hover-color: rgba($primary, 1) !default;
 $navbar-dark-color: rgba($gray-300, 1) !default;
 $navbar-dark-hover-color: rgba($primary, 1) !default;
+
+$link-color: #68a9ff !default;
+$link-hover-color: lighten($link-color, 15%) !default;

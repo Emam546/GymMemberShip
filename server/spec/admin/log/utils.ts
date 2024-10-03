@@ -1,3 +1,5 @@
+import { admin } from "../admin/utils";
+
 export function createLog(
   planId: string,
   userId: string,
@@ -7,5 +9,7 @@ export function createLog(
     paymentId,
     planId,
     userId,
+    adminId: admin._id,
+    
   };
 }

@@ -28,6 +28,7 @@ const registerUpdate = new Validator({
     type: ["string", { in: ["day", "year", "month"] }, "required"],
     num: ["integer", "required"],
   },
+  remaining: ["integer", "required"],
   ".": ["required"],
 });
 router.post("/:id", async (req, res) => {

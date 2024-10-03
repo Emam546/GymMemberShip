@@ -1,16 +1,35 @@
 {
-    "assistant": {
-        "label": "تسجيل الدخول",
+    "user": {
+        "label": "مستخدم",
         "/users/add": "إضافة مستخدم",
-        "/users/search": "البحث عن مستخدم"
+        "/users/search": "البحث عن المستخدم"
     },
-    "creator": {
-        "label": "صانع المحتوي",
-        "/dashboard": "لوحة القيادة",
+    "sell": {
+        "label": "البيع"
+    },
+    "payments": {
+        "label": "المدفوعات"
+    },
+    "whatsapp": {
+        "label": "واتس اب"
+    },
+    "dashboard": {
+        "label": "لوحة القيادة"
+    },
+    "trainers": {
+        "label": "المدربين"
+    },
+    "setting": {
+        "label": "إعدادات",
+        "/admins": "إدارة المسؤولين",
+        "/products": "إدارة المنتجات"
+    },
+    "logout": {
+        "label": "تسجيل الخروج"
+    },
+    "plans": {
+        "label": "الخطط",
         "/plans": "إدارة الخطط",
-        "/users": "إدارة المستخدمين",
-        "/payments": "إدارة المدفوعات",
-        "/logs": "إدارة السجلات",
-        "/admins": "إدارة المسؤولين"
+        "/plans/add": "أضف خطة"
     }
 }
