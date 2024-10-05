@@ -9,7 +9,7 @@ const router = Router();
 export async function getPlan(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "the plan id is not valid");
-  const plan = await Plans.findById(id);
+  const plan = await Plans.findById(id).populate("adminId");
   if (!plan) throw new RouteError(404, "the plan id is not exist");
   return plan;
 }

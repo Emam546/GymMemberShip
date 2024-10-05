@@ -8,7 +8,7 @@ const router = Router();
 export async function getAdmin(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "The admin id is not valid");
-  const user = await Admins.findById(id);
+  const user = await Admins.findById(id).select("+password");
   if (!user) throw new RouteError(404, "The admin is not found");
   return user;
 }

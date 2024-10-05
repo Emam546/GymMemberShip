@@ -38,7 +38,7 @@ passport.use(
       try {
         if (!mongoose.Types.ObjectId.isValid(id))
           done(null, false, { message: "id-valid" });
-        const user = await Admins.findById(id);
+        const user = await Admins.findById(id).select("+password");
         if (!user) return done(null, false, { message: "id-not-exist" });
         if (user.password != password)
           return done(null, false, { message: "password-incorrect" });

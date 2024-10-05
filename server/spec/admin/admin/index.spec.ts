@@ -26,3 +26,6 @@ describe("POST", () => {
   });
 });
 describe("GET", () => {});
+describe("Get Password from Admin", () => {
+  
+});

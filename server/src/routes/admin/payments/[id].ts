@@ -5,21 +5,27 @@ import Validator from "validator-checker-js";
 import Logs from "@serv/models/log";
 import { RouteError } from "@serv/declarations/classes";
 const router = Router();
-export async function getPayment(id: string) {
+export async function getPayment(
+  id: string,
+  populate: (keyof DataBase.Models.Payments)[] = ["adminId", "userId", "planId"]
+) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "the plan id is not valid");
-  const payment = await Payments.findById(id)
-    .populate("userId")
-    .populate("planId");
+  const query = Payments.findById(id);
+  const payment = await populate.reduce<typeof query>(
+    (acc, key) => acc.populate(key),
+    query
+  );
+
   if (!payment) throw new RouteError(404, "the plan id is not exist");
   return payment;
 }
 router.use("/:id", async (req, res, next) => {
-  res.locals.payment = await getPayment(req.params.id);
+  res.locals.payment = await getPayment(req.params.id, []);
   next();
 });
-router.get("/:id", (req, res) => {
-  res.status(200).sendSuccess(res.locals.payment);
+router.get("/:id", async (req, res) => {
+  res.status(200).sendSuccess(await getPayment(req.params.id));
 });
 const registerUpdate = new Validator({
   startAt: ["isDate"],

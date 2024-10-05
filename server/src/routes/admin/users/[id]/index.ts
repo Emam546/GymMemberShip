@@ -1,26 +1,28 @@
 import { Router } from "express";
 import mongoose, { Document } from "mongoose";
-import Payments from "@serv/models/payments";
-import Logs from "@serv/models/log";
 import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
 import paymentsRouter from "./payments";
 import logsRouter from "./logs";
 const router = Router();
-export async function getUser(id: string) {
+export async function getUser(
+  id: string,
+  populate: (keyof DataBase.Models.User)[] = ["adminId"]
+) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "The user id is not valid");
-  const user = await Users.findById(id);
+  const query = Users.findById(id);
+  const user = await populate.reduce((acc, key) => acc.populate(key), query);
   if (!user) throw new RouteError(404, "The user is not found");
   return user;
 }
 router.use("/:id", async (req, res, next) => {
-  res.locals.user = await getUser(req.params.id);
+  res.locals.user = await getUser(req.params.id, []);
   next();
 });
-router.get("/:id", (req, res) => {
-  res.status(200).sendSuccess(res.locals.user);
+router.get("/:id", async(req, res) => {
+  res.status(200).sendSuccess(await getUser(req.params.id));
 });
 const registerUpdate = new Validator({
   name: ["string"],
@@ -40,7 +42,6 @@ router.post("/:id", async (req, res) => {
   const result = registerUpdate.passes(req.body);
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
-
   const newUser = await Users.findByIdAndUpdate(
     user._id,
     {
@@ -48,7 +49,6 @@ router.post("/:id", async (req, res) => {
     },
     { new: true }
   );
-
   res.status(200).sendSuccess(newUser);
 });
 router.delete("/:id", async (req, res) => {

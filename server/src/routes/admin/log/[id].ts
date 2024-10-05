@@ -7,7 +7,10 @@ const router = Router();
 router.use("/:id", async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id))
     return res.status(404).SendFailed("The log is not valid");
-  const log = await Logs.findById(req.params.id);
+  const log = await Logs.findById(req.params.id)
+    .populate("adminId")
+    .populate("userId")
+    .populate("");
   if (!log) return res.status(404).SendFailed("The log is not found");
   res.locals.log = log;
   next();

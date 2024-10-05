@@ -26,7 +26,7 @@ describe("POST", () => {
     const res = await agent
       .post(`/api/admin/admins/${admin._id}`)
       .send({ ...newUser });
-
+    delete (newUser as any)["password"];
     expect(res.statusCode).eq(200);
     expect({ ...admin, ...newUser }).deep.eq(res.body.data);
   });

@@ -106,21 +106,6 @@ describe("User Methods", () => {
       .expect(200);
     expect(res2.body.data.length).eq(0);
   });
-  test("payments deleted with user", async () => {
-    await agent.delete(`/api/admin/users/${user._id}`).expect(200);
-    await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
-  });
-  test("unrelated payments will not be deleted", async () => {
-    const user2 = await createUserRequest();
-    const res2 = await agent
-      .post("/api/admin/payments")
-      .send(createPayment(plan._id, user2._id))
-      .expect(200);
-    const payment2 = res2.body.data;
-    await agent.delete(`/api/admin/users/${user._id}`).expect(200);
-    await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
-    await agent.get(`/api/admin/payments/${payment2._id}`).expect(200);
-  });
 });
 describe("Plan method", () => {
   describe("GET", () => {

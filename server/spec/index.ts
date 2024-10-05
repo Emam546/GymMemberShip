@@ -15,13 +15,13 @@ afterAll(async () => {
 });
 let cookies: string;
 beforeAll(async () => {
-  const admins = await Admins.find({});
+  const admins = await Admins.find({}).select("+password");
   const admin = admins[0];
   const res = await agent
     .post("/api/admin/admins/auth/login")
     .send({
       id: admin._id,
-      password: admin.toObject().password,
+      password: admin.password,
     })
     .expect(200);
   expect(res.body.data).not.undefined;

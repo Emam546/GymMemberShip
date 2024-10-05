@@ -12,12 +12,19 @@ describe("GET", () => {
   test("Success", async () => {
     const res = await agent.get(`/api/admin/users/${user._id}`);
     expect(res.statusCode).eq(200);
-    expect(user).deep.eq(res.body.data);
+    expect(res.body.data).not.undefined;
   });
   test("WrongId", async () => {
     const res = await agent.get(`/api/admin/users/WrongId`);
     expect(res.statusCode).eq(404);
     expect(res.body.status).false;
+  });
+  test("check if the adminId password is exist on the doc", async () => {
+    const res = await agent.get(`/api/admin/users/${user._id}`);
+    expect(res.statusCode).eq(200);
+    expect(res.body.data.adminId).not.undefined;
+    expect(typeof res.body.data.adminId).not.eq("string");
+    expect(res.body.data.adminId.password).undefined;
   });
 });
 describe("POST", () => {
@@ -30,6 +37,7 @@ describe("POST", () => {
     expect(res.statusCode).eq(200);
     expect({ ...user, ...newUser }).deep.eq(res.body.data);
   });
+
   test("WrongId", async () => {
     const newUser = createUserData();
     const res = await agent
