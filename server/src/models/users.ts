@@ -27,6 +27,7 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
   { minimize: false }
 );
 schema.index({ createdAt: -1 });
+schema.index({ adminId: 1, createdAt: -1 });
 schema.index({ provider_id: 1, provider_type: 1 });
 export default ((mongoose.models && mongoose.models.user) ||
   mongoose.model("user", schema)) as mongoose.Model<DataBase.Models.User>;

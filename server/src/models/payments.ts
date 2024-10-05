@@ -31,6 +31,7 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
 );
 schema.index({ userId: 1, createdAt: -1 });
 schema.index({ planId: 1, createdAt: -1 });
+schema.index({ adminId: 1, createdAt: -1 });
 schema.index({ createdAt: -1 });
 export default ((mongoose.models && mongoose.models.payments) ||
   mongoose.model(

@@ -45,6 +45,7 @@ export async function getLogs(
     "userId",
     "paymentId",
     "adminId",
+    "trainerId",
   ]
 ) {
   const result = registerGetQuery.passes(query);

@@ -54,8 +54,6 @@ router.post("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
   const newUser = await Users.findByIdAndDelete(user._id);
-  await Payments.deleteMany({ userId: user._id });
-  await Logs.deleteMany({ userId: user._id });
   res.status(200).sendSuccess(newUser);
 });
 

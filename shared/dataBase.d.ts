@@ -13,6 +13,11 @@ declare global {
       DataBase.WithId<Models.Admins>
     >;
     namespace Models {
+      interface Trainers {
+        name: string;
+        email?: string;
+        phone?: string;
+      }
       interface User {
         createdAt: Date;
         createdBy: "admin";
@@ -48,6 +53,7 @@ declare global {
         planId: string;
         createdBy: "Admin";
         adminId: string;
+        trainerId?: string;
       }
       interface Payments {
         logsCount: number;
