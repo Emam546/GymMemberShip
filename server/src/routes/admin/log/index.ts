@@ -8,16 +8,19 @@ import Payments from "@serv/models/payments";
 import Logs from "@serv/models/log";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
+import { IncrementPaymentLogs } from "../payments/[id]";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
   userId: ["required", { existedId: { path: Users.modelName } }],
   paymentId: ["required", { existedId: { path: Payments.modelName } }],
+  ".": ["required"],
 });
 router.post("/", async (req, res) => {
   const result = await registerValidator.asyncPasses(req.body);
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
+  await IncrementPaymentLogs(result.data.paymentId, 1);
   const log = new Logs({
     ...result.data,
     adminId: req.user?._id,

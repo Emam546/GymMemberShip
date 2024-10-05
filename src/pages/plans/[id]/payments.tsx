@@ -22,14 +22,16 @@ import { getPlan } from "@serv/routes/admin/plans/[id]";
 import PrintPlanPayments from "@src/components/pages/plans/payments/print";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
-type Payment = DataBase.Populate<
+type Payment = DataBase.AdminPopulate<
   DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Payments>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
-  >,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+    DataBase.Populate<
+      DataBase.WithId<DataBase.Models.Payments>,
+      "userId",
+      DataBase.WithId<DataBase.Models.User>
+    >,
+    "planId",
+    DataBase.WithId<DataBase.Models.Plans>
+  >
 >;
 export default function Page({ doc }: Props) {
   const curDate = new Date();
@@ -229,6 +231,7 @@ export default function Page({ doc }: Props) {
               {payments && (
                 <PaymentInfoGenerator
                   page={0}
+                  perPage={payments.length}
                   setPage={() => {}}
                   totalCount={payments.length}
                   payments={payments.map((payment, i) => ({
@@ -237,9 +240,11 @@ export default function Page({ doc }: Props) {
                       ...payment,
                       userId: payment.userId._id,
                       planId: payment.planId._id,
+                      adminId: payment.adminId?._id,
                     },
                     plan: payment.planId,
                     user: payment.userId,
+                    adminId: payment.adminId,
                   }))}
                   headKeys={[
                     "order",

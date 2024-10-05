@@ -10,10 +10,11 @@
     "Created At": "Created At",
     "End At": "End At",
     "A/R/T": "A/R/T",
-    "Separated": "Separated",
     "Attend": "Attend",
     "Delete": "Delete",
-    "admin": "Creator"
+    "admin": "Creator",
+    "startedAt": "Started At",
+    "remainingMoney": "Remaining Money"
   },
   "There is no payments": "There is no payments"
 }

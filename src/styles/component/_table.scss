@@ -1,0 +1,27 @@
+.table-attended {
+  td,
+  th {
+    border: 1px solid rgb(43, 43, 43);
+    padding: 5px 5px;
+  }
+}
+.table-payments {
+  td,
+  th {
+    border: 1px solid rgb(43, 43, 43);
+    padding: 5px 15px;
+    min-width: max-content;
+    text-wrap: nowrap;
+  }
+  tbody {
+    tr {
+      cursor: pointer;
+    }
+    tr[data-remaining="true"] {
+      background-color: rgba(255, 30, 0, 0.603);
+    }
+    tr[data-selected="true"] {
+      background-color: rgba(255, 238, 0, 0.452);
+    }
+  }
+}

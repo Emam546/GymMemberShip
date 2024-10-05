@@ -9,6 +9,7 @@ declare global {
           print: "Print";
           activate: "Activate";
           add: string;
+          attend: string;
         };
         messages: {
           updated: "the document updated successfully";

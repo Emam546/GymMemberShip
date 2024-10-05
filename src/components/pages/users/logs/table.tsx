@@ -91,6 +91,7 @@ export default function FullLogsInfoGenerator({
   if (queryNum.isError) return <p>{JSON.stringify(query.error)}</p>;
   return (
     <LogInfoGenerator
+      perPage={perPage}
       headKeys={headKeys}
       page={page}
       onDelete={(elem) => mutate.mutateAsync(elem.log)}

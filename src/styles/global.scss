@@ -15,5 +15,14 @@
 }
 body {
   font-size: 1rem;
-  color: white;
 }
+[data-blocked="true"] {
+  @apply tw-bg-red-500;
+  * {
+    @apply tw-text-white;
+  }
+  input:disabled {
+    @apply tw-text-gray-400;
+  }
+}
+

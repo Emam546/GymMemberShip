@@ -1,11 +1,10 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 import { expect } from "chai";
-import { admin } from "../admin/utils";
 
 export function createPlanData(): Omit<
   DataBase.Models.Plans,
-  "createdAt" | "createdBy"
+  "createdAt" | "createdBy" | "adminId"
 > {
   return {
     name: faker.person.fullName(),
@@ -17,7 +16,6 @@ export function createPlanData(): Omit<
     details: {
       desc: faker.lorem.text(),
     },
-    adminId: admin._id,
   };
 }
 export async function createPlanRequest(

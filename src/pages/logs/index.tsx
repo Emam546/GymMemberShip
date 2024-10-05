@@ -204,6 +204,7 @@ export default function Page() {
             <div>
               {logs && (
                 <LogInfoGenerator
+                  perPage={logs.length}
                   page={0}
                   setPage={() => {}}
                   totalCount={logs.length}

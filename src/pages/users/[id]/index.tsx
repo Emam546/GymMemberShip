@@ -17,6 +17,7 @@ import { getAllPlans } from "@serv/routes/admin/plans";
 import queryClient from "@src/queryClient";
 import DeleteAccountForm from "@src/components/pages/users/deleteAccountForm";
 import { useTranslation } from "react-i18next";
+import { CopyText } from "@src/components/common/copy";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
@@ -32,7 +33,12 @@ export default function Page({ doc: initData, plans }: Props) {
         <title>{doc.name}</title>
       </Head>
       <BigCard>
-        <CardTitle>{t("Update User Data")}</CardTitle>
+        <div className="tw-flex tw-items-center tw-justify-between">
+          <CardTitle>{t("Update User Data")}</CardTitle>
+          <div>
+            <CopyText text={doc._id}>ID:{doc._id}</CopyText>
+          </div>
+        </div>
         <MainCard>
           <UserInfoForm
             defaultData={{
@@ -56,7 +62,7 @@ export default function Page({ doc: initData, plans }: Props) {
         <div className="tw-mb-8">
           <DeleteAccountForm id={doc._id} />
         </div>
-        <div className="tw-flex tw-items-center tw-justify-between">
+        <div className="tw-flex tw-items-center tw-justify-between tw-mb-3">
           <CardTitle>{t("Payments")}</CardTitle>
           <PrintUsersPayments id={doc._id} />
         </div>
@@ -79,7 +85,7 @@ export default function Page({ doc: initData, plans }: Props) {
             id={doc._id}
             perPage={10}
             headKeys={[
-              "createdAt",
+              "admin",
               "delete",
               "paid",
               "plan",
@@ -87,6 +93,7 @@ export default function Page({ doc: initData, plans }: Props) {
               "addLog",
               "link",
               "endAt",
+              "remainingMoney",
             ]}
           />
         </MainCard>

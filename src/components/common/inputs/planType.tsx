@@ -6,6 +6,7 @@ import MainInput, {
 import SelectInput, { Props as SelectProps } from "./select";
 import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
+import { formateDate } from "@src/utils";
 
 export interface Props {
   priceProps?: Omit<MainInputProps, "title" | "id">;
@@ -13,7 +14,11 @@ export interface Props {
   err?: FieldError;
 }
 
-export default function PlanTypeInput({ priceProps, unitProps, err }: Props) {
+export default function PlanTypeInput({
+  priceProps,
+  unitProps,
+  err,
+}: Props) {
   const { t } = useTranslation("inputs:planType");
   return (
     <div>
@@ -47,12 +52,10 @@ declare global {
             year: "Year";
           };
         };
+        endAt: "{{val}}";
         "amount.label": "Amount of Type";
       };
     }
   }
 }
-i18n.addLoadUrl(
-  "/components/common/planType",
-  "inputs:planType"
-);
+i18n.addLoadUrl("/components/common/planType", "inputs:planType");

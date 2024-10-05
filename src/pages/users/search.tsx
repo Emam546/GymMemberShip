@@ -53,6 +53,7 @@ export default function Page() {
           <div>
             {users && (
               <UsersTable
+                perPage={users.length}
                 page={0}
                 setPage={() => {}}
                 totalUsers={users.length}

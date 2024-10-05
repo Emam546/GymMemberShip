@@ -111,7 +111,7 @@
     "semver": "^7.6.3",
     "simplebar-react": "^3.2.4",
     "uuid": "^9.0.1",
-    "validator-checker-js": "^1.2.1",
+    "validator-checker-js": "^1.2.3",
     "youtube-playlists-js": "^1.0.3",
     "youtube-searches": "^1.0.1"
   },

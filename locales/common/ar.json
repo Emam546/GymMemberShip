@@ -4,7 +4,8 @@
     "update": "تحديث",
     "print": "اطبع",
     "activate": "فعل",
-    "add": "اضف"
+    "add": "اضف",
+    "attend": "حضر"
   },
   "messages": {
     "updated": "تم تحديث المستند بنجاح",

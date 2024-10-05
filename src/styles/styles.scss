@@ -20,6 +20,7 @@
 
 @import "./component/reboot";
 @import "./component/card";
+@import "./component/table";
 
 // Utilities style (Required file)
 @import "./utilities/icon-size";
@@ -27,3 +28,4 @@
 
 // Pages style (Required file)
 @import "./pages/dashboard1";
+@import "./pages/login";

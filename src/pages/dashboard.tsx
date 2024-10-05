@@ -1,5 +1,4 @@
-import "@locales/index";
-import { BigCard } from "@src/components/card";
+import { BigCard, MainCard } from "@src/components/card";
 import { GetServerSideProps, GetStaticProps } from "next";
 import Payments from "@serv/models/payments";
 import Head from "next/head";
@@ -30,11 +29,11 @@ export interface Props {
   sales: SalesOverViewProps;
 }
 export default function Page({ earnings, payments, users, sales }: Props) {
-  const { t } = useTranslation("index");
+  const { t } = useTranslation("/dashboard");
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>Dashboard</title>
       </Head>
       <RedirectIfNotAdmin>
         <BigCard>
@@ -46,28 +45,27 @@ export default function Page({ earnings, payments, users, sales }: Props) {
             <div className="row">
               <RecentPayments {...payments} />
               <div className="col-lg-8 d-flex align-items-stretch">
-                <div className="card w-100">
-                  <div className="p-4 card-body">
-                    <h5 className="mb-4 card-title fw-semibold">
-                      {t("Recent Users")}
-                    </h5>
-                    <UsersTable
-                      page={0}
-                      setPage={() => {}}
-                      totalUsers={users.length}
-                      users={users}
-                      headKeys={[
-                        "createdAt",
-                        "name",
-                        "blocked",
-                        "age/tall/weight",
-                        "plan",
-                        "order",
-                        "admin",
-                      ]}
-                    />
-                  </div>
-                </div>
+                <MainCard containerClassName="card" className="card-body">
+                  <h5 className="mb-4 card-title fw-semibold">
+                    {t("Recent Users")}
+                  </h5>
+                  <UsersTable
+                    perPage={users.length}
+                    page={0}
+                    setPage={() => {}}
+                    totalUsers={users.length}
+                    users={users}
+                    headKeys={[
+                      "createdAt",
+                      "name",
+                      "blocked",
+                      "age/tall/weight",
+                      "plan",
+                      "order",
+                      "admin",
+                    ]}
+                  />
+                </MainCard>
               </div>
             </div>
           </div>
@@ -214,3 +212,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     },
   };
 };
+import i18n from "@src/i18n";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/dashboard": {
+        "Recent Transactions": string;
+        "Recent Users": string;
+        transactions: {
+          receivePayment: "Payment received from {{name}} of {{price}}`}";
+        };
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/pages/dashboard", "/dashboard");

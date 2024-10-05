@@ -52,7 +52,7 @@ app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
   let status = HttpStatusCodes.BAD_REQUEST;
   if (err instanceof RouteError) status = err.status;
   if (err instanceof RouteErrorHasError) error = err.err;
-
+  console.error(err);
   return res.status(status).SendFailed(err.message, error);
 }) as any);
 

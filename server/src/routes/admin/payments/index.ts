@@ -11,13 +11,14 @@ const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
   userId: ["required", { existedId: { path: Users.modelName } }],
-  separated: ["boolean", "required"],
   paid: ["integer", "required"],
   plan: {
     type: ["string", { in: ["day", "year", "month"] }, "required"],
     num: ["integer", "required"],
     ".": ["required"],
   },
+  startAt: ["isDate", "required"],
+  endAt: ["isDate", "required"],
   remaining: ["integer", "required"],
   ".": ["required"],
 });
@@ -130,6 +131,7 @@ export async function getPaymentsProfit(
       },
     },
   ]).hint(hint);
+
   return payments as DataBase.Queries.Payments.Profit[];
 }
 router.get("/profit", async (req, res) => {

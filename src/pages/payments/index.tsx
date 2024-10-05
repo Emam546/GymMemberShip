@@ -18,14 +18,16 @@ import { LineChart } from "@src/components/common/charts";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 
 const perLoad = 20;
-type Payment = DataBase.Populate<
+type Payment = DataBase.AdminPopulate<
   DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Payments>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
-  >,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+    DataBase.Populate<
+      DataBase.WithId<DataBase.Models.Payments>,
+      "userId",
+      DataBase.WithId<DataBase.Models.User>
+    >,
+    "planId",
+    DataBase.WithId<DataBase.Models.Plans>
+  >
 >;
 export default function Page() {
   const curDate = new Date();
@@ -223,6 +225,7 @@ export default function Page() {
             <div>
               {payments && (
                 <PaymentInfoGenerator
+                  perPage={payments.length}
                   page={0}
                   setPage={() => {}}
                   totalCount={payments.length}
@@ -232,7 +235,9 @@ export default function Page() {
                       ...payment,
                       userId: payment.userId._id,
                       planId: payment.planId._id,
+                      adminId: payment.adminId?._id,
                     },
+                    admin: payment.adminId,
                     plan: payment.planId,
                     user: payment.userId,
                   }))}
@@ -242,11 +247,10 @@ export default function Page() {
                     "plan",
                     "paid",
                     "link",
-                    "createdAt",
+                    "remainingMoney",
                     "log",
                     "endAt",
                     "admin",
-                    "admin"
                   ]}
                   onDelete={() => {}}
                 />

@@ -1,11 +1,10 @@
 import Header from "@src/components/sidebar";
 import { useEffect, useRef } from "react";
-// import Header from "@src/components/header";
-
+// import Header from "@src/components/header"
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "./UserProvider";
-
+import ImagesBg from "./bg";
 function MainApp({ children: children }: { children: React.ReactNode }) {
   const mainWrapper = useRef<HTMLDivElement>(null);
   const { i18n } = useTranslation();
@@ -48,16 +47,24 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
     if (!user) router.replace("/login");
   }, [user]);
   if (!user) return null;
+  const dayWeek = new Date().getDay();
+  const image = ImagesBg[dayWeek % ImagesBg.length];
+
   return (
     <>
       <div
-        className="tw-flex tw-flex-1 tw-items-stretch tw-justify-stretch tw-flex-col tw-px-4"
-        // id="main-wrapper"
+        className="tw-flex tw-flex-1 tw-items-stretch tw-justify-stretch tw-flex-col tw-pb-5"
         ref={mainWrapper}
       >
+        <div
+          className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-contain -tw-z-10"
+          style={{
+            backgroundImage: `url(${image.src})`,
+          }}
+        />
         <Header />
-        <div className="body-wrapper tw-flex tw-flex-col tw-w-full">
-          <div className="px-4 py-0 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch">
+        <div className="m-0 body-wrapper tw-flex tw-flex-col tw-w-full tw-px-4 tw-flex-1">
+          <div className="tw-px-4 tw-py-10 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch tw-bg-white/95">
             {children}
           </div>
         </div>

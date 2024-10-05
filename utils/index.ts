@@ -35,3 +35,6 @@ export function clipText(text:string, maxLength:number) {
 
     return clipped;
 }
+export function MakeItSerializable<T>(val: T): T {
+  return JSON.parse(JSON.stringify(val));
+}

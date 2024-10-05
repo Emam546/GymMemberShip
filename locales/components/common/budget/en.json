@@ -1,0 +1,5 @@
+{
+  "shouldPay": {
+    "paragraph": "the amount to be paid is {{val}}"
+  }
+}

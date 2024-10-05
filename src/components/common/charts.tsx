@@ -18,14 +18,14 @@ interface SalesOverViewProps {
   valueFormatter: (val: number | null) => string;
 }
 const style = {
-  [`.${axisClasses.root}`]: {
-    [`.${axisClasses.tick}, .${axisClasses.line}`]: {
-      stroke: "white",
-    },
-    [`.${axisClasses.tickLabel}`]: {
-      fill: "white",
-    },
-  },
+  // [`.${axisClasses.root}`]: {
+  //   [`.${axisClasses.tick}, .${axisClasses.line}`]: {
+  //     stroke: "white",
+  //   },
+  //   [`.${axisClasses.tickLabel}`]: {
+  //     fill: "white",
+  //   },
+  // },
 };
 export function SalesOverView({ data, valueFormatter }: SalesOverViewProps) {
   return (

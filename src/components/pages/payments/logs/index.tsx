@@ -72,6 +72,7 @@ export default function LogsPaymentInfo({ id }: Props) {
         error={QueryInfinity.error}
       />
       <LogInfoGenerator
+        perPage={logs.length}
         page={0}
         setPage={() => {}}
         totalCount={logs.length}

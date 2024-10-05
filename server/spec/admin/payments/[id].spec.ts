@@ -36,7 +36,6 @@ describe("POST", () => {
   test("Success", async () => {
     const newPayment = createPayment(plan._id, user._id);
     const newData: Partial<DataBase.WithId<DataBase.Models.Payments>> = {
-      separated: true,
       paid: 0,
       plan: {
         num: 0,
@@ -57,14 +56,7 @@ describe("POST", () => {
       .expect(404);
     expect(res.body.status).false;
   });
-  test("update separated type", async () => {
-    const separated = faker.datatype.boolean();
-    const res = await agent
-      .post(`/api/admin/payments/${payment._id}`)
-      .send({ separated })
-      .expect(200);
-    expect(res.body.data.separated).eq(separated);
-  });
+
   test("Update New UserId", async () => {
     const userId = "NewID";
     const res = await agent
@@ -85,5 +77,17 @@ describe("DELETE", () => {
   test("Success", async () => {
     await agent.delete(`/api/admin/payments/${payment._id}`).expect(200);
     await agent.get(`/api/admin/payments/${payment._id}`).expect(404);
+  });
+});
+describe("Logs", () => {
+  test("incremental log adding", async () => {
+    const res = await agent
+      .get(`/api/admin/payments/${payment._id}`)
+      .expect(200);
+    await agent.post(`/api/admin/payments/${payment._id}/logs`).expect(200);
+    const res2 = await agent
+      .get(`/api/admin/payments/${payment._id}`)
+      .expect(200);
+    expect(res.body.data.logsCount).eq(res2.body.data.logsCount - 1);
   });
 });

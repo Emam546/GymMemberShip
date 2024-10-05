@@ -11,7 +11,7 @@ export function DeleteButton({
     <button
       type="button"
       className={classNames(
-        "hover:tw-text-red-600 disabled:tw-text-neutral-600 tw-border-0 tw-bg-transparent tw-block tw-text-gray-100 tw-w-fit tw-mx-auto",
+        "hover:tw-text-red-600 disabled:tw-text-neutral-600 tw-border-0 tw-bg-transparent tw-block tw-text-neutral-800 tw-w-fit tw-mx-auto",
         className
       )}
       aria-label="delete"

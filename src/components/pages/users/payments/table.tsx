@@ -90,6 +90,7 @@ export default function FullPaymentInfoGenerator({
           order: page + i + 1,
           payment: doc,
           plan: doc.planId,
+          admin: doc.adminId,
         } as unknown as ElemProps;
       });
     },
@@ -100,7 +101,7 @@ export default function FullPaymentInfoGenerator({
       const request = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
       >(`/api/admin/users/${id}/payments/profit`);
-      return request.data.data[0].paymentCount;
+      return request.data.data[0]?.paymentCount || 0;
     },
   });
   if (query.isLoading || queryNum.isLoading) return null;
@@ -108,6 +109,7 @@ export default function FullPaymentInfoGenerator({
   if (queryNum.isError) return <p>{JSON.stringify(query.error)}</p>;
   return (
     <PaymentInfoGenerator
+      perPage={perPage}
       headKeys={headKeys}
       page={page}
       onDelete={(elem) => mutate.mutateAsync(elem.payment)}

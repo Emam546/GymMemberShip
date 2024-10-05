@@ -95,13 +95,13 @@ function DropLinksElem({ hrefs, children, ...props }: DropLinkElemProps) {
     >
       <div
         className={classNames(
-          "tw-absolute tw-m-0 tw-left-0 tw-min-w-[15rem] tw-top-full tw-z-10",
+          "tw-absolute tw-m-0 tw-left-0 tw-min-w-[15rem] tw-top-full tw-z-10 tw-bg-white/30",
           {
             "tw-hidden": !opened,
           }
         )}
       >
-        <ul>
+        <ul className="tw-z-20">
           {hrefs.map((val) => {
             return (
               <li
@@ -153,7 +153,11 @@ function ManageUsersNavBar() {
         href="/products/sell"
       />
       <IsAdminComp>
-        <LinkElem icon={GraphIcon.src} href="/payments" title={"Payments"} />
+        <LinkElem
+          icon={GraphIcon.src}
+          href="/payments"
+          title={t("payments.label")}
+        />
         <LinkElem icon={Whatsapp.src} href="/users" title={"Whatsapp"} />
         <LinkElem icon={PlansIcon.src} href="/plans" title={t("plans.label")} />
         <LinkElem
@@ -179,7 +183,9 @@ function ManageUsersNavBar() {
         }
         title={t("setting.label")}
       >
-        <SelectLang />
+        <div className="tw-bg-white tw-rounded-lg">
+          <SelectLang />
+        </div>
       </DropLinksElem>
     </>
   );

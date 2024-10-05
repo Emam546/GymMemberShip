@@ -10,10 +10,11 @@
     "Created At": "تم الإنشاء في",
     "End At": "نهاية عند",
     "A/R/T": "المجموع/الباقي/الحضور",
-    "Separated": "منفصل",
     "Attend": "حضر",
     "Delete": "امسح",
-    "admin": "المنشي"
+    "admin": "المنشي",
+    "startedAt": "بدأ في",
+    "remainingMoney": "الأموال المتبقية"
   },
   "There is no payments": "لا يوجد أي مدفوعات"
 }

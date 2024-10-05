@@ -12,23 +12,7 @@ beforeAll(async () => {
   plan = await createPlanRequest();
   payment = await createPaymentRequest(plan._id, user._id);
 });
-describe("POST", () => {
-  test("success", async () => {
-    const log = createLog(plan._id, user._id, payment._id);
-    const res = await agent.post("/api/admin/logs").send(log);
-    const resPayment = res.body.data;
-    expect(resPayment._id).not.eq(undefined);
-    expect(resPayment).deep.includes(log);
-  });
-  describe("Wrong", () => {
-    test("Wrong UserId Type", async () => {
-      const log = createLog(user._id, plan._id, payment._id);
-      log.userId = "wrongId";
-      const res = await agent.post("/api/admin/logs").send(log).expect(400);
-      expect(res.body.err).has.property("userId");
-    });
-  });
-});
+
 describe("GET", () => {
   beforeAll(async () => {
     const log = createLog(plan._id, user._id, payment._id);

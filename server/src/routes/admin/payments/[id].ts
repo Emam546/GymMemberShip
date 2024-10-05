@@ -22,13 +22,14 @@ router.get("/:id", (req, res) => {
   res.status(200).sendSuccess(res.locals.payment);
 });
 const registerUpdate = new Validator({
-  separated: ["boolean"],
+  startAt: ["isDate"],
+  endAt: ["isDate"],
   paid: ["integer"],
   plan: {
     type: ["string", { in: ["day", "year", "month"] }, "required"],
     num: ["integer", "required"],
   },
-  remaining: ["integer", "required"],
+  remaining: ["integer"],
   ".": ["required"],
 });
 router.post("/:id", async (req, res) => {
@@ -73,18 +74,34 @@ router.get("/:id/logs", async (req, res) => {
 
   res.status(200).sendSuccess(logs);
 });
+export async function IncrementPaymentLogs(id: string, dir: number) {
+  return await Payments.findByIdAndUpdate(
+    id,
+    {
+      $inc: { logsCount: dir },
+    },
+    { new: true }
+  );
+}
 router.post("/:id/logs", async (req, res) => {
-  const payment = res.locals.payment as Document<DataBase.Models.User> &
-    DataBase.Models.Payments;
+  const payment = res.locals.payment as Document<
+    DataBase.Models.Payments,
+    DataBase.Models.Payments,
+    DataBase.Models.Payments
+  >;
   const log = new Logs({
     paymentId: payment._id.toString(),
-    planId: payment.planId,
-    userId: payment.userId,
+    planId: payment.toObject().planId,
+    userId: payment.toObject().userId,
     adminId: req.user?._id,
     createdBy: "Admin",
   });
+  const newPayment = await IncrementPaymentLogs(
+    payment._id as unknown as string,
+    1
+  );
   const logSave = await log.save();
-  res.status(200).sendSuccess(logSave);
+  res.status(200).sendSuccess({ log: logSave, count: newPayment });
 });
 router.get("/:id/logs/count", async (req, res) => {
   const payment = res.locals.payment as Document<DataBase.Models.User>;

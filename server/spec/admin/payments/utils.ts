@@ -1,25 +1,33 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
-import { admin } from "../admin/utils";
+import { MakeItSerializable } from "@utils/index";
 export function createPayment(
   planId: string,
   userId: string
-): Omit<DataBase.Models.Payments, "createdAt" | "createdBy"> {
-  return {
-    separated: faker.datatype.boolean(),
+): Omit<
+  DataBase.Models.Payments,
+  "createdAt" | "createdBy" | "logsCount" | "adminId"
+> {
+  const days = faker.number.int(100);
+  const startAt = new Date();
+  return MakeItSerializable({
     paid: faker.number.int(100),
     plan: {
       type: (["day", "month", "year"] as Array<DataBase.PlansType>)[
         faker.number.int(2)
       ],
-      num: faker.number.int(100),
+      num: days,
     },
     planId,
     userId,
-    adminId: admin._id,
+    endAt: new Date(
+      startAt.getFullYear(),
+      startAt.getMonth(),
+      startAt.getDate() + days
+    ),
+    startAt: startAt,
     remaining: faker.number.int(100),
-    
-  } as any;
+  });
 }
 export async function createPaymentRequest(
   planId: string,

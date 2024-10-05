@@ -1,7 +1,15 @@
 {
-  "Recent Transactions": "Recent Transactions",
-  "Recent Users": "Recent Users",
-  "transactions": {
-    "receivePayment": "Payment received from {{name}} of {{price}}"
+  "title": "Home",
+  "admin": {
+    "name": "Admin Name"
+  },
+  "payments": {
+    "title": "Payments"
+  },
+  "addPayment": {
+    "title": "Add payment"
+  },
+  "user": {
+    "title": "Users Info"
   }
 }

@@ -208,6 +208,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
             <div>
               {logs && (
                 <LogInfoGenerator
+                  perPage={logs.length}
                   page={0}
                   setPage={() => {}}
                   totalCount={logs.length}

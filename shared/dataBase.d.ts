@@ -7,6 +7,11 @@ declare global {
     type WithIdOrg<T> = T & { id: string };
     type Price = number;
     type PlansType = "day" | "year" | "month";
+    type AdminPopulate<T> = Populate<
+      T,
+      "adminId",
+      DataBase.WithId<Models.Admins>
+    >;
     namespace Models {
       interface User {
         createdAt: Date;
@@ -45,12 +50,13 @@ declare global {
         adminId: string;
       }
       interface Payments {
+        logsCount: number;
         planId: string;
         userId: string;
-        separated: boolean;
         plan: { type: PlansType; num: number };
         createdAt: Date;
         startAt: Date;
+        endAt: Date;
         createdBy: "Admin";
         adminId: string;
         paid: Price;

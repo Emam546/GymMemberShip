@@ -167,6 +167,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
           <div>
             <LogInfoGenerator
               page={0}
+              perPage={logs.length}
               setPage={() => {}}
               totalCount={logs.length}
               logs={logs.map((log, i) => ({

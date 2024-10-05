@@ -45,7 +45,7 @@ export default function Login({ admins }: Props) {
   const router = useRouter();
   return (
     <div
-      className="body-wrapper tw-bg-cover tw-bg-no-repeat tw-bg-center"
+      className="body-wrapper tw-bg-cover tw-bg-no-repeat tw-bg-center login"
       data-layout="vertical"
       style={{
         backgroundImage: `url("${image.src}")`,
@@ -55,8 +55,8 @@ export default function Login({ admins }: Props) {
         <div className="d-flex align-items-center justify-content-center w-100">
           <div className="row justify-content-center w-100">
             <div className="col-md-8 col-lg-6 col-xxl-3">
-              <div className="mb-0 card">
-                <div className="card-body tw-bg-black/90">
+              <div className="mb-0 card tw-bg-black/90">
+                <div className="card-body">
                   <div className="py-3 text-center text-nowrap logo-img d-block w-100">
                     <img src={Logo.src} width={180} alt="logo" />
                   </div>

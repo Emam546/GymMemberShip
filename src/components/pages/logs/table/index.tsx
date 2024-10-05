@@ -130,6 +130,7 @@ export interface PaymentProps {
   setPage: (page: number) => any;
   headKeys: HeadKeys[];
   onDelete: (elem: ElemProps) => any;
+  perPage: number;
 }
 export function LogInfoGenerator({
   page,
@@ -138,75 +139,67 @@ export function LogInfoGenerator({
   setPage,
   headKeys,
   onDelete,
+  perPage,
 }: PaymentProps) {
   const pageNum = Math.ceil(totalCount / logs.length);
   const { t } = useTranslation("logs:table");
   return (
-    <div>
-      {totalCount > 0 && (
-        <>
-          <div className="table-responsive">
-            <table className="table mb-0 align-middle text-nowrap">
-              <thead className="text-dark fs-4">
-                <tr>
-                  <E heads={headKeys} val="order">
-                    <TH>{t("th.Id")}</TH>
-                  </E>
-                  <E heads={headKeys} val="user">
-                    <TH>{t("th.User")}</TH>
-                  </E>
-                  <E heads={headKeys} val="plan">
-                    <TH>{t("th.Plan")}</TH>
-                  </E>
-                  <E heads={headKeys} val="admin">
-                    <TH>{t("th.admin")}</TH>
-                  </E>
-                  <E heads={headKeys} val="paymentLink">
-                    <TH>{t("th.paymentLink")}</TH>
-                  </E>
-                  <E heads={headKeys} val="createdAt">
-                    <TH>{t("th.Logged At")}</TH>
-                  </E>
-                  <E heads={headKeys} val="delete">
-                    <TH>{t("th.Delete")}</TH>
-                  </E>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map((doc) => {
-                  return (
-                    <Shower
-                      {...doc}
-                      key={doc.log._id}
-                      headKeys={headKeys}
-                      onDelete={() => {
-                        onDelete(doc);
-                      }}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          {pageNum > 1 && (
-            <div className="tw-mt-2">
-              <Pagination
-                onChange={(e, value) => {
-                  setPage(value - 1);
-                }}
-                page={page + 1}
-                count={pageNum}
-              />
-            </div>
-          )}
-        </>
-      )}
-      {totalCount == 0 && <p className="tw-mb-0">{t("paragraph")}</p>}
-    </div>
+    <PaginationManager
+      page={page}
+      perPage={perPage}
+      totalCount={totalCount}
+      setPage={setPage}
+      noElems={t("paragraph")}
+    >
+      <div className="table-responsive">
+        <table className="table mb-0 align-middle text-nowrap">
+          <thead className="text-dark fs-4">
+            <tr>
+              <E heads={headKeys} val="order">
+                <TH>{t("th.Id")}</TH>
+              </E>
+              <E heads={headKeys} val="user">
+                <TH>{t("th.User")}</TH>
+              </E>
+              <E heads={headKeys} val="plan">
+                <TH>{t("th.Plan")}</TH>
+              </E>
+              <E heads={headKeys} val="admin">
+                <TH>{t("th.admin")}</TH>
+              </E>
+              <E heads={headKeys} val="paymentLink">
+                <TH>{t("th.paymentLink")}</TH>
+              </E>
+              <E heads={headKeys} val="createdAt">
+                <TH>{t("th.Logged At")}</TH>
+              </E>
+              <E heads={headKeys} val="delete">
+                <TH>{t("th.Delete")}</TH>
+              </E>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((doc) => {
+              return (
+                <Shower
+                  {...doc}
+                  key={doc.log._id}
+                  headKeys={headKeys}
+                  onDelete={() => {
+                    onDelete(doc);
+                  }}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </PaginationManager>
   );
 }
 import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
+import { PaginationManager } from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

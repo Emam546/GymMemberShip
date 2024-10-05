@@ -82,6 +82,7 @@ function UserShower({
 
 export interface Props {
   page: number;
+  perPage: number;
   admins: ElemProps[];
   totalCount: number;
   setPage: (page: number) => any;
@@ -95,72 +96,63 @@ export default function AdminsTable({
   setPage,
   headKeys,
   onDelete,
+  perPage,
 }: Props) {
   const { t } = useTranslation("table:admins");
-  const pageNum = Math.ceil(totalCount / admins.length);
   return (
-    <div>
-      {totalCount > 0 && (
-        <>
-          <div className="table-responsive">
-            <table className="table mb-0 align-middle text-nowrap">
-              <thead className="text-dark fs-4">
-                <tr>
-                  <E heads={headKeys} val="order">
-                    <TH>{t("th.id")}</TH>
-                  </E>
-                  <E heads={headKeys} val="name">
-                    <TH>{t("th.name")}</TH>
-                  </E>
-                  <E heads={headKeys} val="type">
-                    <TH>{t("th.type")}</TH>
-                  </E>
-                  <E heads={headKeys} val="email">
-                    <TH>{t("th.email")}</TH>
-                  </E>
-                  <E heads={headKeys} val="phone">
-                    <TH>{t("th.phone")}</TH>
-                  </E>
-                  <E heads={headKeys} val="delete">
-                    <TH>{t("th.delete")}</TH>
-                  </E>
-                </tr>
-              </thead>
-              <tbody>
-                {admins.map((doc) => {
-                  return (
-                    <UserShower
-                      {...doc}
-                      onDelete={() => {
-                        return onDelete?.(doc.admin);
-                      }}
-                      key={doc.admin._id}
-                      headKeys={headKeys}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          {pageNum > 1 && (
-            <div className="tw-mt-2">
-              <Pagination
-                onChange={(e, value) => {
-                  setPage(value - 1);
-                }}
-                page={page + 1}
-                count={pageNum}
-              />
-            </div>
-          )}
-        </>
-      )}
-      {totalCount == 0 && <p className="tw-mb-0">{t("noData")}</p>}
-    </div>
+    <PaginationManager
+      page={page}
+      perPage={perPage}
+      totalCount={totalCount}
+      setPage={setPage}
+      noElems={t("noData")}
+    >
+      <div className="table-responsive">
+        <table className="table mb-0 align-middle text-nowrap">
+          <thead className="text-dark fs-4">
+            <tr>
+              <E heads={headKeys} val="order">
+                <TH>{t("th.id")}</TH>
+              </E>
+              <E heads={headKeys} val="name">
+                <TH>{t("th.name")}</TH>
+              </E>
+              <E heads={headKeys} val="type">
+                <TH>{t("th.type")}</TH>
+              </E>
+              <E heads={headKeys} val="email">
+                <TH>{t("th.email")}</TH>
+              </E>
+              <E heads={headKeys} val="phone">
+                <TH>{t("th.phone")}</TH>
+              </E>
+              <E heads={headKeys} val="delete">
+                <TH>{t("th.delete")}</TH>
+              </E>
+            </tr>
+          </thead>
+          <tbody>
+            {admins.map((doc) => {
+              return (
+                <UserShower
+                  {...doc}
+                  onDelete={() => {
+                    return onDelete?.(doc.admin);
+                  }}
+                  key={doc.admin._id}
+                  headKeys={headKeys}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </PaginationManager>
   );
 }
 import i18n from "@src/i18n";
 import { DeleteButton } from "@src/components/common/deleteButton";
+import { PaginationManager } from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

@@ -60,6 +60,7 @@ export default function Page({ admins: initAdmins }: Props) {
         </MainCard>
         <MainCard>
           <AdminsTable
+            perPage={admins.length}
             page={0}
             admins={admins.map((admin, i) => {
               return {

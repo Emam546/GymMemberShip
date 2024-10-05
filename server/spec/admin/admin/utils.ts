@@ -21,11 +21,3 @@ export async function createAdminRequest(
     .expect(200);
   return res.body.data;
 }
-beforeAll(async () => {
-  const res = await agent
-    .post("/api/admin/admins")
-    .send(createAdminData())
-    .expect(200);
-  admin = res.body.data;
-});
-export let admin: DataBase.WithId<DataBase.Models.Admins>;

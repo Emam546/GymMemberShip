@@ -137,6 +137,7 @@ export interface Props {
   totalUsers: number;
   setPage: (page: number) => any;
   headKeys: HeadKeys[];
+  perPage: number;
 }
 export default function UsersTable({
   page,
@@ -144,73 +145,58 @@ export default function UsersTable({
   totalUsers,
   setPage,
   headKeys,
+  perPage,
 }: Props) {
   const { t } = useTranslation("table:users");
-  const pageNum = Math.ceil(totalUsers / users.length);
   return (
-    <div>
-      {totalUsers > 0 && (
-        <>
-          <div className="table-responsive">
-            <table className="table mb-0 align-middle text-nowrap">
-              <thead className="text-dark fs-4">
-                <tr>
-                  <E heads={headKeys} val="order">
-                    <TH>{t("th.Id")}</TH>
-                  </E>
-                  <E heads={headKeys} val="name">
-                    <TH>{t("th.Name")}</TH>
-                  </E>
-                  <E heads={headKeys} val="admin">
-                    <TH>{t("th.admin")}</TH>
-                  </E>
-                  <E heads={headKeys} val="age/tall/weight">
-                    <TH>{t("th.Age/Tall/Weight")}</TH>
-                  </E>
-                  <E heads={headKeys} val="plan">
-                    <TH>{t("th.Plan")}</TH>
-                  </E>
-                  <E heads={headKeys} val="createdAt">
-                    <TH>{t("th.Created At")}</TH>
-                  </E>
-                  <E heads={headKeys} val="blocked">
-                    <TH>{t("th.Blocked")}</TH>
-                  </E>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((doc) => {
-                  return (
-                    <UserShower
-                      {...doc}
-                      key={doc.user._id}
-                      headKeys={headKeys}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          {pageNum > 1 && (
-            <div className="tw-mt-2">
-              <Pagination
-                onChange={(e, value) => {
-                  setPage(value - 1);
-                }}
-                page={page + 1}
-                count={pageNum}
-              />
-            </div>
-          )}
-        </>
-      )}
-      {totalUsers == 0 && (
-        <p className="tw-mb-0">{t("There is no users so far")}</p>
-      )}
-    </div>
+    <PaginationManager
+      page={page}
+      perPage={perPage}
+      totalCount={totalUsers}
+      setPage={setPage}
+      noElems={t("There is no users so far")}
+    >
+      <div className="table-responsive">
+        <table className="table mb-0 align-middle text-nowrap">
+          <thead className="text-dark fs-4">
+            <tr>
+              <E heads={headKeys} val="order">
+                <TH>{t("th.Id")}</TH>
+              </E>
+              <E heads={headKeys} val="name">
+                <TH>{t("th.Name")}</TH>
+              </E>
+              <E heads={headKeys} val="admin">
+                <TH>{t("th.admin")}</TH>
+              </E>
+              <E heads={headKeys} val="age/tall/weight">
+                <TH>{t("th.Age/Tall/Weight")}</TH>
+              </E>
+              <E heads={headKeys} val="plan">
+                <TH>{t("th.Plan")}</TH>
+              </E>
+              <E heads={headKeys} val="createdAt">
+                <TH>{t("th.Created At")}</TH>
+              </E>
+              <E heads={headKeys} val="blocked">
+                <TH>{t("th.Blocked")}</TH>
+              </E>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((doc) => {
+              return (
+                <UserShower {...doc} key={doc.user._id} headKeys={headKeys} />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </PaginationManager>
   );
 }
 import i18n from "@src/i18n";
+import { PaginationManager } from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

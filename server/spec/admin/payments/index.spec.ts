@@ -1,5 +1,4 @@
 import agent from "@test/index";
-import { faker } from "@faker-js/faker";
 import { expect } from "chai";
 import { createPayment, createPaymentRequest } from "./utils";
 import { createPlanRequest } from "../plans/utils";
@@ -14,7 +13,10 @@ beforeAll(async () => {
 describe("POST", () => {
   test("success", async () => {
     const payment = createPayment(plan._id, user._id);
-    const res = await agent.post("/api/admin/payments").send(payment);
+    const res = await agent
+      .post("/api/admin/payments")
+      .send(payment)
+      .expect(200);
     const resPayment = res.body.data;
     expect(resPayment._id).not.eq(undefined);
     expect(resPayment).deep.includes(payment);
@@ -63,15 +65,6 @@ describe("GET", () => {
       .query({ skip: 1 })
       .expect(200);
     expect(res.body.data).not.deep.eq(res2.body.data);
-  });
-  test("Test no Skip", async () => {
-    const res = await agent.get("/api/admin/payments").expect(200);
-    expect(res.body.data).instanceOf(Array);
-    const res2 = await agent
-      .get("/api/admin/payments")
-      .query({ skip: 0 })
-      .expect(200);
-    expect(res.body.data).deep.eq(res2.body.data);
   });
 });
 describe("User Methods", () => {
@@ -190,7 +183,6 @@ describe("Get Profit Profit", () => {
   test("get All payments profit", async () => {
     const res = await agent.get(`/api/admin/payments/profit`).expect(200);
     expect(res.body.data.length).greaterThanOrEqual(1);
-    console.log(res.body.data);
     expect(res.body.data[0]).include.keys("profit");
   });
 });

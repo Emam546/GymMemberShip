@@ -2,12 +2,13 @@ import {
   StyledInput,
   InputProps,
   SelectedInputProps,
-  StyledSelect,
   WrapElem,
 } from "@src/components/common/inputs/styles";
-import currencies from "./options.json";
 import { ErrorInputShower } from "../main";
 import { FieldError } from "react-hook-form";
+import { isNumber, isString } from "@src/utils/types";
+import { useTranslation } from "react-i18next";
+import i18n from "@src/i18n";
 
 export type Props = {
   label: string;
@@ -44,3 +45,33 @@ export default function BudgetInput({
     </WrapElem>
   );
 }
+export interface ShouldPaidBudgetProps extends Props {
+  price?: number;
+}
+export function ShouldPaidBudget({ price, ...props }: ShouldPaidBudgetProps) {
+  const { t } = useTranslation("input:budget");
+  return (
+    <div>
+      <BudgetInput {...props} />
+      {isNumber(price) && (
+        <p className="tw-mb-0">
+          {t("shouldPay.paragraph", {
+            val: `${price}EGP`,
+          })}
+        </p>
+      )}
+    </div>
+  );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "input:budget": {
+        shouldPay: {
+          paragraph: "the amount to be paid is {{val}}";
+        };
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/components/common/budget", "input:budget");

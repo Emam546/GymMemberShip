@@ -1,14 +1,12 @@
 import { faker } from "@faker-js/faker";
 import agent from "@test/index";
-import { admin } from "../admin/utils";
 
 export function createUserData(): Omit<
   DataBase.Models.User,
-  "createdAt" | "createdBy"
+  "createdAt" | "createdBy" | "adminId"
 > {
   return {
     name: faker.person.fullName(),
-    adminId: admin._id,
     age: faker.number.int({ min: 10, max: 100 }),
     email: faker.internet.email(),
     phone: faker.phone.number(),

@@ -33,7 +33,7 @@ interface Props {
 export default function Page({ doc: initData, plans }: Props) {
   const [doc, setDoc] = useState(initData);
   const { t } = useTranslation("/payments/[id]");
-  
+
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>

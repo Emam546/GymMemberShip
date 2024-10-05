@@ -1,8 +1,5 @@
 {
     "User": "User",
     "Plan": "Plan",
-    "createdAt": {
-        "label": "Created At",
-        "paragraph": "This payment should be end at {{val}}"
-    }
+    "createdAt": "Created At"
 }

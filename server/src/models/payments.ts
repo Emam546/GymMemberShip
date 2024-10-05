@@ -1,12 +1,14 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import User from "./users";
 import Plans from "./plans";
 import Admins from "./admins";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
+    startAt: { type: Date, default: Date.now, required: true },
+    endAt: { type: Date, default: Date.now, required: true },
+    logsCount: { type: Number, default: 0 },
     paid: { type: Number, required: true },
-    separated: { type: Boolean, default: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: User.modelName,
@@ -19,8 +21,7 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
     } as never,
     plan: { type: Object, required: true },
     createdBy: String,
-    remaining: { type: Number, required: true },
-
+    remaining: { type: Number, default: 0, required: true },
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Admins.modelName,

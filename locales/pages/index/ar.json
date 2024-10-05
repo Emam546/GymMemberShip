@@ -1,7 +1,15 @@
 {
-    "Recent Transactions": "المعاملات الأخيرة",
-    "Recent Users": "المستخدمون الجدد",
-    "transactions": {
-        "receivePayment": "تم استلام المبلغ من {{name}} ل {{price}}"
-    }
+  "title": "بيت",
+  "admin": {
+    "name": "اسم المشرف"
+  },
+  "payments": {
+    "title": "الاشتراكات"
+  },
+  "addPayment": {
+    "title": "إضافة اشتراك"
+  },
+  "user": {
+    "title": "معلومات المستخدمين"
+  }
 }
