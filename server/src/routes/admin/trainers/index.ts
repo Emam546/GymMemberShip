@@ -6,8 +6,9 @@ import IdRouter from "./[id]";
 const router = Router();
 const registerValidator = new Validator({
   name: ["string", "required"],
-  email: ["email"],
+  email: ["email", "string"],
   phone: ["string"],
+  ".": ["required"],
 });
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
@@ -20,9 +21,11 @@ router.post("/", async (req, res) => {
   const savedUser = await trainer.save();
   res.status(200).sendSuccess(savedUser);
 });
-
+export async function getAllTrainers() {
+  return await Trainers.find({});
+}
 router.get("/", async (req, res) => {
-  const results = await Trainers.find({});
+  const results = await getAllTrainers();
   res.status(200).sendSuccess(results);
 });
 router.use(IdRouter);
