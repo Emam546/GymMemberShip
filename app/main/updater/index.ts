@@ -3,7 +3,6 @@ import { app } from "electron";
 import { createUpdateWindow } from "@app/main/lib/update";
 import AppUpdater from "./AppUpdater";
 import PackageJson from "../../../package.json";
-import { isProd } from "../utils";
 console.log("Version", PackageJson.version);
 const autoUpdater = new AppUpdater({
   owner: PackageJson.publish.owner,
@@ -12,7 +11,7 @@ const autoUpdater = new AppUpdater({
 });
 app.whenReady().then(async () => {
   autoUpdater.on("error", (e) => console.error(e));
-  if (isProd) autoUpdater.checkForUpdates();
+  // if (isProd) autoUpdater.checkForUpdates();
 });
 autoUpdater.once("update-available", (update) => {
   console.log("update available");
