@@ -14,7 +14,7 @@ router.get("/logs", async (req, res) => {
   );
   res.status(200).sendSuccess(logs);
 });
-router.get("/logs/LogCount", async (req, res) => {
+router.get("/logs/count", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
   const logs = await getLogsCount(
     req.query,

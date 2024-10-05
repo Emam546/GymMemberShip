@@ -73,33 +73,21 @@ function UserShower({
   );
 }
 
-export interface Props {
-  page: number;
-  perPage: number;
+export interface Props extends ExtendedPaginationProps {
   trainers: ElemProps[];
-  totalCount: number;
-  setPage: (page: number) => void;
   headKeys: HeadKeys[];
   onDelete?: (admin: ElemProps["trainer"]) => void;
 }
 export default function TrainersTable({
-  page,
   trainers: trainers,
-  totalCount,
-  setPage,
+
   headKeys,
   onDelete,
-  perPage,
+  ...props
 }: Props) {
   const { t } = useTranslation("table:trainers");
   return (
-    <PaginationManager
-      page={page}
-      perPage={perPage}
-      totalCount={totalCount}
-      setPage={setPage}
-      noElems={t("noData")}
-    >
+    <PaginationManager noElems={t("noData")} {...props}>
       <div className="table-responsive">
         <table className="table mb-0 align-middle text-nowrap">
           <thead className="text-dark fs-4">
@@ -142,7 +130,10 @@ export default function TrainersTable({
 }
 import i18n from "@src/i18n";
 import { DeleteButton } from "@src/components/common/deleteButton";
-import { PaginationManager } from "@src/components/pagination";
+import {
+  ExtendedPaginationProps,
+  PaginationManager,
+} from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

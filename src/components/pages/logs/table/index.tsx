@@ -142,7 +142,7 @@ export interface PaymentProps extends ExtendedPaginationProps {
   logs: ElemProps[];
   totalCount: number;
   headKeys: HeadKeys[];
-  onDelete: (elem: ElemProps) => void;
+  onDelete?: (elem: ElemProps) => void;
   perPage: number;
 }
 export function LogInfoGenerator({
@@ -192,7 +192,7 @@ export function LogInfoGenerator({
                   key={doc.log._id}
                   headKeys={headKeys}
                   onDelete={() => {
-                    onDelete(doc);
+                    onDelete?.(doc);
                   }}
                 />
               );

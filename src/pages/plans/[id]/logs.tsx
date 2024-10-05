@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import "@locales/plan/[id]/logs";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
@@ -57,7 +58,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
       );
       return { page: pageParam, data: users.data.data };
     },
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -68,7 +69,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount[]>
-      >(`/api/admin/plans/${doc._id}/logCount`, {
+      >(`/api/admin/plans/${doc._id}logs/count`, {
         params: {
           ...filter,
           day: true,
@@ -173,10 +174,9 @@ const Page: NextPage<Props> = function Page({ doc }) {
                       {
                         scaleType: "point",
                         data: data,
-                        valueFormatter(
-                          { _id }: DataBase.Queries.Logs.LogsCount,
-                          context
-                        ) {
+                        valueFormatter({
+                          _id,
+                        }: DataBase.Queries.Logs.LogsCount) {
                           const date = new Date(
                             _id.year!,
                             _id.month!,
@@ -205,7 +205,6 @@ const Page: NextPage<Props> = function Page({ doc }) {
                 <LogInfoGenerator
                   perPage={logs.length}
                   page={0}
-                  setPage={() => {}}
                   totalCount={logs.length}
                   logs={logs.map((doc, i) => ({
                     order: i,
@@ -227,7 +226,6 @@ const Page: NextPage<Props> = function Page({ doc }) {
                     "delete",
                     "admin",
                   ]}
-                  onDelete={() => {}}
                 />
               )}
             </div>

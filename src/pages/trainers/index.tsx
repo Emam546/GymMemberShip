@@ -1,9 +1,6 @@
-import "@src/i18n/locales/plan";
 import EnvVars from "@serv/declarations/major/EnvVars";
-import { getAllPlans } from "@serv/routes/admin/plans";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import AddButton from "@src/components/common/inputs/addButton";
-import PlansInfoGetter from "@src/components/pages/plans/info";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -59,7 +56,6 @@ export default function Page({ trainers: initPlans }: Props) {
               headKeys={["delete", "email", "name", "order", "phone"]}
               page={0}
               perPage={trainers.length}
-              setPage={() => {}}
               totalCount={trainers.length}
               onDelete={async (trainer) => {
                 await requester.delete(`/api/admin/trainers/${trainer._id}`);

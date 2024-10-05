@@ -16,6 +16,7 @@ import BudgetInput, {
   ShouldPaidBudget,
 } from "@src/components/common/inputs/budget";
 import { useAttend } from "@src/hooks/payments";
+import SelectInput from "@src/components/common/inputs/select";
 export interface Data {
   startAt: Date;
   endAt: Date;
@@ -24,6 +25,7 @@ export interface Data {
 }
 interface FormData extends Data {
   plan: DataBase.Models.Payments["plan"];
+  trainerId?: string;
 }
 type Doc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
@@ -32,8 +34,9 @@ type Doc = DataBase.Populate.Model<
 
 export interface Props {
   payment?: Doc;
-  onUpdate: (payment: FormData) => any;
-  onIncrement: (payment: Doc) => any;
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
+  onUpdate: (payment: FormData) => void;
+  onIncrement: (payment: Doc) => void;
 }
 export function Grid2({ ...props }: ComponentProps<"div">) {
   return (
@@ -45,7 +48,12 @@ export function Grid2({ ...props }: ComponentProps<"div">) {
     />
   );
 }
-export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
+export function AttendPerson({
+  payment,
+  onUpdate,
+  onIncrement,
+  trainers,
+}: Props) {
   const { register, setValue, handleSubmit, watch, formState, reset } =
     useForm<FormData>({
       values: payment,
@@ -55,9 +63,11 @@ export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
   }, [payment]);
   const { t } = useTranslation("payment:form:update");
   const { t: t2 } = useTranslation("payment:add");
+  const { t: t3 } = useTranslation("form:attend");
   const attend = useAttend({
     onSuccess() {
-      onIncrement({ ...payment!, logsCount: payment!.logsCount + 1 });
+      if (!payment) return;
+      onIncrement({ ...payment, logsCount: payment.logsCount + 1 });
     },
   });
   register("startAt", { valueAsDate: true });
@@ -72,6 +82,7 @@ export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
         action=""
         onSubmit={handleSubmit(async (data) => {
           if (!payment) return;
+          if (!data["trainerId"]) delete data["trainerId"];
           await onUpdate({
             endAt: data.endAt,
             paid: data.paid,
@@ -144,14 +155,29 @@ export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
             priceProps={register("remaining", { valueAsNumber: true })}
           />
         </Grid2>
-
+        <div className="tw-my-5">
+          <SelectInput
+            id="trainer-input"
+            {...register("trainerId")}
+            title={t3("trainer.label")}
+          >
+            <option value="">{t3("trainer.default")}</option>
+            {trainers.map((val) => {
+              return (
+                <option value={val._id} key={val._id}>
+                  {val.name}
+                </option>
+              );
+            })}
+          </SelectInput>
+        </div>
         <WrapElem label="Last Active Payment" className="tw-my-5">
           <table className="tw-text-center tw-w-full tw-mt-3 table-attended">
             <thead>
               <tr>
-                <th>Attended Days</th>
-                <th>Remaining Days</th>
-                <th>Total Days</th>
+                <th>{t3("table.th.attended")}</th>
+                <th>{t3("table.th.remaining")}</th>
+                <th>{t3("table.th.total")}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,17 +216,21 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "form:attend": {
-        userName: "User Name";
-        planName: "Plan";
-        createdAt: "Created At";
-        startedAt: "Started At";
-        endAt: "End At";
-        paid: "Paid";
-        remaining: "Remaining";
-        lastPayment: "Last Active Payment";
+        table: {
+          th: {
+            attended: "AttendedDays";
+            remaining: "Remaining Days";
+            total: "Total Days";
+          };
+        };
+        trainer: {
+          label: "Choose Trainer";
+          default: "Choose Trainer";
+        };
       };
     }
   }
 }
 i18n.addLoadUrl("/components/payments/info", "payment:form:update");
 i18n.addLoadUrl("/components/users/addPayment", "payment:add");
+i18n.addLoadUrl("/components/loggers/form/", "form:attend");

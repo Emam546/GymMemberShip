@@ -135,7 +135,7 @@ export async function getLogsCount(
   ]).hint(hint);
   return logs as DataBase.Queries.Logs.LogsCount[];
 }
-router.get("/logCount", async (req, res) => {
+router.get("logs/count", async (req, res) => {
   const payments = await getLogsCount(req.query);
   res.status(200).sendSuccess(payments);
 });

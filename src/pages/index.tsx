@@ -25,8 +25,10 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import { GetServerSideProps } from "next";
 import i18n from "@src/i18n";
+import { getAllTrainers } from "@serv/routes/admin/trainers";
 interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
 }
 export function Item({ className, ...props }: ComponentProps<"div">) {
   return (
@@ -45,7 +47,7 @@ type PaymentType = DataBase.Populate.Model<
 >;
 
 const perPage = 7;
-export default function Page({ plans }: Props) {
+export default function Page({ plans, trainers }: Props) {
   const router = useRouter();
   const date = new Date();
   const { t } = useTranslation("/index");
@@ -99,6 +101,7 @@ export default function Page({ plans }: Props) {
     setUserId(strInput);
     setStrInput("");
   }, [strInput]);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const auth = useAuth()!;
   const currentPayment = query.data?.payments.find(
     (payment) => payment._id == selectedPayment
@@ -192,7 +195,7 @@ export default function Page({ plans }: Props) {
               }
             >
               <AttendPerson
-                payment={currentPayment as any}
+                payment={currentPayment}
                 onUpdate={async function (data) {
                   if (!currentPayment) return;
                   await requester.post(
@@ -205,6 +208,7 @@ export default function Page({ plans }: Props) {
                 onIncrement={() => {
                   query.refetch();
                 }}
+                trainers={trainers}
               />
             </MainCard>
           </div>
@@ -236,9 +240,10 @@ export default function Page({ plans }: Props) {
     </div>
   );
 }
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   await connect(EnvVars.mongo.url);
   try {
+    const trainers = await getAllTrainers();
     const plans = await getAllPlans();
     return {
       props: {
@@ -246,6 +251,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
           return {
             ...MakeItSerializable(plan),
             _id: plan._id.toString(),
+          };
+        }),
+        trainers: trainers.map((trainer) => {
+          return {
+            ...MakeItSerializable(trainer),
+            _id: trainer._id.toString(),
           };
         }),
       },

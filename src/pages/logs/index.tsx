@@ -60,7 +60,7 @@ export default function Page() {
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount[]>
-      >(`/api/admin/logs/logCount`, {
+      >(`/api/admin/logslogs/count`, {
         params: {
           ...filter,
           day: true,

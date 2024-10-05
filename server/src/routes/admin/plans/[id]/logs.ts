@@ -13,7 +13,7 @@ router.get("/logs", async (req, res) => {
   );
   res.status(200).sendSuccess(logs);
 });
-router.get("/logCount", async (req, res) => {
+router.get("logs/count", async (req, res) => {
   const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const payments = await getLogsCount(
     req.query,
