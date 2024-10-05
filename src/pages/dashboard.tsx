@@ -1,5 +1,5 @@
 import { BigCard, MainCard } from "@src/components/card";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import Payments from "@serv/models/payments";
 import Head from "next/head";
 import {
@@ -52,8 +52,7 @@ export default function Page({ earnings, payments, users, sales }: Props) {
                   <UsersTable
                     perPage={users.length}
                     page={0}
-                    setPage={() => {}}
-                    totalUsers={users.length}
+                    totalCount={users.length}
                     users={users}
                     headKeys={[
                       "createdAt",

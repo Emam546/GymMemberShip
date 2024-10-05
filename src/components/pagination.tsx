@@ -1,14 +1,17 @@
 import { Pagination } from "@mui/material";
-import { useTranslation } from "react-i18next";
 
-export interface PaymentProps {
+export interface PaginationProps {
   page: number;
   perPage: number;
   totalCount: number;
-  setPage: (page: number) => any;
+  setPage?: (page: number) => void;
   noElems: string;
   children: React.ReactNode;
 }
+export type ExtendedPaginationProps = Omit<
+  PaginationProps,
+  "children" | "noElems"
+>;
 export function PaginationManager({
   page,
   perPage,
@@ -16,7 +19,7 @@ export function PaginationManager({
   setPage,
   noElems,
   children,
-}: PaymentProps) {
+}: PaginationProps) {
   const pageNum = Math.ceil(totalPayments / perPage);
   return (
     <div>
@@ -27,7 +30,7 @@ export function PaginationManager({
             <div className="tw-mt-2" dir="ltr">
               <Pagination
                 onChange={(e, value) => {
-                  setPage(value - 1);
+                  setPage?.(value - 1);
                 }}
                 page={page + 1}
                 count={pageNum}

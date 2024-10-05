@@ -16,18 +16,9 @@ import { LineChart } from "@src/components/common/charts";
 import { getDaysArray } from "@src/utils";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
-type LogDoc = DataBase.Populate<
-  DataBase.Populate<
-    DataBase.Populate<
-      DataBase.WithId<DataBase.Models.Logs>,
-      "userId",
-      DataBase.WithId<DataBase.Models.User>
-    >,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >,
-  "paymentId",
-  DataBase.WithId<DataBase.Models.Payments>
+type LogDoc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Logs>,
+  "adminId" | "trainerId" | "userId" | "planId"
 >;
 export default function Page() {
   const curDate = new Date();
@@ -208,16 +199,18 @@ export default function Page() {
                   page={0}
                   setPage={() => {}}
                   totalCount={logs.length}
-                  logs={logs.map((payment, i) => ({
+                  logs={logs.map((log, i) => ({
                     order: i,
                     log: {
-                      ...payment,
-                      userId: payment.userId._id,
-                      planId: payment.planId._id,
-                      paymentId: payment.paymentId._id,
+                      ...log,
+                      userId: log.userId?._id,
+                      planId: log.planId?._id,
+                      trainerId: log.trainerId?._id || "",
+                      adminId: log.adminId?._id || "",
                     },
-                    plan: payment.planId,
-                    user: payment.userId,
+                    plan: log.planId,
+                    user: log.userId,
+                    admin: log.adminId,
                   }))}
                   headKeys={[
                     "order",

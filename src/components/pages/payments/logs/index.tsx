@@ -5,13 +5,13 @@ import { LogInfoGenerator } from "@src/components/pages/logs/table";
 import queryClient from "@src/queryClient";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 const perLoad = 20;
+type Doc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Logs>,
+  "adminId" | "planId" | "userId" | "trainerId"
+>;
 type Page = {
   page: number;
-  data: DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Logs>,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >[];
+  data: Doc[];
 };
 interface InfiniteQueryData {
   pages: Page[];
@@ -20,6 +20,7 @@ interface InfiniteQueryData {
 export interface Props {
   id: string;
 }
+
 export default function LogsPaymentInfo({ id }: Props) {
   const mutate = useMutation({
     mutationFn(id: string) {
@@ -44,19 +45,20 @@ export default function LogsPaymentInfo({ id }: Props) {
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["logs", "payments", id, "infinity"],
     queryFn: async ({ pageParam = 0, signal }) => {
-      const users = await requester.get<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>[]>
-      >(`/api/admin/payments/${id}/logs`, {
-        params: {
-          skip: perLoad * pageParam,
-          limit: perLoad,
-        },
-        signal,
-      });
+      const users = await requester.get<Routes.ResponseSuccess<Doc[]>>(
+        `/api/admin/payments/${id}/logs`,
+        {
+          params: {
+            skip: perLoad * pageParam,
+            limit: perLoad,
+          },
+          signal,
+        }
+      );
       return { page: pageParam, data: users.data.data };
     },
     enabled: typeof id == "string",
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -74,13 +76,22 @@ export default function LogsPaymentInfo({ id }: Props) {
       <LogInfoGenerator
         perPage={logs.length}
         page={0}
-        setPage={() => {}}
         totalCount={logs.length}
         logs={logs.map((log, i) => ({
           order: i,
-          log,
+          log: {
+            ...log,
+            trainerId: log.trainerId?._id || "",
+            userId: log.userId?._id || "",
+            adminId: log.userId?._id || "",
+            planId: log.planId?._id || "",
+          },
+          admin: log.adminId,
+          user: log.userId,
+          plan: log.planId,
+          trainer: log.trainerId,
         }))}
-        headKeys={["order", "delete", "createdAt", "admin"]}
+        headKeys={["order", "delete", "createdAt", "admin", "plan", "trainer"]}
         onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
       />
       <TriggerOnVisible

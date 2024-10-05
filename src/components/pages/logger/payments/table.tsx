@@ -6,12 +6,9 @@ import Link from "next/link";
 
 interface ElemProps {
   order: number;
-  payment: DataBase.WithId<
-    DataBase.Populate<
-      DataBase.Models.Payments,
-      "planId",
-      DataBase.WithId<DataBase.Models.Plans>
-    >
+  payment: DataBase.Populate.Model<
+    DataBase.WithId<DataBase.Models.Payments>,
+    "planId" | "adminId"
   >;
   headKeys: HeadKeys[];
   selected: boolean;
@@ -41,7 +38,7 @@ function Row({
       </E>
       <E heads={headKeys} val="plan">
         <td>
-          <Link href={`/payments/${payment._id}`}>{payment.planId.name}</Link>
+          <Link href={`/payments/${payment._id}`}>{payment.planId?.name}</Link>
         </td>
       </E>
       <E heads={headKeys} val="link">
@@ -79,7 +76,7 @@ export interface Props {
   page: number;
   selected?: string;
   headKeys: HeadKeys[];
-  perPage:number
+  perPage: number;
 }
 export default function UserPaymentsTable({
   onSetPage,
@@ -89,7 +86,7 @@ export default function UserPaymentsTable({
   totalCount,
   headKeys,
   selected,
-  perPage
+  perPage,
 }: Props) {
   return (
     <PaginationManager

@@ -1,8 +1,6 @@
 import DeleteDialog from "@src/components/common/AlertDialog";
-import { formateDate, formateDateClock } from "@src/utils";
-import { Pagination } from "@mui/material";
 import Link from "next/link";
-import React, { ComponentProps, useState } from "react";
+import { useState } from "react";
 import { DeleteButton } from "@src/components/common/deleteButton";
 import classNames from "classnames";
 import { E, TH } from "@src/components/common/table";
@@ -13,7 +11,8 @@ export interface ElemProps {
   user?: DataBase.WithId<DataBase.Models.User>;
   plan?: DataBase.WithId<DataBase.Models.Plans>;
   admin?: DataBase.WithId<DataBase.Models.Admins>;
-  onDelete?: () => any;
+  trainer?: DataBase.WithId<DataBase.Models.Trainers>;
+  onDelete?: () => void;
 }
 export type HeadKeys =
   | "order"
@@ -22,7 +21,8 @@ export type HeadKeys =
   | "createdAt"
   | "delete"
   | "paymentLink"
-  | "admin";
+  | "admin"
+  | "trainer";
 const formatDate = (date: Date) => {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
@@ -42,6 +42,7 @@ function Shower({
   onDelete,
   plan,
   admin,
+  trainer,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation("logs:table");
@@ -71,8 +72,21 @@ function Shower({
             )}
           </td>
         </E>
+        <E val="trainer" heads={headKeys}>
+          <td>
+            {log.trainerId ? (
+              trainer ? (
+                <Link href={`/trainers/${trainer._id}`}>{trainer.name}</Link>
+              ) : (
+                t("td.deleted")
+              )
+            ) : (
+              t("td.trainer.notExist")
+            )}
+          </td>
+        </E>
         <E val="admin" heads={headKeys}>
-          <td className="tw-w-full">
+          <td>
             {admin ? (
               <Link href={`/admins/${admin._id}`}>{admin.name}</Link>
             ) : (
@@ -123,34 +137,23 @@ function Shower({
   );
 }
 
-export interface PaymentProps {
+export interface PaymentProps extends ExtendedPaginationProps {
   page: number;
   logs: ElemProps[];
   totalCount: number;
-  setPage: (page: number) => any;
   headKeys: HeadKeys[];
-  onDelete: (elem: ElemProps) => any;
+  onDelete: (elem: ElemProps) => void;
   perPage: number;
 }
 export function LogInfoGenerator({
-  page,
   logs,
-  totalCount,
-  setPage,
   headKeys,
   onDelete,
-  perPage,
+  ...props
 }: PaymentProps) {
-  const pageNum = Math.ceil(totalCount / logs.length);
   const { t } = useTranslation("logs:table");
   return (
-    <PaginationManager
-      page={page}
-      perPage={perPage}
-      totalCount={totalCount}
-      setPage={setPage}
-      noElems={t("paragraph")}
-    >
+    <PaginationManager noElems={t("paragraph")} {...props}>
       <div className="table-responsive">
         <table className="table mb-0 align-middle text-nowrap">
           <thead className="text-dark fs-4">
@@ -163,6 +166,9 @@ export function LogInfoGenerator({
               </E>
               <E heads={headKeys} val="plan">
                 <TH>{t("th.Plan")}</TH>
+              </E>
+              <E heads={headKeys} val="trainer">
+                <TH>{t("th.trainer")}</TH>
               </E>
               <E heads={headKeys} val="admin">
                 <TH>{t("th.admin")}</TH>
@@ -199,7 +205,10 @@ export function LogInfoGenerator({
 }
 import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
-import { PaginationManager } from "@src/components/pagination";
+import {
+  ExtendedPaginationProps,
+  PaginationManager,
+} from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {
@@ -212,8 +221,10 @@ declare global {
           Delete: "Delete";
           Plan: "Plan";
           admin: string;
+          trainer: string;
         };
         td: {
+          "trainer.notExist": string;
           deleted: "Deleted";
           model: {
             title: "Block User";

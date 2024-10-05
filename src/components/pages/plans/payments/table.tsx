@@ -14,12 +14,9 @@ export interface Props {
   perPage: number;
 }
 type S = Routes.ResponseSuccess<
-  DataBase.WithId<
-    DataBase.Populate<
-      DataBase.Models.Payments,
-      "userId",
-      DataBase.WithId<DataBase.Models.User>
-    >
+  DataBase.Populate.Model<
+    DataBase.WithId<DataBase.Models.Payments>,
+    "userId" | "adminId"
   >[]
 >;
 function isQueryPayment(

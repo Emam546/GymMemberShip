@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import "@locales/payments";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
@@ -18,17 +19,11 @@ import { LineChart } from "@src/components/common/charts";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 
 const perLoad = 20;
-type Payment = DataBase.AdminPopulate<
-  DataBase.Populate<
-    DataBase.Populate<
-      DataBase.WithId<DataBase.Models.Payments>,
-      "userId",
-      DataBase.WithId<DataBase.Models.User>
-    >,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >
+type Payment = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Payments>,
+  "userId" | "adminId" | "planId"
 >;
+
 export default function Page() {
   const curDate = new Date();
   const [filter, setFilter] = useState<DataType>({
@@ -57,7 +52,7 @@ export default function Page() {
       );
       return { page: pageParam, data: users.data.data };
     },
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -197,7 +192,7 @@ export default function Page() {
                         data: data,
                         valueFormatter(
                           { _id }: DataBase.Queries.Logs.LogsCount,
-                          context
+                          
                         ) {
                           const date = new Date(
                             _id.year!,
@@ -227,15 +222,14 @@ export default function Page() {
                 <PaymentInfoGenerator
                   perPage={payments.length}
                   page={0}
-                  setPage={() => {}}
                   totalCount={payments.length}
                   payments={payments.map((payment, i) => ({
                     order: i,
                     payment: {
                       ...payment,
-                      userId: payment.userId._id,
-                      planId: payment.planId._id,
-                      adminId: payment.adminId?._id,
+                      userId: payment.userId?._id || "",
+                      planId: payment.planId?._id || "",
+                      adminId: payment.adminId?._id || "",
                     },
                     admin: payment.adminId,
                     plan: payment.planId,
@@ -252,7 +246,6 @@ export default function Page() {
                     "endAt",
                     "admin",
                   ]}
-                  onDelete={() => {}}
                 />
               )}
             </div>

@@ -22,14 +22,9 @@ interface Props {
   logs: DataBase.Queries.Logs.LogsCount[];
 }
 const perLoad = 20;
-type LogDoc = DataBase.Populate<
-  DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Logs>,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >,
-  "paymentId",
-  DataBase.WithId<DataBase.Models.Payments>
+type LogDoc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Logs>,
+  "planId" | "trainerId" | "adminId"
 >;
 type Page = {
   page: number;
@@ -174,10 +169,13 @@ export default function Page({ doc, logs: logsCount }: Props) {
                 order: i,
                 log: {
                   ...log,
-                  planId: log.planId._id,
-                  paymentId: log.paymentId._id,
+                  planId: log.planId?._id || "",
+                  adminId: log.adminId?._id || "",
+                  trainerId: log.trainerId?._id || "",
                 },
                 plan: log.planId,
+                admin: log.adminId,
+                trainer: log.trainerId,
               }))}
               headKeys={[
                 "order",
@@ -186,6 +184,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
                 "plan",
                 "createdAt",
                 "admin",
+                "trainer",
               ]}
               onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
             />

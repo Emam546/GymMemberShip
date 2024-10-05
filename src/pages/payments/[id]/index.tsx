@@ -16,16 +16,9 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
   doc: DataBase.WithId<
-    DataBase.WithId<
-      DataBase.Populate<
-        DataBase.Populate<
-          DataBase.Models.Payments,
-          "userId",
-          DataBase.WithId<DataBase.Models.User>
-        >,
-        "planId",
-        DataBase.WithId<DataBase.Models.Plans>
-      >
+    DataBase.Populate.Model<
+      DataBase.WithId<DataBase.Models.Payments>,
+      "userId" | "planId" | "adminId"
     >
   >;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -39,7 +32,7 @@ export default function Page({ doc: initData, plans }: Props) {
       <Head>
         <title>
           {t("title", {
-            val: doc.userId.name,
+            val: doc.userId?.name,
           })}
         </title>
       </Head>
@@ -49,8 +42,9 @@ export default function Page({ doc: initData, plans }: Props) {
           <PaymentInfoForm
             payment={{
               ...doc,
-              planId: doc.planId._id,
-              userId: doc.userId._id,
+              planId: doc.planId?._id || "",
+              userId: doc.userId?._id || "",
+              adminId: doc.adminId?._id || "",
             }}
             plans={plans}
             user={doc.userId}
@@ -64,8 +58,9 @@ export default function Page({ doc: initData, plans }: Props) {
         <DeletePaymentForm
           payment={{
             ...doc,
-            planId: doc.planId._id,
-            userId: doc.userId._id,
+            planId: doc.planId?._id || "",
+            userId: doc.userId?._id || "",
+            adminId: doc.adminId?._id || "",
           }}
         />
         <MainCard>
@@ -81,7 +76,11 @@ export default function Page({ doc: initData, plans }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   try {
-    const payment = await getPayment(ctx.params!.id as string);
+    if (!ctx.params)
+      return {
+        notFound: true,
+      };
+    const payment = await getPayment(ctx.params.id as string);
     const plans = await getAllPlans();
     return {
       props: {

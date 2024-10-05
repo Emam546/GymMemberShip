@@ -16,7 +16,7 @@ export interface ElemProps {
   user?: DataBase.WithId<DataBase.Models.User>;
   plan?: DataBase.WithId<DataBase.Models.Plans>;
   admin?: DataBase.WithId<DataBase.Models.Admins>;
-  onDelete?: () => any;
+  onDelete?: () => void;
 }
 export type HeadKeys =
   | "order"
@@ -52,7 +52,7 @@ function AddLog({
   ...props
 }: ComponentProps<"button"> & {
   payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
-  onAdded: () => any;
+  onAdded: () => void;
 }) {
   const mutate = useAttend({
     onSuccess(data) {
@@ -203,33 +203,21 @@ function Shower({
   );
 }
 
-export interface PaymentProps {
-  page: number;
+export interface PaymentProps extends ExtendedPaginationProps {
   payments: ElemProps[];
   totalCount: number;
-  setPage: (page: number) => any;
   headKeys: HeadKeys[];
-  onDelete: (elem: ElemProps) => any;
-  perPage: number;
+  onDelete?: (elem: ElemProps) => void;
 }
 export function PaymentInfoGenerator({
-  page,
   payments,
-  totalCount: totalPayments,
-  setPage,
   headKeys,
   onDelete,
-  perPage,
+  ...props
 }: PaymentProps) {
   const { t } = useTranslation("table:payments");
   return (
-    <PaginationManager
-      page={page}
-      perPage={perPage}
-      totalCount={totalPayments}
-      setPage={setPage}
-      noElems={t("There is no payments")}
-    >
+    <PaginationManager {...props} noElems={t("There is no payments")}>
       <div className="table-responsive">
         <table className="table mb-0 align-middle text-nowrap">
           <thead className="text-dark fs-4">
@@ -281,7 +269,7 @@ export function PaymentInfoGenerator({
               return (
                 <Shower
                   {...doc}
-                  onDelete={() => onDelete(doc)}
+                  onDelete={() => onDelete?.(doc)}
                   key={doc.payment._id}
                   headKeys={headKeys}
                 />
@@ -294,7 +282,10 @@ export function PaymentInfoGenerator({
   );
 }
 import i18n from "@src/i18n";
-import { PaginationManager } from "@src/components/pagination";
+import {
+  ExtendedPaginationProps,
+  PaginationManager,
+} from "@src/components/pagination";
 import { useAttend } from "@src/hooks/payments";
 declare global {
   namespace I18ResourcesType {

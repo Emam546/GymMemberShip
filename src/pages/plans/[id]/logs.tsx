@@ -24,14 +24,9 @@ const perLoad = 20;
 interface Props {
   doc: DataBase.WithId<DataBase.Models.Plans>;
 }
-type LogDoc = DataBase.Populate<
-  DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Logs>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
-  >,
-  "paymentId",
-  DataBase.WithId<DataBase.Models.Payments>
+type LogDoc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Logs>,
+  "adminId" | "userId" | "trainerId"
 >;
 const Page: NextPage<Props> = function Page({ doc }) {
   const curDate = new Date();
@@ -212,14 +207,17 @@ const Page: NextPage<Props> = function Page({ doc }) {
                   page={0}
                   setPage={() => {}}
                   totalCount={logs.length}
-                  logs={logs.map((payment, i) => ({
+                  logs={logs.map((doc, i) => ({
                     order: i,
                     log: {
-                      ...payment,
-                      userId: payment.userId._id,
-                      paymentId: payment.paymentId._id,
+                      ...doc,
+                      userId: doc.userId?._id || "",
+                      trainerId: doc.trainerId?._id || "",
+                      adminId: doc.trainerId?._id || "",
                     },
-                    user: payment.userId,
+                    user: doc.userId,
+                    admin: doc.adminId,
+                    trainer: doc.trainerId,
                   }))}
                   headKeys={[
                     "order",
@@ -227,7 +225,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
                     "paymentLink",
                     "createdAt",
                     "delete",
-                    "admin"
+                    "admin",
                   ]}
                   onDelete={() => {}}
                 />

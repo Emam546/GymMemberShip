@@ -8,12 +8,10 @@ import DatePicker, {
 import { WrapElem } from "@src/components/common/inputs/styles";
 import SelectPlan from "../../users/addPayment/selectPlan";
 import PlanTypeInput from "@src/components/common/inputs/planType";
-import CheckInput from "@src/components/common/checkInput";
 import BudgetInput, {
   ShouldPaidBudget,
 } from "@src/components/common/inputs/budget";
 import Link from "next/link";
-import { formateDate } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
 import { useEffect } from "react";
@@ -27,9 +25,9 @@ export type DataType = {
 type FormData = DataBase.Models.Payments;
 export interface Props {
   payment: DataBase.WithId<DataBase.Models.Payments>;
-  user: DataBase.WithId<DataBase.Models.User>;
+  user?: DataBase.WithId<DataBase.Models.User>;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
-  onData: (data: DataType) => Promise<any> | any;
+  onData: (data: DataType) => Promise<void> | void;
 }
 declare global {
   namespace I18ResourcesType {
@@ -86,11 +84,11 @@ export default function PaymentInfoForm({
             <MainInput
               id={"name-input"}
               title={t1("User")}
-              value={user.name}
+              value={user?.name}
               disabled={true}
             />
             <p>
-              <Link href={`/users/${user._id}`}>{user.name}</Link>
+              <Link href={`/users/${user?._id}`}>{user?.name}</Link>
             </p>
           </div>
           <SelectPlan

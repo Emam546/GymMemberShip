@@ -6,9 +6,11 @@
         "Logged At": "Logged At",
         "Delete": "Delete",
         "Plan": "Plan",
-        "admin": "المنشي"
+        "admin": "admin",
+        "trainer": "Trainer"
     },
     "td": {
+        "trainer.notExist": "Not Exist",
         "deleted": "Deleted",
         "model": {
             "title": "Delete User",

@@ -27,7 +27,7 @@ const toolbar = {
 };
 
 const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
-    ({ defaultValue, placeholder, disabled, ...props }, ref) => {
+    ({ defaultValue, placeholder, disabled, ...props }) => {
         return (
             <div
                 aria-disabled={disabled}

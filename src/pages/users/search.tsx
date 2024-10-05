@@ -29,7 +29,7 @@ export default function Page() {
       });
       return { page: pageParam, data: users.data.data };
     },
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -55,8 +55,7 @@ export default function Page() {
               <UsersTable
                 perPage={users.length}
                 page={0}
-                setPage={() => {}}
-                totalUsers={users.length}
+                totalCount={users.length}
                 users={users.map((user, i) => ({
                   order: i,
                   user: user,
@@ -68,9 +67,8 @@ export default function Page() {
                   "blocked",
                   "age/tall/weight",
                   "admin",
-                  "admin"
-                ]}
-              />
+                  "admin",
+                ]}             />
             )}
           </div>
           <TriggerOnVisible

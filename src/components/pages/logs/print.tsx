@@ -6,14 +6,9 @@ import requester from "@src/utils/axios";
 export interface Data {
   query: unknown;
 }
-type LogDoc = DataBase.Populate<
-  DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Logs>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
-  >,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+type LogDoc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Logs>,
+  "planId" | "userId" | "adminId" | "trainerId"
 >;
 export default function PrintLogs({ query }: Data) {
   return (
@@ -26,8 +21,8 @@ export default function PrintLogs({ query }: Data) {
         const body = payments.data.data.map<string[]>((doc, i) => {
           return [
             (i + 1).toString(),
-            doc.userId.name || "",
-            doc.planId.name || "",
+            doc.userId?.name || "NotExisted",
+            doc.planId?.name || "NotExisted",
             formateDate(new Date(doc.createdAt)),
           ];
         });

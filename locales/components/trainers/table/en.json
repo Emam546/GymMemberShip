@@ -1,0 +1,20 @@
+{
+  "td": {
+    "Deleted": "Deleted",
+    "block.label": "block",
+    "delete": {
+      "title": "Delete Trainer",
+      "desc": "Once you click Delete, The user will be deleted form the database",
+      "accept": "Delete {{name}}",
+      "deny": "Keep"
+    }
+  },
+  "th": {
+    "id": "Id",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "email",
+    "delete":"Delete"
+  },
+  "noData": "There is no trainers so far"
+}

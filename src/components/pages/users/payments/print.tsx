@@ -13,12 +13,9 @@ export default function PrintUserPayments({ id }: { id: string }) {
         >(`/api/admin/users/${id}`);
         const payments = await requester.get<
           Routes.ResponseSuccess<
-            DataBase.WithId<
-              DataBase.Populate<
-                DataBase.Models.Payments,
-                "planId",
-                DataBase.WithId<DataBase.Models.Plans>
-              >
+            DataBase.Populate.Model<
+              DataBase.WithId<DataBase.Models.Payments>,
+              "planId" | "adminId"
             >[]
           >
         >(`/api/admin/users/${id}/payments`);
@@ -30,7 +27,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
           );
           return [
             (i + 1).toString(),
-            doc.planId.name || "",
+            doc.planId?.name || "",
             `${doc.paid} EGP`,
             formateDate(new Date(doc.createdAt)),
             formateDate(new Date(endAt)),

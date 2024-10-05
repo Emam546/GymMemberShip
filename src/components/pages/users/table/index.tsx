@@ -1,6 +1,5 @@
 import DeleteDialog from "@src/components/common/AlertDialog";
-import { formateDate, hasOwnProperty } from "@src/utils";
-import { Pagination } from "@mui/material";
+import { formateDate } from "@src/utils";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -98,7 +97,7 @@ function UserShower({
               label={t("td.block.label")}
               checked={blocked}
               className="tw-mr-1"
-              onChange={async (e) => {
+              onChange={async () => {
                 if (blocked) {
                   mutate.mutate(false);
                 } else {
@@ -131,30 +130,28 @@ function UserShower({
   );
 }
 
-export interface Props {
+export interface Props extends ExtendedPaginationProps {
   page: number;
   users: ElemProps[];
-  totalUsers: number;
-  setPage: (page: number) => any;
   headKeys: HeadKeys[];
   perPage: number;
 }
 export default function UsersTable({
   page,
   users,
-  totalUsers,
   setPage,
   headKeys,
   perPage,
+  ...props
 }: Props) {
   const { t } = useTranslation("table:users");
   return (
     <PaginationManager
       page={page}
       perPage={perPage}
-      totalCount={totalUsers}
       setPage={setPage}
       noElems={t("There is no users so far")}
+      {...props}
     >
       <div className="table-responsive">
         <table className="table mb-0 align-middle text-nowrap">
@@ -196,7 +193,10 @@ export default function UsersTable({
   );
 }
 import i18n from "@src/i18n";
-import { PaginationManager } from "@src/components/pagination";
+import {
+  ExtendedPaginationProps,
+  PaginationManager,
+} from "@src/components/pagination";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

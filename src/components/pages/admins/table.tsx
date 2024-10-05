@@ -1,17 +1,14 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import DeleteDialog from "@src/components/common/AlertDialog";
-import { formateDate, hasOwnProperty } from "@src/utils";
-import { Pagination } from "@mui/material";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import requester from "@src/utils/axios";
-import CheckInput from "@src/components/common/checkInput";
 import { useTranslation } from "react-i18next";
 import { E, TH } from "@src/components/common/table";
 interface ElemProps {
   order: number;
   admin: DataBase.WithId<DataBase.Models.Admins>;
-  onDelete?: () => any;
+  onDelete?: () => void;
 }
 type HeadKeys = "order" | "name" | "phone" | "email" | "delete" | "type";
 
@@ -23,7 +20,7 @@ function UserShower({
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
   const mutate = useMutation({
-    async mutationFn(val: boolean) {
+    async mutationFn() {
       await onDelete?.();
     },
   });
@@ -62,7 +59,7 @@ function UserShower({
       </tr>
       <DeleteDialog
         onAccept={async () => {
-          await mutate.mutateAsync(true);
+          await mutate.mutateAsync();
           setOpen(false);
         }}
         onClose={function () {
@@ -85,7 +82,7 @@ export interface Props {
   perPage: number;
   admins: ElemProps[];
   totalCount: number;
-  setPage: (page: number) => any;
+  setPage?: (page: number) => any;
   headKeys: HeadKeys[];
   onDelete?: (admin: ElemProps["admin"]) => void;
 }

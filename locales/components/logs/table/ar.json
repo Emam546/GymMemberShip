@@ -6,9 +6,11 @@
         "Logged At": "تم تسجيل الدخول في",
         "Delete": "احذف",
         "Plan": "الخطه",
-        "admin": "المنشي"
+        "admin": "المنشي",
+        "trainer": "مدرب"
     },
     "td": {
+        "trainer.notExist": "غير موجود",
         "deleted": "محذوف",
         "model": {
             "title": "حذف التسجيل",

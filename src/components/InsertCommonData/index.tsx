@@ -15,10 +15,10 @@ export interface Props<T extends PSchema> {
   Elem: ElemType<T>;
   data: T[];
   noDragging?: boolean;
-  onDeleteElem?: (v: T) => any;
-  onResort?: (v: number[]) => any;
+  onDeleteElem?: (v: T) => void;
+  onResort?: (v: number[]) => void;
 }
-export const CreateElem = function <T = {}>(
+export const CreateElem = function <T>(
   ...values: Parameters<
     typeof React.forwardRef<HTMLDivElement, OrgElemProps<ListProps<T>>>
   >

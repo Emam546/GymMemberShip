@@ -10,13 +10,7 @@ export interface Props {
   perPage: number;
 }
 type S = Routes.ResponseSuccess<
-  DataBase.WithId<
-    DataBase.Populate<
-      DataBase.Models.Payments,
-      "planId",
-      DataBase.WithId<DataBase.Models.User>
-    >
-  >[]
+  DataBase.Populate.Model<DataBase.WithId<DataBase.Models.Payments>, "planId">[]
 >;
 export default function FullLogsInfoGenerator({
   id,
@@ -36,14 +30,15 @@ export default function FullLogsInfoGenerator({
       ]);
       const newPages = pages
         .filter((val) => typeof val[0] == "number" || val[0] instanceof Number)
-        .reduce((acc, [_, cur]) => {
+        .reduce((acc, [, cur]) => {
           if (!cur) return acc;
           return [...acc, ...cur];
         }, [] as ElemProps[])
         .filter((val) => val.log._id != doc._id)
         .reduce(
           (acc, cur) => {
-            const last = acc.at(-1)!;
+            const last = acc.at(-1);
+            if (!last) return [[]];
             if (last.length > perPage) return [...acc, [cur]];
             last.push(cur);
             return acc;
@@ -55,7 +50,7 @@ export default function FullLogsInfoGenerator({
       });
       queryClient.setQueryData(
         ["logs", "users", id, "number"],
-        queryNum.data! - 1
+        queryNum.data ? queryNum.data - 1 : 0
       );
     },
   });

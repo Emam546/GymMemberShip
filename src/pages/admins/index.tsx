@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import "@locales/users/add";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
@@ -74,7 +75,6 @@ export default function Page({ admins: initAdmins }: Props) {
               if (auth?._id == admin._id) login.mutate(null);
             }}
             totalCount={admins.length}
-            setPage={() => {}}
             headKeys={["delete", "email", "name", "order", "phone", "type"]}
           />
         </MainCard>

@@ -133,7 +133,7 @@ function formatTimeToString(date: Date) {
   return `${formattedHours}:${formattedMinutes} ${period}`;
 }
 export function RecentPayments({ payments }: RecentPaymentsProps) {
-  const { t } = useTranslation("index");
+  const { t } = useTranslation("/dashboard");
   return (
     <div className="col-lg-4 d-flex align-items-stretch">
       <div className="card w-100">

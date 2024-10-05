@@ -3,14 +3,9 @@ import { createTableDoc } from "@src/utils/jspdf";
 import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
-type Payment = DataBase.Populate<
-  DataBase.Populate<
-    DataBase.WithId<DataBase.Models.Payments>,
-    "userId",
-    DataBase.WithId<DataBase.Models.User>
-  >,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+type Payment = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Payments>,
+  "planId" | "userId" | "adminId"
 >;
 export default function PrintUserPayments({ query }: { query: unknown }) {
   return (
@@ -27,8 +22,8 @@ export default function PrintUserPayments({ query }: { query: unknown }) {
           );
           return [
             (i + 1).toString(),
-            doc.planId.name || "",
-            doc.planId.name || "",
+            doc.userId?.name || "",
+            doc.planId?.name || "",
             `${doc.paid}EGP`,
             formateDate(new Date(doc.createdAt)),
             formateDate(new Date(endAt)),

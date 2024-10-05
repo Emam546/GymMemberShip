@@ -22,17 +22,11 @@ import { getPlan } from "@serv/routes/admin/plans/[id]";
 import PrintPlanPayments from "@src/components/pages/plans/payments/print";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
-type Payment = DataBase.AdminPopulate<
-  DataBase.Populate<
-    DataBase.Populate<
-      DataBase.WithId<DataBase.Models.Payments>,
-      "userId",
-      DataBase.WithId<DataBase.Models.User>
-    >,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >
+type Payment = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Payments>,
+  "userId" | "adminId" | "planId"
 >;
+
 export default function Page({ doc }: Props) {
   const curDate = new Date();
   const [filter, setFilter] = useState<DataType>({
@@ -238,9 +232,9 @@ export default function Page({ doc }: Props) {
                     order: i,
                     payment: {
                       ...payment,
-                      userId: payment.userId._id,
-                      planId: payment.planId._id,
-                      adminId: payment.adminId?._id,
+                      userId: payment.userId?._id || "",
+                      planId: payment.planId?._id || "",
+                      adminId: payment.adminId?._id || "",
                     },
                     plan: payment.planId,
                     user: payment.userId,

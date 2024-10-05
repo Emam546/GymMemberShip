@@ -7,11 +7,20 @@ declare global {
     type WithIdOrg<T> = T & { id: string };
     type Price = number;
     type PlansType = "day" | "year" | "month";
-    type AdminPopulate<T> = Populate<
-      T,
-      "adminId",
-      DataBase.WithId<Models.Admins>
-    >;
+    namespace Populate {
+      interface _G {
+        adminId: Models.Admins;
+        planId: Models.Plans;
+        userId: Models.User;
+        trainerId: Models.Trainers;
+        paymentId: Models.Payments;
+      }
+      type _Dic<T, Name extends keyof _G & keyof T> = DataBase.WithId<_G[Name]>;
+
+      type Model<T, C extends keyof _G & keyof T> = Omit<T, C> & {
+        [key in C]?: _Dic<T, key>;
+      };
+    }
     namespace Models {
       interface Trainers {
         name: string;

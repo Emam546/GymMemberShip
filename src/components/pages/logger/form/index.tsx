@@ -25,10 +25,9 @@ export interface Data {
 interface FormData extends Data {
   plan: DataBase.Models.Payments["plan"];
 }
-type Doc = DataBase.Populate<
+type Doc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "planId",
-  DataBase.WithId<DataBase.Models.Plans>
+  "planId" | "adminId"
 >;
 
 export interface Props {
@@ -98,11 +97,11 @@ export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
             <MainInput
               title={t("Plan")}
               id="user-id"
-              value={payment?.planId.name}
+              value={payment?.planId?.name}
               disabled
             />
-            <Link href={`/plans/${payment?.planId._id}`}>
-              {payment?.planId.name}
+            <Link href={`/plans/${payment?.planId?._id}`}>
+              {payment?.planId?.name}
             </Link>
           </div>
           <WrapElem label={t("createdAt")}>
@@ -137,7 +136,7 @@ export function AttendPerson({ payment, onUpdate, onIncrement }: Props) {
             priceProps={register("paid")}
             price={paidType(
               watch("plan"),
-              payment?.planId.prices[watch("plan.type")]
+              payment?.planId?.prices[watch("plan.type")]
             )}
           />
           <BudgetInput

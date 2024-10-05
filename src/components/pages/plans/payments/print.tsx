@@ -3,7 +3,10 @@ import { createTableDoc } from "@src/utils/jspdf";
 import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
-
+type Doc = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Payments>,
+  "userId" | "adminId"
+>;
 export default function PrintPlanPayments({
   id,
   query,
@@ -17,17 +20,10 @@ export default function PrintPlanPayments({
         const res = await requester.get<
           Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Plans>>
         >(`/api/admin/plans/${id}`);
-        const payments = await requester.get<
-          Routes.ResponseSuccess<
-            DataBase.WithId<
-              DataBase.Populate<
-                DataBase.Models.Payments,
-                "userId",
-                DataBase.WithId<DataBase.Models.User>
-              >
-            >[]
-          >
-        >(`/api/admin/plans/${id}/payments`, { params: query });
+        const payments = await requester.get<Routes.ResponseSuccess<Doc[]>>(
+          `/api/admin/plans/${id}/payments`,
+          { params: query }
+        );
         const plan = res.data.data;
 
         const body = await Promise.all(
@@ -38,7 +34,7 @@ export default function PrintPlanPayments({
             );
             return [
               (i + 1).toString(),
-              doc.userId.name || "",
+              doc.userId?.name || "",
               `${doc.paid}EGP`,
               formateDate(new Date(doc.createdAt)),
               formateDate(new Date(endAt)),

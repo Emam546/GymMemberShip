@@ -38,8 +38,7 @@ export default function DeletePaymentForm({
       queryClient.invalidateQueries(["payments"]);
       alert(t("messages.added", { ns: "translation" }));
       await router.push(`/users/${payment._id}`);
-    },
-    onSuccess() {},
+    }
   });
 
   return (

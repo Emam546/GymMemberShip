@@ -39,13 +39,11 @@ export function Item({ className, ...props }: ComponentProps<"div">) {
     />
   );
 }
-type PaymentType = DataBase.WithId<
-  DataBase.Populate<
-    DataBase.Models.Payments,
-    "planId",
-    DataBase.WithId<DataBase.Models.Plans>
-  >
+type PaymentType = DataBase.Populate.Model<
+  DataBase.WithId<DataBase.Models.Payments>,
+  "planId" | "adminId"
 >;
+
 const perPage = 7;
 export default function Page({ plans }: Props) {
   const router = useRouter();
@@ -194,7 +192,7 @@ export default function Page({ plans }: Props) {
               }
             >
               <AttendPerson
-                payment={currentPayment}
+                payment={currentPayment as any}
                 onUpdate={async function (data) {
                   if (!currentPayment) return;
                   await requester.post(

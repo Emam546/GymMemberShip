@@ -56,10 +56,14 @@ function OrgLinkElem({
         className={classNames(
           "tw-flex tw-flex-col tw-items-stretch tw-min-w-[9rem] tw-group tw-cursor-pointer tw-gap-2"
         )}
-        onClick={onClick as any}
+        onClick={onClick}
       >
         <div className="tw-aspect-square tw-h-20 tw-flex tw-justify-center tw-items-center">
-          <img src={icon} className="tw-pointer-events-none tw-h-full" />
+          <img
+            src={icon}
+            className="tw-pointer-events-none tw-h-full"
+            alt="icon"
+          />
         </div>
         <PText className="tw-mb-1" aria-selected={state}>
           {title}
@@ -131,7 +135,7 @@ function LinkElem({ href, ...props }: LinkElemProps) {
   );
 }
 export interface Props {
-  onClose?: (this: HTMLElement) => any;
+  onClose?: (this: HTMLElement) => void;
 }
 
 function ManageUsersNavBar() {
@@ -203,7 +207,7 @@ export default function Header() {
               href="/"
               className="hover:tw-bg-yellow-600/10 tw-block tw-p-3 tw-h-[7rem] tw-rounded"
             >
-              <img src={Logo.src} className="tw-h-full" />
+              <img src={Logo.src} className="tw-h-full" alt="Logo" />
             </Link>
           </div>
           <nav className="">

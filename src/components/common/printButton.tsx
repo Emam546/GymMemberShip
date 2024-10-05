@@ -15,8 +15,7 @@ export function PrintButton<T>({
   buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 }) {
   const mutate = useMutation({
-    mutationFn: fn,
-    onError(err) {},
+    mutationFn: fn
   });
   const { t } = useTranslation("translation");
   return (

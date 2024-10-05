@@ -33,8 +33,7 @@ export default function DeleteAccountForm({ id }: { id: string }) {
       queryClient.invalidateQueries(["users"]);
       alert("document deleted successfully");
       await router.push("/users");
-    },
-    onSuccess() {},
+    }
   });
 
   return (
