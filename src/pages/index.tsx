@@ -26,7 +26,6 @@ import { getAllPlans } from "@serv/routes/admin/plans";
 import { GetServerSideProps } from "next";
 import i18n from "@src/i18n";
 import { getAllTrainers } from "@serv/routes/admin/trainers";
-import Barcode from "react-barcode";
 
 interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];

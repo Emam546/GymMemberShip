@@ -7,6 +7,7 @@ import { ObjectEntries } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
 import SelectInput from "@src/components/common/inputs/select";
+import PhoneNumberWithForm from "@src/components/common/inputs/phone";
 export interface DataType {
   name: string;
   password: string;
@@ -25,7 +26,7 @@ export default function AdminInfoForm({
   buttonName,
   onData,
 }: Props) {
-  const { register, handleSubmit, formState } = useForm<DataType>({
+  const { register, handleSubmit, formState, control } = useForm<DataType>({
     values: defaultData,
   });
   const { t } = useTranslation("form:admin");
@@ -52,10 +53,11 @@ export default function AdminInfoForm({
           {...register("password", { required: true })}
           err={formState.errors.name}
         />
-        <MainInput
+        <PhoneNumberWithForm
           id={"phone-input"}
           title={t("phone")}
-          {...register("phone")}
+          control={control}
+          name="phone"
           err={formState.errors.name}
         />
         <MainInput

@@ -7,6 +7,7 @@ import { ObjectEntries } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
 import SelectInput from "@src/components/common/inputs/select";
+import PhoneNumberWithForm from "@src/components/common/inputs/phone";
 export interface DataType {
   name: string;
   phone?: string;
@@ -23,7 +24,7 @@ export default function TrainerInfoForm({
   buttonName,
   onData,
 }: Props) {
-  const { register, handleSubmit, formState } = useForm<DataType>({
+  const { register, handleSubmit, formState, control } = useForm<DataType>({
     values: defaultData,
   });
   const { t } = useTranslation("form:trainers");
@@ -44,10 +45,11 @@ export default function TrainerInfoForm({
           {...register("name", { required: true })}
           err={formState.errors.name}
         />
-        <MainInput
+        <PhoneNumberWithForm
           id={"phone-input"}
           title={t("phone")}
-          {...register("phone")}
+          name="phone"
+          control={control}
           err={formState.errors.name}
         />
         <MainInput

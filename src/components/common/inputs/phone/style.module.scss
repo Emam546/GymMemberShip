@@ -1,0 +1,15 @@
+.phone_number {
+  @apply tw-p-0 tw-pl-5 tw-py-0 tw-overflow-hidden tw-gap-2;
+  * {
+    @apply tw-outline-none;
+  }
+  > .PhoneInputCountry {
+    @apply tw-min-w-max tw-block tw-flex-1;
+  }
+  select:disabled {
+    opacity: 0;
+  }
+  > input {
+    @apply focus:tw-outline-none tw-w-full tw-border-none tw-bg-none tw-py-2 tw-flex-1 tw-min-w-0;
+  }
+}

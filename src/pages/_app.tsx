@@ -4,7 +4,9 @@ import "@src/styles/global.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "simplebar-react/dist/simplebar.min.css";
+import "react-phone-number-input/style.css";
 import "@locales/common";
+
 import { config } from "@fortawesome/fontawesome-svg-core";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode, useEffect } from "react";
@@ -22,9 +24,7 @@ import i18n from "@src/i18n";
 import { ObjectEntries } from "@src/utils";
 import { UserProvider } from "@src/components/UserProvider";
 import { loadAuthData } from "@src/utils/loadAuth";
-import {
-  BarcodePrintProvider,
-} from "@src/components/BarcodePrinter";
+import { BarcodePrintProvider } from "@src/components/BarcodePrinter";
 
 config.autoAddCss = false;
 

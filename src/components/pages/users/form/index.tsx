@@ -7,6 +7,7 @@ import React from "react";
 import { ObjectEntries } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
+import PhoneNumberWithForm from "@src/components/common/inputs/phone";
 
 export interface DataType {
   blocked?: boolean;
@@ -31,10 +32,10 @@ export default function UserInfoForm({
   buttonName,
   onData,
 }: Props) {
-  const { register, handleSubmit, formState } = useForm<DataType>({
+  const { register, handleSubmit, formState, control } = useForm<DataType>({
     values: defaultData,
   });
-  const { t } = useTranslation("form:user")
+  const { t } = useTranslation("form:user");
   register("details", { value: {} });
   return (
     <form
@@ -53,10 +54,11 @@ export default function UserInfoForm({
           {...register("name")}
           err={formState.errors.name}
         />
-        <MainInput
+        <PhoneNumberWithForm
           id={"phone-input"}
           title={t("Phone")}
-          {...register("phone")}
+          control={control}
+          name="phone"
           err={formState.errors.name}
         />
       </Grid2>

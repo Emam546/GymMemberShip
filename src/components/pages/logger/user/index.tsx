@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Grid2 } from "../form";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
+import PhoneNumberWithForm from "@src/components/common/inputs/phone";
 interface Props {
   user?: DataBase.WithId<DataBase.Models.User>;
 }
@@ -21,7 +22,7 @@ export interface DataType extends DataBase.WithId<DataBase.Models.User> {
 }
 export default function UserInfoForm({ user }: Props) {
   const { t } = useTranslation("form:user");
-  const { register, formState } = useForm<DataType>({
+  const { register, formState, control } = useForm<DataType>({
     values: user,
   });
   return (
@@ -37,11 +38,12 @@ export default function UserInfoForm({ user }: Props) {
           <Link href={`/users/${user?._id}`}>{user?.name}</Link>
         </div>
 
-        <MainInput
+        <PhoneNumberWithForm
           id={"phone-input"}
           disabled
+          control={control}
+          name="phone"
           title={t("Phone")}
-          {...register("phone")}
           err={formState.errors.name}
         />
       </Grid2>
