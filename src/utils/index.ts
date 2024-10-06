@@ -7,7 +7,6 @@ export function assertIsNode(e: EventTarget | null): asserts e is Node {
   }
 }
 
-
 export function hasOwnProperty<K extends PropertyKey, T>(
   obj: unknown,
   key: K
@@ -18,7 +17,7 @@ export function hasOwnProperty<K extends PropertyKey, T>(
 export function uuid() {
   return _uuid();
 }
-export function formateDate(date: Date, sep: string = "-") {
+export function formateDate(date: Date, sep = "-") {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-indexed, so we add 1
   const day = date.getDate().toString().padStart(2, "0");

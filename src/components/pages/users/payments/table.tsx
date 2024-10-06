@@ -16,7 +16,7 @@ export interface Props {
 type S = Routes.ResponseSuccess<
   DataBase.Populate.Model<
     DataBase.WithId<DataBase.Models.Payments>,
-    "planId" | "adminId"
+    "planId" | "adminId" | "trainerId"
   >[]
 >;
 function isQueryPayment(

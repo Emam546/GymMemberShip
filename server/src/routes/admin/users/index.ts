@@ -23,7 +23,6 @@ router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
     return res.status(400).SendFailed("invalid Data", result.errors);
-  result.data;
   const user = new Users({
     ...result.data,
     createdBy: "admin",

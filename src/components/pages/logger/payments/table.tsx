@@ -8,7 +8,7 @@ interface ElemProps {
   order: number;
   payment: DataBase.Populate.Model<
     DataBase.WithId<DataBase.Models.Payments>,
-    "planId" | "adminId"
+    "planId" | "adminId" | "trainerId"
   >;
   headKeys: HeadKeys[];
   selected: boolean;

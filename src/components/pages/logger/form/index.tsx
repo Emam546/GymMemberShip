@@ -17,6 +17,8 @@ import BudgetInput, {
 } from "@src/components/common/inputs/budget";
 import { useAttend } from "@src/hooks/payments";
 import SelectInput from "@src/components/common/inputs/select";
+import { usePrintBarCode } from "@src/components/BarcodePrinter";
+import { printJsDoc } from "@src/utils/print";
 export interface Data {
   startAt: Date;
   endAt: Date;
@@ -29,7 +31,7 @@ interface FormData extends Data {
 }
 type Doc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "planId" | "adminId"
+  "planId" | "adminId" | "userId"
 >;
 
 export interface Props {
@@ -54,20 +56,36 @@ export function AttendPerson({
   onIncrement,
   trainers,
 }: Props) {
-  const { register, setValue, handleSubmit, watch, formState, reset } =
-    useForm<FormData>({
-      values: payment,
-    });
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    getValues,
+    watch,
+    formState,
+    reset,
+  } = useForm<FormData>({
+    defaultValues: { trainerId: "" },
+    values: payment
+      ? { ...payment, trainerId: payment.trainerId ?? "" }
+      : undefined,
+  });
   useEffect(() => {
     reset();
   }, [payment]);
   const { t } = useTranslation("payment:form:update");
   const { t: t2 } = useTranslation("payment:add");
   const { t: t3 } = useTranslation("form:attend");
+  const printBarcode = usePrintBarCode({
+    onSuccess(doc) {
+      printJsDoc(doc, `${payment?.userId?.name?.split(" ").join("-")}.pdf`);
+    },
+  });
   const attend = useAttend({
     onSuccess() {
       if (!payment) return;
       onIncrement({ ...payment, logsCount: payment.logsCount + 1 });
+      reset();
     },
   });
   register("startAt", { valueAsDate: true });
@@ -82,7 +100,6 @@ export function AttendPerson({
         action=""
         onSubmit={handleSubmit(async (data) => {
           if (!payment) return;
-          if (!data["trainerId"]) delete data["trainerId"];
           await onUpdate({
             endAt: data.endAt,
             paid: data.paid,
@@ -153,15 +170,16 @@ export function AttendPerson({
           <BudgetInput
             label={t2("remaining")}
             priceProps={register("remaining", { valueAsNumber: true })}
+            err={formState.errors.remaining}
           />
         </Grid2>
         <div className="tw-my-5">
           <SelectInput
             id="trainer-input"
             {...register("trainerId")}
-            title={t3("trainer.label")}
+            title={t2("trainer.label")}
           >
-            <option value="">{t3("trainer.default")}</option>
+            <option value="">{t2("trainer.default")}</option>
             {trainers.map((val) => {
               return (
                 <option value={val._id} key={val._id}>
@@ -194,13 +212,37 @@ export function AttendPerson({
             <PrimaryButton disabled={formState.isLoading} type="submit">
               {t("buttons.update", { ns: "translation" })}
             </PrimaryButton>
+            <SuccessButton
+              type="button"
+              onClick={() => {
+                if (!payment) return;
+                printBarcode.mutate([
+                  {
+                    ...payment,
+                    adminId: payment.adminId?._id || "",
+                    trainerId: trainers.find(({ _id }) => {
+                      return getValues("trainerId") == _id;
+                    }),
+                  },
+                ]);
+              }}
+            >
+              Print Barcode
+            </SuccessButton>
           </div>
           <div>
             <SuccessButton
               type="button"
               disabled={formState.isLoading}
               onClick={() => {
-                if (payment) attend.mutate(payment._id);
+                if (!payment) return;
+                const trainerId = getValues("trainerId");
+                if (trainerId)
+                  attend.mutate({
+                    paymentId: payment._id,
+                    body: { trainerId: trainerId },
+                  });
+                else attend.mutate({ paymentId: payment._id });
               }}
             >
               {t("buttons.attend", { ns: "translation" })}
@@ -222,10 +264,6 @@ declare global {
             remaining: "Remaining Days";
             total: "Total Days";
           };
-        };
-        trainer: {
-          label: "Choose Trainer";
-          default: "Choose Trainer";
         };
       };
     }

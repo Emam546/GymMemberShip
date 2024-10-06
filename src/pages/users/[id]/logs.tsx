@@ -2,7 +2,7 @@ import "@locales/users/[id]/logs";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import { useRouter } from "next/router";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
@@ -11,7 +11,7 @@ import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import { useTranslation } from "react-i18next";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getUser } from "@serv/routes/admin/users/[id]";
-import { getDaysArray, getMonthsArray, MakeItSerializable } from "@src/utils";
+import { getDaysArray, MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
 import { getLogsCount } from "@serv/routes/admin/log";
@@ -26,14 +26,6 @@ type LogDoc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Logs>,
   "planId" | "trainerId" | "adminId"
 >;
-type Page = {
-  page: number;
-  data: LogDoc[];
-};
-interface InfiniteQueryData {
-  pages: Page[];
-  pageParams: unknown[];
-}
 
 export default function Page({ doc, logs: logsCount }: Props) {
   const curDate = new Date();
@@ -42,28 +34,9 @@ export default function Page({ doc, logs: logsCount }: Props) {
   const getMonthName = useFormateDate({ month: "short" });
   const { t } = useTranslation("/users/[id]/logs");
   const { id } = router.query;
-  const mutate = useMutation({
-    mutationFn(id: string) {
-      return requester.delete(`/api/admin/logs/${id}`);
-    },
-    onSuccess(_, logId) {
-      queryClient.setQueryData<InfiniteQueryData>(
-        ["logs", "users", id, "infinity"],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              data: page.data.filter((item) => item._id !== logId),
-            })),
-          };
-        }
-      );
-    },
-  });
+  const queryInfinityKey = ["logs", "users", id, "infinity"];
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["logs", "users", id, "infinity"],
+    queryKey: queryInfinityKey,
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
         `/api/admin/users/${id}/logs`,
@@ -78,7 +51,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
       return { page: pageParam, data: users.data.data };
     },
     enabled: typeof id == "string",
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -163,7 +136,6 @@ export default function Page({ doc, logs: logsCount }: Props) {
             <LogInfoGenerator
               page={0}
               perPage={logs.length}
-              setPage={() => {}}
               totalCount={logs.length}
               logs={logs.map((log, i) => ({
                 order: i,
@@ -186,7 +158,24 @@ export default function Page({ doc, logs: logsCount }: Props) {
                 "admin",
                 "trainer",
               ]}
-              onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
+              onDelete={async (doc) => {
+                await requester.delete(`/api/admin/logs/${doc.log._id}`);
+                queryClient.setQueryData<InfinityQuery<LogDoc>>(
+                  queryInfinityKey,
+                  (oldData) => {
+                    if (!oldData) return oldData;
+                    return {
+                      ...oldData,
+                      pages: oldData.pages.map((page) => ({
+                        ...page,
+                        data: page.data.filter(
+                          (item) => item._id !== doc.log._id
+                        ),
+                      })),
+                    };
+                  }
+                );
+              }}
             />
           </div>
           <TriggerOnVisible
@@ -209,7 +198,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const curDate = new Date();
   const startAt = new Date(curDate.getFullYear(), curDate.getMonth() - 8, 0);
   try {
-    const user = await getUser(ctx.params!.id as string);
+    if (!ctx.params)
+      return {
+        notFound: true,
+      };
+    const user = await getUser(ctx.params.id as string);
     const logsCount = await getLogsCount(
       {
         startAt: startAt.getTime().toString(),

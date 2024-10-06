@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "./users";
 import Plans from "./plans";
 import Admins from "./admins";
+import Trainers from "./trainers";
 const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
@@ -19,6 +20,10 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
       ref: Plans.modelName,
       required: true,
     } as never,
+    trainerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Trainers.modelName,
+    } as never,
     plan: { type: Object, required: true },
     createdBy: String,
     remaining: { type: Number, default: 0, required: true },
@@ -32,6 +37,7 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
 schema.index({ userId: 1, createdAt: -1 });
 schema.index({ planId: 1, createdAt: -1 });
 schema.index({ adminId: 1, createdAt: -1 });
+schema.index({ trainerId: 1, createdAt: -1 });
 schema.index({ createdAt: -1 });
 export default ((mongoose.models && mongoose.models.payments) ||
   mongoose.model(

@@ -18,7 +18,12 @@ export default function Page() {
     queryKey: ["users", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.User>[]>
+        Routes.ResponseSuccess<
+          DataBase.Populate.Model<
+            DataBase.WithId<DataBase.Models.User>,
+            "adminId"
+          >[]
+        >
       >(`/api/admin/users`, {
         params: {
           skip: perLoad * pageParam,
@@ -58,7 +63,8 @@ export default function Page() {
                 totalCount={users.length}
                 users={users.map((user, i) => ({
                   order: i,
-                  user: user,
+                  user: { ...user, adminId: user.adminId?._id || "" },
+                  admin: user.adminId,
                 }))}
                 headKeys={[
                   "order",
@@ -68,7 +74,8 @@ export default function Page() {
                   "age/tall/weight",
                   "admin",
                   "admin",
-                ]}             />
+                ]}
+              />
             )}
           </div>
           <TriggerOnVisible

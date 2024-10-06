@@ -74,6 +74,7 @@ declare global {
         endAt: Date;
         createdBy: "Admin";
         adminId: string;
+        trainerId?: string;
         paid: Price;
         remaining: Price;
       }

@@ -2,12 +2,19 @@ import { Router } from "express";
 import mongoose, { Document } from "mongoose";
 import Payments from "@serv/models/payments";
 import Validator from "validator-checker-js";
+import Trainers from "@serv/models/trainers";
 import Logs from "@serv/models/log";
 import { RouteError } from "@serv/declarations/classes";
+import LogsRouter from "./logs";
 const router = Router();
 export async function getPayment(
   id: string,
-  populate: (keyof DataBase.Models.Payments)[] = ["adminId", "userId", "planId"]
+  populate: (keyof DataBase.Models.Payments)[] = [
+    "adminId",
+    "userId",
+    "planId",
+    "trainerId",
+  ]
 ) {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new RouteError(404, "the plan id is not valid");
@@ -31,11 +38,13 @@ const registerUpdate = new Validator({
   startAt: ["isDate"],
   endAt: ["isDate"],
   paid: ["integer"],
+  trainerId: [{ existedId: { path: Trainers.modelName } }],
   plan: {
     type: ["string", { in: ["day", "year", "month"] }, "required"],
     num: ["integer", "required"],
   },
   remaining: ["integer"],
+
   ".": ["required"],
 });
 router.post("/:id", async (req, res) => {
@@ -59,62 +68,6 @@ router.delete("/:id", async (req, res) => {
   await Logs.deleteMany({ paymentId: payment._id });
   res.status(200).sendSuccess(newPayment);
 });
-const registerQuery = new Validator({
-  skip: ["numeric"],
-  limit: ["numeric"],
-  ".": ["required"],
-});
-router.get("/:id/logs", async (req, res) => {
-  const result = registerQuery.passes(req.query);
-  if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
-  const { skip, limit } = result.data;
-  const payment = res.locals.payment as Document<DataBase.Models.User>;
-  const logs = await Logs.find({ paymentId: payment._id })
-    .hint({
-      userId: 1,
-      createdAt: -1,
-    })
-    .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity);
+router.use(LogsRouter);
 
-  res.status(200).sendSuccess(logs);
-});
-export async function IncrementPaymentLogs(id: string, dir: number) {
-  return await Payments.findByIdAndUpdate(
-    id,
-    {
-      $inc: { logsCount: dir },
-    },
-    { new: true }
-  );
-}
-router.post("/:id/logs", async (req, res) => {
-  const payment = res.locals.payment as Document<
-    DataBase.Models.Payments,
-    DataBase.Models.Payments,
-    DataBase.Models.Payments
-  >;
-  const log = new Logs({
-    paymentId: payment._id.toString(),
-    planId: payment.toObject().planId,
-    userId: payment.toObject().userId,
-    adminId: req.user?._id,
-    createdBy: "Admin",
-  });
-  const newPayment = await IncrementPaymentLogs(
-    payment._id as unknown as string,
-    1
-  );
-  const logSave = await log.save();
-  res.status(200).sendSuccess({ log: logSave, count: newPayment });
-});
-router.get("/:id/logs/count", async (req, res) => {
-  const payment = res.locals.payment as Document<DataBase.Models.User>;
-  const logs = await Logs.countDocuments({ paymentId: payment._id }).hint({
-    paymentId: 1,
-    createdAt: -1,
-  });
-  res.status(200).sendSuccess(logs);
-});
 export default router;

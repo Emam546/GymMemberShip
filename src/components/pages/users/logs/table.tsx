@@ -10,7 +10,10 @@ export interface Props {
   perPage: number;
 }
 type S = Routes.ResponseSuccess<
-  DataBase.Populate.Model<DataBase.WithId<DataBase.Models.Payments>, "planId">[]
+  DataBase.Populate.Model<
+    DataBase.WithId<DataBase.Models.Payments>,
+    "planId" | "adminId" | "trainerId"
+  >[]
 >;
 export default function FullLogsInfoGenerator({
   id,
@@ -18,42 +21,7 @@ export default function FullLogsInfoGenerator({
   headKeys,
 }: Props) {
   const [page, setPage] = useState(0);
-  const mutate = useMutation({
-    mutationFn(payment: ElemProps["log"]) {
-      return requester.delete(`/api/admin/logs/${payment._id}`);
-    },
-    onSuccess(_, doc) {
-      const pages = queryClient.getQueriesData<ElemProps[]>([
-        "users",
-        id,
-        "payments",
-      ]);
-      const newPages = pages
-        .filter((val) => typeof val[0] == "number" || val[0] instanceof Number)
-        .reduce((acc, [, cur]) => {
-          if (!cur) return acc;
-          return [...acc, ...cur];
-        }, [] as ElemProps[])
-        .filter((val) => val.log._id != doc._id)
-        .reduce(
-          (acc, cur) => {
-            const last = acc.at(-1);
-            if (!last) return [[]];
-            if (last.length > perPage) return [...acc, [cur]];
-            last.push(cur);
-            return acc;
-          },
-          [[]] as ElemProps[][]
-        );
-      newPages.forEach((data, page) => {
-        queryClient.setQueryData(["logs", "users", id, page], data);
-      });
-      queryClient.setQueryData(
-        ["logs", "users", id, "number"],
-        queryNum.data ? queryNum.data - 1 : 0
-      );
-    },
-  });
+
   const query = useQuery({
     queryKey: ["logs", "users", id, page],
     queryFn: async () => {
@@ -75,10 +43,10 @@ export default function FullLogsInfoGenerator({
   const queryNum = useQuery({
     queryKey: ["logs", "users", id, "number"],
     queryFn: async () => {
-      const request = await requester.get<Routes.ResponseSuccess<number>>(
-        `/api/admin/users/${id}/logs/count`
-      );
-      return request.data.data;
+      const request = await requester.get<
+        Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount>
+      >(`/api/admin/users/${id}/logs/count`);
+      return request.data.data.count;
     },
   });
   if (query.isLoading || queryNum.isLoading) return null;
@@ -89,7 +57,41 @@ export default function FullLogsInfoGenerator({
       perPage={perPage}
       headKeys={headKeys}
       page={page}
-      onDelete={(elem) => mutate.mutateAsync(elem.log)}
+      onDelete={async (elem) => {
+        await requester.delete(`/api/admin/logs/${elem.log._id}`);
+        const pages = queryClient.getQueriesData<ElemProps[]>([
+          "users",
+          id,
+          "payments",
+        ]);
+        const doc = elem.log;
+        const newPages = pages
+          .filter(
+            (val) => typeof val[0] == "number" || val[0] instanceof Number
+          )
+          .reduce((acc, [, cur]) => {
+            if (!cur) return acc;
+            return [...acc, ...cur];
+          }, [] as ElemProps[])
+          .filter((val) => val.log._id != doc._id)
+          .reduce(
+            (acc, cur) => {
+              const last = acc.at(-1);
+              if (!last) return [[]];
+              if (last.length > perPage) return [...acc, [cur]];
+              last.push(cur);
+              return acc;
+            },
+            [[]] as ElemProps[][]
+          );
+        newPages.forEach((data, page) => {
+          queryClient.setQueryData(["logs", "users", id, page], data);
+        });
+        queryClient.setQueryData(
+          ["logs", "users", id, "number"],
+          queryNum.data ? queryNum.data - 1 : 0
+        );
+      }}
       logs={query.data}
       setPage={setPage}
       totalCount={queryNum.data}

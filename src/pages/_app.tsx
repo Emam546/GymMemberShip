@@ -22,6 +22,9 @@ import i18n from "@src/i18n";
 import { ObjectEntries } from "@src/utils";
 import { UserProvider } from "@src/components/UserProvider";
 import { loadAuthData } from "@src/utils/loadAuth";
+import {
+  BarcodePrintProvider,
+} from "@src/components/BarcodePrinter";
 
 config.autoAddCss = false;
 
@@ -41,7 +44,7 @@ export function Provider({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         {/* <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID!}> */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          {children}
+          <BarcodePrintProvider>{children}</BarcodePrintProvider>
         </LocalizationProvider>
         {/* </GoogleOAuthProvider> */}
       </QueryClientProvider>

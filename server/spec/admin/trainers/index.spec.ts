@@ -1,5 +1,5 @@
 import agent from "@test/index";
-import { createTrainerData, createUserRequest } from "./utils";
+import { createTrainerData, createTrainerRequest } from "./utils";
 
 describe("POST", () => {
   test("success", async () => {

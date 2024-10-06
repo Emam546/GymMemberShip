@@ -13,5 +13,9 @@
     },
     "remaining": "Remaining",
     "endAt": "End At",
-    "startAt": "Start At"
+    "startAt": "Start At",
+    "trainer": {
+        "label": "Trainer",
+        "default": "Choose Trainer"
+    }
 }

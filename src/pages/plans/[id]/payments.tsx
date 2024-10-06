@@ -10,7 +10,6 @@ import TimeStartEndSelector, {
 } from "@src/components/pages/payments/filter";
 import { useState } from "react";
 import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
-import PrintUserPayments from "@src/components/pages/payments/print";
 import { useTranslation } from "react-i18next";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { LineChart } from "@src/components/common/charts";
@@ -24,7 +23,7 @@ import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "userId" | "adminId" | "planId"
+  "userId" | "adminId" | "planId" | "trainerId"
 >;
 
 export default function Page({ doc }: Props) {
@@ -226,7 +225,6 @@ export default function Page({ doc }: Props) {
                 <PaymentInfoGenerator
                   page={0}
                   perPage={payments.length}
-                  setPage={() => {}}
                   totalCount={payments.length}
                   payments={payments.map((payment, i) => ({
                     order: i,
@@ -243,7 +241,6 @@ export default function Page({ doc }: Props) {
                   headKeys={[
                     "order",
                     "user",
-                    "plan",
                     "paid",
                     "link",
                     "createdAt",
@@ -251,7 +248,6 @@ export default function Page({ doc }: Props) {
                     "endAt",
                     "admin",
                   ]}
-                  onDelete={() => {}}
                 />
               )}
             </div>

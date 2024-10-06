@@ -1,7 +1,9 @@
 import requester from "@src/utils/axios";
 import { remainingDays } from "@src/utils/payment";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
-
+export interface Data {
+  trainerId?: string;
+}
 export function useAttend({
   onSuccess,
   ...opt
@@ -9,13 +11,17 @@ export function useAttend({
   UseMutationOptions<
     DataBase.WithId<DataBase.Models.Logs> | null,
     unknown,
-    string,
+    { paymentId: string; body?: Data },
     unknown
   >,
-  "useMutation"
+  "mutationFn"
 >) {
-  return useMutation({
-    async mutationFn(paymentId: string) {
+  return useMutation<
+    DataBase.WithId<DataBase.Models.Logs> | null,
+    unknown,
+    { paymentId: string; body?: Data }
+  >({
+    async mutationFn({ body, paymentId }) {
       const request = await requester.get<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Payments>>
       >(`/api/admin/payments/${paymentId}`);
@@ -29,12 +35,12 @@ export function useAttend({
         return null;
       const data = await requester.post<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>>
-      >(`/api/admin/payments/${paymentId}/logs`);
+      >(`/api/admin/payments/${paymentId}/logs`, body);
       return data.data.data;
     },
-    onSuccess(data, variables, context) {
+    onSuccess(...args) {
       alert("log added successfuly");
-      onSuccess?.call(this, data, variables, context);
+      onSuccess?.call(this, ...args);
     },
     ...opt,
   });

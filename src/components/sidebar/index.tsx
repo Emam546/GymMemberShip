@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
 import { IsAdminComp } from "../wrappers";
@@ -89,6 +89,15 @@ function DropLinksElem({ hrefs, children, ...props }: DropLinkElemProps) {
   const router = useRouter();
   const state = hrefs.some(({ href }) => href == router.pathname);
   const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    const handleComplete = () => setOpened(false);
+    router.events.on("routeChangeError", handleComplete);
+    router.events.on("routeChangeComplete", handleComplete);
+    return () => {
+      router.events.off("routeChangeError", handleComplete);
+      router.events.off("routeChangeComplete", handleComplete);
+    };
+  }, []);
   return (
     <OrgLinkElem
       {...props}
@@ -108,11 +117,7 @@ function DropLinksElem({ hrefs, children, ...props }: DropLinkElemProps) {
         <ul className="tw-z-20">
           {hrefs.map((val) => {
             return (
-              <li
-                key={val.href}
-                className="tw-group"
-                onClick={() => setOpened(false)}
-              >
+              <li key={val.href} className="tw-group">
                 <Link href={val.href}>
                   <PText className="tw-mb-0.5">{val.label}</PText>
                 </Link>
@@ -199,7 +204,7 @@ export default function Header() {
   const logout = useLogUser();
   const { t } = useTranslation("sideBar");
   return (
-    <header className="header tw-pt-4" dir="ltr">
+    <header className="tw-px-2 header tw-pt-4" dir="ltr">
       <div className="tw-flex tw-justify-between">
         <div className="tw-flex tw-gap-5">
           <div className="tw-h-full">

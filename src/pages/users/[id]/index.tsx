@@ -14,6 +14,7 @@ import PaymentInfoGenerator from "@src/components/pages/users/payments/table";
 import { getUser } from "@serv/routes/admin/users/[id]";
 import AddUserPayment from "@src/components/pages/users/addPayment";
 import { getAllPlans } from "@serv/routes/admin/plans";
+import { getAllTrainers } from "@serv/routes/admin/trainers";
 import queryClient from "@src/queryClient";
 import DeleteAccountForm from "@src/components/pages/users/deleteAccountForm";
 import { useTranslation } from "react-i18next";
@@ -22,9 +23,10 @@ import { CopyText } from "@src/components/common/copy";
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
 }
 
-export default function Page({ doc: initData, plans }: Props) {
+export default function Page({ doc: initData, plans, trainers }: Props) {
   const [doc, setDoc] = useState(initData);
   const { t } = useTranslation("/users/[id]");
   return (
@@ -68,6 +70,7 @@ export default function Page({ doc: initData, plans }: Props) {
         </div>
         <MainCard>
           <AddUserPayment
+            trainers={trainers}
             onData={async ({ ...data }) => {
               await requester.post("/api/admin/payments", {
                 ...data,
@@ -109,6 +112,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   try {
     const user = await getUser(ctx.params!.id as string);
     const plans = await getAllPlans();
+    const trainers = await getAllTrainers();
     return {
       props: {
         doc: MakeItSerializable({ ...user.toJSON(), _id: user._id.toString() }),
@@ -116,6 +120,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
           return {
             ...MakeItSerializable(plan),
             _id: plan._id.toString(),
+          };
+        }),
+        trainers: trainers.map((trainer) => {
+          return {
+            ...MakeItSerializable(trainer),
+            _id: trainer._id.toString(),
           };
         }),
       },

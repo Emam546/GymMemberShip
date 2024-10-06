@@ -14,6 +14,7 @@ import { WrapElem } from "@src/components/common/inputs/styles";
 import DatePicker, {
   EndDatePicker,
 } from "@src/components/common/inputs/datePicker";
+import SelectInput from "@src/components/common/inputs/select";
 
 export interface FormData {
   planId: string;
@@ -25,36 +26,15 @@ export interface FormData {
   endAt: Date;
   paid: DataBase.Price;
   remaining: DataBase.Price;
+  trainerId: string;
 }
 export interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
   onData: (data: FormData) => any;
 }
-declare global {
-  namespace I18ResourcesType {
-    interface Resources {
-      "payment:add": {
-        "Choose Course": "Choose Course";
-        payment: {
-          endAt: "This payment should be end at {{val}}";
-        };
-        paid: {
-          label: "The amount paid";
-          required: {
-            currency: "Please select a currency";
-            num: "Please set the course price or set it to 0";
-          };
-          paragraph: "The amount to be paid is {{val}}";
-          placeholder: "eg.120";
-        };
-        startAt: string;
-        endAt: string;
-        remaining: string;
-      };
-    }
-  }
-}
-export default function AddUserPayment({ plans, onData }: Props) {
+
+export default function AddUserPayment({ plans, onData, trainers }: Props) {
   const { handleSubmit, register, formState, getValues, setValue, watch } =
     useForm<FormData>();
   const planType = watch("plan.type");
@@ -156,15 +136,29 @@ export default function AddUserPayment({ plans, onData }: Props) {
             ...register("remaining", {
               required: t("paid.required.num"),
               valueAsNumber: true,
-              min: 0,
               value: 0,
             }),
             placeholder: "eg.120",
             type: "number",
           }}
           unitProps={{}}
-          err={formState.errors.paid}
+          err={formState.errors.remaining}
         />
+        <SelectInput
+          {...register("trainerId")}
+          title={t("trainer.label")}
+          id={"trainer-input"}
+          err={formState.errors.trainerId}
+        >
+          <option value="">{t("trainer.default")}</option>
+          {trainers.map((val) => {
+            return (
+              <option value={val._id} key={val._id}>
+                {val.name}
+              </option>
+            );
+          })}
+        </SelectInput>
       </Grid2>
       <div className="tw-flex tw-justify-end tw-items-end tw-mt-5">
         <PrimaryButton type="submit">
@@ -173,5 +167,33 @@ export default function AddUserPayment({ plans, onData }: Props) {
       </div>
     </form>
   );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payment:add": {
+        "Choose Course": "Choose Course";
+        payment: {
+          endAt: "This payment should be end at {{val}}";
+        };
+        paid: {
+          label: "The amount paid";
+          required: {
+            currency: "Please select a currency";
+            num: "Please set the course price or set it to 0";
+          };
+          paragraph: "The amount to be paid is {{val}}";
+          placeholder: "eg.120";
+        };
+        startAt: string;
+        endAt: string;
+        remaining: string;
+        trainer: {
+          label: "Trainer";
+          default: "Choose Trainer";
+        };
+      };
+    }
+  }
 }
 i18n.addLoadUrl("/components/users/addPayment", "payment:add");

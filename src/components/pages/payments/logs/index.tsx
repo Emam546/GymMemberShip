@@ -22,28 +22,9 @@ export interface Props {
 }
 
 export default function LogsPaymentInfo({ id }: Props) {
-  const mutate = useMutation({
-    mutationFn(id: string) {
-      return requester.delete(`/api/admin/logs/${id}`);
-    },
-    onSuccess(_, logId) {
-      queryClient.setQueryData<InfiniteQueryData>(
-        ["logs", "payments", id, "infinity"],
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              data: page.data.filter((item) => item._id !== logId),
-            })),
-          };
-        }
-      );
-    },
-  });
+  const queryInfinityKey = ["logs", "payments", id, "infinity"];
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["logs", "payments", id, "infinity"],
+    queryKey: queryInfinityKey,
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<Doc[]>>(
         `/api/admin/payments/${id}/logs`,
@@ -92,7 +73,22 @@ export default function LogsPaymentInfo({ id }: Props) {
           trainer: log.trainerId,
         }))}
         headKeys={["order", "delete", "createdAt", "admin", "plan", "trainer"]}
-        onDelete={(doc) => mutate.mutateAsync(doc.log._id)}
+        onDelete={async (doc) => {
+          await requester.delete(`/api/admin/logs/${doc.log._id}`);
+          queryClient.setQueryData<InfiniteQueryData>(
+            queryInfinityKey,
+            (oldData) => {
+              if (!oldData) return oldData;
+              return {
+                ...oldData,
+                pages: oldData.pages.map((page) => ({
+                  ...page,
+                  data: page.data.filter((item) => item._id !== doc.log._id),
+                })),
+              };
+            }
+          );
+        }}
       />
       <TriggerOnVisible
         onVisible={async () => {

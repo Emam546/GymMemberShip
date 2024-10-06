@@ -9,7 +9,7 @@ router.get("/payments", async (req, res) => {
     req.query,
     { userId: user._id },
     { userId: 1, createdAt: -1 },
-    ["planId", "adminId"]
+    ["planId", "adminId", "trainerId"]
   );
   res.status(200).sendSuccess(logs);
 });

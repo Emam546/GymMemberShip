@@ -15,6 +15,7 @@ import PrintLogs from "@src/components/pages/logs/print";
 import { LineChart } from "@src/components/common/charts";
 import { getDaysArray } from "@src/utils";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
+import queryClient from "@src/queryClient";
 const perLoad = 20;
 type LogDoc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Logs>,
@@ -31,8 +32,9 @@ export default function Page() {
     endAt: curDate,
   });
   const diffTime = filter.endAt.getTime() - filter.startAt.getTime();
+  const queryInfinityKey = ["logs", "infinity", filter];
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["logs", "infinity", filter],
+    queryKey: queryInfinityKey,
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
         `/api/admin/logs`,
@@ -60,7 +62,7 @@ export default function Page() {
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount[]>
-      >(`/api/admin/logslogs/count`, {
+      >(`/api/admin/logs/count`, {
         params: {
           ...filter,
           day: true,
@@ -197,7 +199,6 @@ export default function Page() {
                 <LogInfoGenerator
                   perPage={logs.length}
                   page={0}
-                  setPage={() => {}}
                   totalCount={logs.length}
                   logs={logs.map((log, i) => ({
                     order: i,
@@ -221,7 +222,24 @@ export default function Page() {
                     "delete",
                     "admin",
                   ]}
-                  onDelete={() => {}}
+                  onDelete={async (elem) => {
+                    await requester.delete(`/api/admin/logs/${elem.log._id}`);
+                    queryClient.setQueryData<InfinityQuery<LogDoc>>(
+                      queryInfinityKey,
+                      (oldData) => {
+                        if (!oldData) return oldData;
+                        return {
+                          ...oldData,
+                          pages: oldData.pages.map((page) => ({
+                            ...page,
+                            data: page.data.filter(
+                              (item) => item._id !== elem.log._id
+                            ),
+                          })),
+                        };
+                      }
+                    );
+                  }}
                 />
               )}
             </div>

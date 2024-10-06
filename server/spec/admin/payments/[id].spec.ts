@@ -5,6 +5,7 @@ import { expect } from "chai";
 import { createPayment } from "./utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
+import { createTrainerData, createTrainerRequest } from "../trainers/utils";
 
 let payment: DataBase.WithId<DataBase.Models.Payments>;
 let user: DataBase.WithId<DataBase.Models.User>;
@@ -80,6 +81,13 @@ describe("DELETE", () => {
   });
 });
 describe("Logs", () => {
+  test("Add a log by payment route", async () => {
+    await agent.post(`/api/admin/payments/${payment._id}/logs`).expect(200);
+    const res = await agent
+      .get(`/api/admin/payments/${payment._id}/logs`)
+      .expect(200);
+    expect(res.body.data.length).greaterThanOrEqual(1);
+  });
   test("incremental log adding", async () => {
     const res = await agent
       .get(`/api/admin/payments/${payment._id}`)
@@ -89,5 +97,27 @@ describe("Logs", () => {
       .get(`/api/admin/payments/${payment._id}`)
       .expect(200);
     expect(res.body.data.logsCount).eq(res2.body.data.logsCount - 1);
+  });
+  describe("Add a trainer log", () => {
+    let trainer: DataBase.WithId<DataBase.Models.Trainers>;
+    beforeAll(async () => {
+      trainer = await createTrainerRequest();
+    });
+    test("Add", async () => {
+      await agent
+        .post(`/api/admin/payments/${payment._id}/logs`)
+        .send({
+          trainerId: trainer._id,
+        })
+        .expect(200);
+      const res = await agent.get(`/api/admin/payments/${payment._id}/logs`);
+      expect(res.body.data).instanceOf(Array);
+      console.log(res.body.data);
+      expect(
+        (res.body.data as any[]).some((val: any) => {
+          return val.trainerId._id == trainer._id;
+        })
+      ).true;
+    });
   });
 });

@@ -12,10 +12,14 @@ import { E, TH } from "@src/components/common/table";
 
 export interface ElemProps {
   order: number;
-  payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
+  payment: Omit<
+    DataBase.WithId<DataBase.Models.Payments>,
+    "userId" | "planId" | "adminId" | "trainerId"
+  >;
   user?: DataBase.WithId<DataBase.Models.User>;
   plan?: DataBase.WithId<DataBase.Models.Plans>;
   admin?: DataBase.WithId<DataBase.Models.Admins>;
+  trainer?: DataBase.WithId<DataBase.Models.Trainers>;
   onDelete?: () => void;
 }
 export type HeadKeys =
@@ -51,7 +55,7 @@ function AddLog({
   onAdded,
   ...props
 }: ComponentProps<"button"> & {
-  payment: Omit<DataBase.WithId<DataBase.Models.Payments>, "userId" | "planId">;
+  payment: ElemProps["payment"];
   onAdded: () => void;
 }) {
   const mutate = useAttend({
@@ -63,7 +67,7 @@ function AddLog({
   return (
     <button
       disabled={mutate.isLoading}
-      onClick={() => mutate.mutate(payment._id)}
+      onClick={() => mutate.mutate({ paymentId: payment._id })}
       {...props}
       className={classNames(
         "tw-border-none focus-within:tw-outline-none tw-bg-blue-500 tw-text-blue-100 tw-w-5 tw-h-5 tw-flex tw-items-center tw-justify-center tw-rounded tw-leading-[0]",

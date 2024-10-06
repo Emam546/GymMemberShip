@@ -32,7 +32,7 @@ export default function DeleteAccountForm({ id }: { id: string }) {
       await requester.delete(`/api/admin/users/${id}`);
       queryClient.invalidateQueries(["users"]);
       alert("document deleted successfully");
-      await router.push("/users");
+      await router.push("/");
     }
   });
 

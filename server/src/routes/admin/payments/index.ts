@@ -7,10 +7,12 @@ import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
+import Trainers from "@serv/models/trainers";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
   userId: ["required", { existedId: { path: Users.modelName } }],
+  trainerId: [{ existedId: { path: Trainers.modelName } }],
   paid: ["integer", "required"],
   plan: {
     type: ["string", { in: ["day", "year", "month"] }, "required"],
@@ -46,7 +48,12 @@ export async function getPayments(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 },
-  populate: (keyof DataBase.Models.Logs)[] = ["planId", "userId", "adminId"]
+  populate: (keyof DataBase.Models.Payments)[] = [
+    "planId",
+    "userId",
+    "adminId",
+    "trainerId",
+  ]
 ) {
   const result = registerQuery.passes(query);
   if (!result.state)

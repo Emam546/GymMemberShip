@@ -21,7 +21,7 @@ import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "userId" | "adminId" | "planId"
+  "userId" | "adminId" | "planId" | "trainerId"
 >;
 
 export default function Page() {
@@ -190,10 +190,9 @@ export default function Page() {
                       {
                         scaleType: "point",
                         data: data,
-                        valueFormatter(
-                          { _id }: DataBase.Queries.Logs.LogsCount,
-                          
-                        ) {
+                        valueFormatter({
+                          _id,
+                        }: DataBase.Queries.Logs.LogsCount) {
                           const date = new Date(
                             _id.year!,
                             _id.month!,

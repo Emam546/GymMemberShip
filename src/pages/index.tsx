@@ -26,6 +26,8 @@ import { getAllPlans } from "@serv/routes/admin/plans";
 import { GetServerSideProps } from "next";
 import i18n from "@src/i18n";
 import { getAllTrainers } from "@serv/routes/admin/trainers";
+import Barcode from "react-barcode";
+
 interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
   trainers: DataBase.WithId<DataBase.Models.Trainers>[];
@@ -43,7 +45,7 @@ export function Item({ className, ...props }: ComponentProps<"div">) {
 }
 type PaymentType = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "planId" | "adminId"
+  "planId" | "adminId" | "trainerId"
 >;
 
 const perPage = 7;
@@ -132,8 +134,15 @@ export default function Page({ plans, trainers }: Props) {
                 </div>
               </div>
               <UserInfoForm user={query.data?.user} />
+              <div className="tw-mt-5">
+                <div>
+                  <div className="tw-flex tw-mx-auto tw-w-[20rem]"></div>
+                  <div className="tw-w-full tw-flex tw-justify-center">
+                    <p className="mb-0">{query.data?.user.name}</p>
+                  </div>
+                </div>
+              </div>
             </MainCard>
-
             <MainCard containerClassName="tw-flex-1">
               <CardTitle>{t("payments.title")}</CardTitle>
               <UserPaymentsTable
@@ -159,6 +168,7 @@ export default function Page({ plans, trainers }: Props) {
               />
             </MainCard>
           </div>
+
           <div className="tw-flex-1">
             <div className="card tw-mb-3">
               <div className="tw-py-4 card-body">
@@ -195,7 +205,15 @@ export default function Page({ plans, trainers }: Props) {
               }
             >
               <AttendPerson
-                payment={currentPayment}
+                payment={
+                  currentPayment
+                    ? {
+                        ...currentPayment,
+                        userId: query.data?.user,
+                        trainerId: currentPayment.trainerId?._id,
+                      }
+                    : undefined
+                }
                 onUpdate={async function (data) {
                   if (!currentPayment) return;
                   await requester.post(
@@ -217,6 +235,7 @@ export default function Page({ plans, trainers }: Props) {
           <MainCard>
             <CardTitle className="tw-mb-3">{t("addPayment.title")}</CardTitle>
             <AddUserPayment
+              trainers={trainers}
               onData={async (data) => {
                 if (!query.data) return;
                 const req = await requester.post<

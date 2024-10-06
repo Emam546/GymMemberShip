@@ -15,7 +15,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
           Routes.ResponseSuccess<
             DataBase.Populate.Model<
               DataBase.WithId<DataBase.Models.Payments>,
-              "planId" | "adminId"
+              "planId" | "adminId" | "trainerId"
             >[]
           >
         >(`/api/admin/users/${id}/payments`);

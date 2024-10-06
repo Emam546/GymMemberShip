@@ -21,6 +21,7 @@ import PrintUserPayments from "@src/components/pages/payments/print";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
+import queryClient from "@src/queryClient";
 interface Props {
   doc: DataBase.WithId<DataBase.Models.Trainers>;
 }
@@ -32,13 +33,13 @@ export default function Page({ doc }: Props) {
   const [filter, setFilter] = useState<DataType>({
     startAt: new Date(
       curDate.getFullYear(),
-      curDate.getMonth(),
-      curDate.getDate() - 8
+      curDate.getMonth() - 1,
+      curDate.getDate()
     ),
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["logs", "infinity", filter],
+    queryKey: ["logs", "trainers", doc._id, "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<
@@ -85,7 +86,7 @@ export default function Page({ doc }: Props) {
   });
   const totalCount =
     QueryCount.data?.reduce((acc, val) => acc + val.count, 0) || 0;
-  const payments = QueryInfinity.data?.pages
+  const logs = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
   const data: DataBase.Queries.Logs.LogsCount[] = getDaysArray(
@@ -226,12 +227,12 @@ export default function Page({ doc }: Props) {
                 error={QueryInfinity.error}
               />
               <div>
-                {payments && (
+                {logs && (
                   <LogInfoGenerator
-                    perPage={payments.length}
+                    perPage={logs.length}
                     page={0}
-                    totalCount={payments.length}
-                    logs={payments.map((payment, i) => ({
+                    totalCount={logs.length}
+                    logs={logs.map((payment, i) => ({
                       order: i,
                       log: {
                         ...payment,
@@ -252,6 +253,33 @@ export default function Page({ doc }: Props) {
                       "delete",
                       "paymentLink",
                     ]}
+                    onDelete={async (elem) => {
+                      await requester.delete(`/api/admin/logs/${elem.log._id}`);
+                      alert(t("messages.deleted", { ns: "translation" }));
+                      queryClient.setQueryData<
+                        InfinityQuery<
+                          DataBase.Populate.Model<
+                            DataBase.WithId<DataBase.Models.Logs>,
+                            "adminId" | "planId" | "userId"
+                          >
+                        >
+                      >(
+                        ["logs", "trainers", doc._id, "infinity", filter],
+                        (oldData) => {
+                          if (!oldData) return oldData;
+                          return {
+                            ...oldData,
+                            pages: oldData.pages.map((page) => ({
+                              ...page,
+                              data: page.data.filter(
+                                (item) => item._id !== elem.log._id
+                              ),
+                            })),
+                          };
+                        }
+                      );
+                      QueryCount.refetch();
+                    }}
                   />
                 )}
               </div>

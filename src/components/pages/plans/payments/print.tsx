@@ -5,7 +5,7 @@ import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 type Doc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "userId" | "adminId"
+  "userId" | "adminId" | "trainerId"
 >;
 export default function PrintPlanPayments({
   id,

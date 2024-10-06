@@ -8,9 +8,9 @@ export function createTrainerData(): Omit<DataBase.Models.Trainers, ""> {
     phone: faker.phone.number(),
   };
 }
-export async function createUserRequest(
+export async function createTrainerRequest(
   data?: ReturnType<typeof createTrainerData>
-): Promise<DataBase.WithId<DataBase.Models.User>> {
+): Promise<DataBase.WithId<DataBase.Models.Trainers>> {
   const response = await agent
     .post("/api/admin/trainers")
     .send(data || createTrainerData());

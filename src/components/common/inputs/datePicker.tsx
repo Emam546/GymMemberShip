@@ -35,7 +35,7 @@ function CustomField(props: ButtonFieldProps) {
       <input
         disabled={props.disabled}
         className={"form-control"}
-        value={formateDate(props.value!.toDate(), "/")}
+        value={props.value ? formateDate(props.value.toDate(), "/") : undefined}
       />
       <button
         disabled={props.disabled}
@@ -56,20 +56,23 @@ export default function DatePicker({
 }: Props) {
   const [open, setOpen] = useState(false);
   return (
-    <OrgDatePicker
-      value={dayjs(value)}
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      slots={{
-        field: CustomField,
-      }}
-      slotProps={{
-        field: { setOpen } as any,
-      }}
-      onChange={(v) => onChange && onChange((v as Dayjs).toDate())}
-      {...props}
-    />
+    <div>
+      <OrgDatePicker
+        value={dayjs(value)}
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        slots={{
+          field: CustomField,
+        }}
+        slotProps={{
+          field: { setOpen } as any,
+          popper: { dir: "ltr" },
+        }}
+        onChange={(v) => onChange && onChange((v as Dayjs).toDate())}
+        {...props}
+      />
+    </div>
   );
 }
 export interface EndDatePickerProps extends Props {

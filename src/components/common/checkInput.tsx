@@ -12,7 +12,7 @@ export interface Props extends ComponentPropsWithRef<"input"> {
 const CheckInput = React.forwardRef<ComponentRef<"input">, Props>(
   ({ id, label, labelProps, className, ...props }, ref) => {
     return (
-      <div className="tw-flex tw-items-center">
+      <div className="tw-flex tw-items-center tw-gap-1">
         <div className="mb-0 fw-normal form-check">
           <input
             type="checkbox"

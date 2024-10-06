@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import i18n from "@src/i18n";
-import { Resource } from "i18next";
 
 declare global {
   namespace I18ResourcesType {

@@ -5,7 +5,7 @@ import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "planId" | "userId" | "adminId"
+  "planId" | "userId" | "adminId" | "trainerId"
 >;
 export default function PrintUserPayments({ query }: { query: unknown }) {
   return (

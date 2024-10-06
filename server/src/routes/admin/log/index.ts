@@ -8,12 +8,14 @@ import Payments from "@serv/models/payments";
 import Logs from "@serv/models/log";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
-import { IncrementPaymentLogs } from "../payments/[id]";
+import { IncrementPaymentLogs } from "@serv/routes/admin/payments/[id]/logs";
+import Trainers from "@serv/models/trainers";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
   userId: ["required", { existedId: { path: Users.modelName } }],
   paymentId: ["required", { existedId: { path: Payments.modelName } }],
+  trainerId: [{ existedId: { path: Trainers.modelName } }],
   ".": ["required"],
 });
 router.post("/", async (req, res) => {
@@ -135,7 +137,7 @@ export async function getLogsCount(
   ]).hint(hint);
   return logs as DataBase.Queries.Logs.LogsCount[];
 }
-router.get("logs/count", async (req, res) => {
+router.get("/count", async (req, res) => {
   const payments = await getLogsCount(req.query);
   res.status(200).sendSuccess(payments);
 });

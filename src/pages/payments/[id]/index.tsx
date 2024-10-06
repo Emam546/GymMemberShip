@@ -18,7 +18,7 @@ interface Props {
   doc: DataBase.WithId<
     DataBase.Populate.Model<
       DataBase.WithId<DataBase.Models.Payments>,
-      "userId" | "planId" | "adminId"
+      "userId" | "planId" | "adminId" | "trainerId"
     >
   >;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -45,6 +45,7 @@ export default function Page({ doc: initData, plans }: Props) {
               planId: doc.planId?._id || "",
               userId: doc.userId?._id || "",
               adminId: doc.adminId?._id || "",
+              trainerId: doc.trainerId?._id,
             }}
             plans={plans}
             user={doc.userId}
@@ -61,6 +62,7 @@ export default function Page({ doc: initData, plans }: Props) {
             planId: doc.planId?._id || "",
             userId: doc.userId?._id || "",
             adminId: doc.adminId?._id || "",
+            trainerId: doc.trainerId?._id,
           }}
         />
         <MainCard>

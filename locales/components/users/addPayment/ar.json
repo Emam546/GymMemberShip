@@ -13,5 +13,9 @@
     },
     "remaining": "متبقي",
     "endAt": "ينتهي في",
-    "startAt": "يبدا في"
+    "startAt": "يبدا في",
+    "trainer": {
+        "label": "مدرب",
+        "default": "اختر المدرب"
+    }
 }

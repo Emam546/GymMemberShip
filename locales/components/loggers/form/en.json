@@ -5,9 +5,5 @@
       "remaining": "Remaining Days",
       "total": "Total Days"
     }
-  },
-  "trainer": {
-    "label": "Trainer",
-    "default": "Choose Trainer"
   }
 }
