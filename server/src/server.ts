@@ -1,5 +1,5 @@
-import cookieParser from "cookie-parser";
 import "./express";
+import cookieParser from "cookie-parser";
 import "express-async-errors";
 import helmet from "helmet";
 import express, { NextFunction, Request, Response } from "express";
@@ -10,6 +10,9 @@ import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import { NodeEnvs } from "@serv/declarations/enums";
 import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
 import passport from "./passport.config";
+import fileUpload from "express-fileupload";
+import parseMultiFormData from "./middleware/parseMultiForm";
+
 import session from "express-session";
 // **** Init express **** //
 const app = express();
@@ -27,6 +30,8 @@ app.use(cookieParser(EnvVars.cookieProps.secret));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.session());
+app.use(fileUpload());
+app.use(parseMultiFormData());
 app.use(passport.initialize());
 // Show routes called in console during development
 if (EnvVars.nodeEnv === NodeEnvs.Dev) {

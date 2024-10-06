@@ -7,6 +7,7 @@ import next from "next";
 import { serverStart } from "./command";
 import connect from "./db/connect";
 import { InitDataBase } from "./db/init";
+import { connectWhatsapp } from "./whatsapp";
 // **** Start server **** //
 const dev = EnvVars.nodeEnv == "development";
 const app = next({ dev, dir: EnvVars.dir });
@@ -17,6 +18,7 @@ const handle = app.getRequestHandler();
 logger.info(`${EnvVars.nodeEnv}`);
 connect(EnvVars.mongo.url).then(async () => {
   await InitDataBase();
+  await connectWhatsapp(EnvVars.whatsapp.timeout);
   app
     .prepare()
     .then(() => {

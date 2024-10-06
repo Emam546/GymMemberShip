@@ -24,4 +24,12 @@ export default {
     options: { expiresIn: process.env.COOKIE_EXP ?? "" } as SignOptions,
   },
   dir: process.env.DIR,
+  GYM: {
+    barcode: {
+      title: process.env.NEXT_PUBLIC_GYM_BARCODE_TITLE ?? "GYM",
+    },
+  },
+  whatsapp: {
+    timeout: Number(process.env.WHATSAPP_TIMEOUT ?? 1000),
+  },
 } as const;
