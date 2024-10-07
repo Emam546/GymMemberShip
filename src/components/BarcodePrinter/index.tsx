@@ -17,6 +17,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import axios from "axios";
 import requester from "@src/utils/axios";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
 export function Group({
   title,
@@ -181,6 +182,7 @@ export function useSendBarcodeAsImage({
   >,
   "mutationFn"
 >) {
+  const { t } = useTranslation("payment:form:update");
   const print = useContext(BarCodeContext).setUser;
   return useMutation({
     async mutationFn(params) {
@@ -189,6 +191,9 @@ export function useSendBarcodeAsImage({
       const num = params.phone.startsWith("+")
         ? params.phone.slice(1)
         : params.phone;
+      if (!isValidPhoneNumber(params.phone))
+        return alert(t("message.validNumber"));
+
       const data = {
         number: num,
         messages: [
@@ -228,3 +233,4 @@ declare global {
   }
 }
 i18n.addLoadUrl("/components/barcode/print", "barcode:print");
+i18n.addLoadUrl("/components/payments/info", "payment:form:update");

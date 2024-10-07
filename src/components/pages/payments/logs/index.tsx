@@ -72,7 +72,7 @@ export default function LogsPaymentInfo({ id }: Props) {
           plan: log.planId,
           trainer: log.trainerId,
         }))}
-        headKeys={["order", "delete", "createdAt", "admin", "plan", "trainer"]}
+        headKeys={["order", "delete", "createdAt", "admin", "trainer"]}
         onDelete={async (doc) => {
           await requester.delete(`/api/admin/logs/${doc.log._id}`);
           queryClient.setQueryData<InfiniteQueryData>(

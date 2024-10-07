@@ -110,7 +110,7 @@ export function AttendPerson({
       <form
         action=""
         onSubmit={handleSubmit(async (data) => {
-          if (!payment) return alert(t3("message.noPayment"));
+          if (!payment) return alert(t("message.noPayment"));
           await onUpdate({
             endAt: data.endAt,
             paid: data.paid,
@@ -225,7 +225,7 @@ export function AttendPerson({
             </PrimaryButton>
             <PrintButton
               fn={async () => {
-                if (!payment) return alert(t3("message.noPayment"));
+                if (!payment) return alert(t("message.noPayment"));
 
                 await printBarcode.mutateAsync([
                   {
@@ -240,13 +240,12 @@ export function AttendPerson({
             />
             <WhatsappButton
               fn={async () => {
-                if (!payment) return alert(t3("message.noPayment"));
-
+                if (!payment) return alert(t("message.noPayment"));
                 if (
                   !payment.userId?.phone ||
                   !isValidPhoneNumber(payment.userId.phone)
                 ) {
-                  alert(t3("message.validNumber"));
+                  alert(t("message.validNumber"));
                   return;
                 }
                 await sendBarcode.mutateAsync({
@@ -269,7 +268,7 @@ export function AttendPerson({
               type="button"
               disabled={formState.isLoading}
               onClick={() => {
-                if (!payment) return alert(t3("message.noPayment"));
+                if (!payment) return alert(t("message.noPayment"));
 
                 const trainerId = getValues("trainerId");
                 if (trainerId)
@@ -299,10 +298,6 @@ declare global {
             remaining: "Remaining Days";
             total: "Total Days";
           };
-        };
-        message: {
-          noPayment: string;
-          validNumber: string;
         };
       };
     }
