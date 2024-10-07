@@ -42,12 +42,6 @@ export default function UsersFilter({ onData }: Props) {
           placeholder={t("name.placeholder")}
           {...register("name")}
         />
-        {/* <MainInput
-          id={"phone-input"}
-          title={"Phone"}
-          {...register("phone")}
-          err={formState.errors.name}
-        /> */}
       </Grid2>
     </form>
   );

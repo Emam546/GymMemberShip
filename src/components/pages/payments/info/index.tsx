@@ -16,6 +16,15 @@ import { useTranslation } from "react-i18next";
 import i18n from "@src/i18n";
 import { useEffect } from "react";
 import { getDefaultDays, paidType } from "@src/utils/payment";
+import {
+  usePrintBarCode,
+  useSendBarcodeAsImage,
+} from "@src/components/BarcodePrinter";
+import { WhatsappButton } from "@src/components/common/buttons/whatsapp";
+import { PrintButton } from "@src/components/common/printButton";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { printJsDoc } from "@src/utils/print";
+import SelectInput from "@src/components/common/inputs/select";
 
 export type DataType = {
   plan: DataBase.Models.Payments["plan"];
@@ -27,24 +36,16 @@ export interface Props {
   payment: DataBase.WithId<DataBase.Models.Payments>;
   user?: DataBase.WithId<DataBase.Models.User>;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
   onData: (data: DataType) => Promise<void> | void;
 }
-declare global {
-  namespace I18ResourcesType {
-    interface Resources {
-      "payment:form:update": {
-        User: "User";
-        Plan: "Plan";
-        createdAt: string;
-      };
-    }
-  }
-}
+
 export default function PaymentInfoForm({
   payment,
   onData,
   user,
   plans,
+  trainers,
 }: Props) {
   const { register, handleSubmit, setValue, formState, getValues, watch } =
     useForm<FormData>({
@@ -61,7 +62,16 @@ export default function PaymentInfoForm({
   const planPrice = plan?.prices[getValues("plan.type")];
   const { t: t1 } = useTranslation("payment:form:update");
   const { t: t2 } = useTranslation("payment:add");
-
+  const sendBarcode = useSendBarcodeAsImage({
+    onSuccess() {
+      alert("message was sent successfully");
+    },
+  });
+  const printBarcode = usePrintBarCode({
+    onSuccess(doc) {
+      printJsDoc(doc, `${user?.name?.split(" ").join("-")}.pdf`);
+    },
+  });
   useEffect(() => {
     const planType = getValues("plan.type");
     if (!planType) return;
@@ -165,8 +175,70 @@ export default function PaymentInfoForm({
               err={formState.errors.paid}
             />
           </div>
+          <SelectInput
+            {...register("trainerId")}
+            title={t2("trainer.label")}
+            id={"trainer-input"}
+            err={formState.errors.trainerId}
+          >
+            <option value="">{t2("trainer.default")}</option>
+            {trainers.map((val) => {
+              return (
+                <option value={val._id} key={val._id}>
+                  {val.name}
+                </option>
+              );
+            })}
+          </SelectInput>
         </Grid2>
-        <div className="tw-mt-4 tw-flex tw-justify-end">
+        <div className="tw-mt-4 tw-flex tw-justify-between">
+          <div className="tw-flex tw-gap-3">
+            <PrintButton
+              fn={async () => {
+                if (!payment) return alert(t1("message.noPayment"));
+
+                await printBarcode.mutateAsync([
+                  {
+                    ...payment,
+                    adminId: payment.adminId,
+                    planId: plans.find(({ _id }) => {
+                      return payment.planId == _id;
+                    }),
+                    trainerId: trainers.find(({ _id }) => {
+                      return getValues("trainerId") == _id;
+                    }),
+                    userId: user,
+                  },
+                ]);
+              }}
+            />
+            <WhatsappButton
+              fn={async () => {
+                if (!payment) return alert(t1("message.noPayment"));
+
+                if (!user?.phone || !isValidPhoneNumber(user.phone)) {
+                  alert(t1("message.validNumber"));
+                  return;
+                }
+                await sendBarcode.mutateAsync({
+                  data: [
+                    {
+                      ...payment,
+                      adminId: payment.adminId || "",
+                      planId: plans.find(({ _id }) => {
+                        return payment.planId == _id;
+                      }),
+                      trainerId: trainers.find(({ _id }) => {
+                        return getValues("trainerId") == _id;
+                      }),
+                      userId: user,
+                    },
+                  ],
+                  phone: user.phone,
+                });
+              }}
+            />
+          </div>
           <PrimaryButton type="submit" disabled={formState.isSubmitting}>
             {t2("buttons.update", { ns: "translation" })}
           </PrimaryButton>
@@ -174,6 +246,21 @@ export default function PaymentInfoForm({
       </form>
     </>
   );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payment:form:update": {
+        User: "User";
+        Plan: "Plan";
+        createdAt: string;
+        message: {
+          noPayment: string;
+          validNumber: string;
+        };
+      };
+    }
+  }
 }
 i18n.addLoadUrl("/components/payments/info", "payment:form:update");
 i18n.addLoadUrl("/components/users/addPayment", "payment:add");

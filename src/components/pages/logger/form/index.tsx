@@ -17,8 +17,14 @@ import BudgetInput, {
 } from "@src/components/common/inputs/budget";
 import { useAttend } from "@src/hooks/payments";
 import SelectInput from "@src/components/common/inputs/select";
-import { usePrintBarCode } from "@src/components/BarcodePrinter";
+import {
+  usePrintBarCode,
+  useSendBarcodeAsImage,
+} from "@src/components/BarcodePrinter";
 import { printJsDoc } from "@src/utils/print";
+import { PrintButton } from "@src/components/common/printButton";
+import { WhatsappButton } from "@src/components/common/buttons/whatsapp";
+import { isValidPhoneNumber } from "react-phone-number-input";
 export interface Data {
   startAt: Date;
   endAt: Date;
@@ -81,6 +87,11 @@ export function AttendPerson({
       printJsDoc(doc, `${payment?.userId?.name?.split(" ").join("-")}.pdf`);
     },
   });
+  const sendBarcode = useSendBarcodeAsImage({
+    onSuccess() {
+      alert("message was sent successfully");
+    },
+  });
   const attend = useAttend({
     onSuccess() {
       if (!payment) return;
@@ -99,7 +110,7 @@ export function AttendPerson({
       <form
         action=""
         onSubmit={handleSubmit(async (data) => {
-          if (!payment) return;
+          if (!payment) return alert(t3("message.noPayment"));
           await onUpdate({
             endAt: data.endAt,
             paid: data.paid,
@@ -208,15 +219,15 @@ export function AttendPerson({
           </table>
         </WrapElem>
         <div className="tw-flex tw-justify-between">
-          <div className="tw-flex tw-gap-1">
+          <div className="tw-flex tw-gap-1 tw-items-start">
             <PrimaryButton disabled={formState.isLoading} type="submit">
               {t("buttons.update", { ns: "translation" })}
             </PrimaryButton>
-            <SuccessButton
-              type="button"
-              onClick={() => {
-                if (!payment) return;
-                printBarcode.mutate([
+            <PrintButton
+              fn={async () => {
+                if (!payment) return alert(t3("message.noPayment"));
+
+                await printBarcode.mutateAsync([
                   {
                     ...payment,
                     adminId: payment.adminId?._id || "",
@@ -226,16 +237,40 @@ export function AttendPerson({
                   },
                 ]);
               }}
-            >
-              Print Barcode
-            </SuccessButton>
+            />
+            <WhatsappButton
+              fn={async () => {
+                if (!payment) return alert(t3("message.noPayment"));
+
+                if (
+                  !payment.userId?.phone ||
+                  !isValidPhoneNumber(payment.userId.phone)
+                ) {
+                  alert(t3("message.validNumber"));
+                  return;
+                }
+                await sendBarcode.mutateAsync({
+                  data: [
+                    {
+                      ...payment,
+                      adminId: payment.adminId?._id || "",
+                      trainerId: trainers.find(({ _id }) => {
+                        return getValues("trainerId") == _id;
+                      }),
+                    },
+                  ],
+                  phone: payment.userId.phone,
+                });
+              }}
+            />
           </div>
           <div>
             <SuccessButton
               type="button"
               disabled={formState.isLoading}
               onClick={() => {
-                if (!payment) return;
+                if (!payment) return alert(t3("message.noPayment"));
+
                 const trainerId = getValues("trainerId");
                 if (trainerId)
                   attend.mutate({
@@ -264,6 +299,10 @@ declare global {
             remaining: "Remaining Days";
             total: "Total Days";
           };
+        };
+        message: {
+          noPayment: string;
+          validNumber: string;
         };
       };
     }

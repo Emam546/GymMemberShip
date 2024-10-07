@@ -35,7 +35,10 @@ function CustomField(props: ButtonFieldProps) {
       <input
         disabled={props.disabled}
         className={"form-control"}
-        value={props.value ? formateDate(props.value.toDate(), "/") : undefined}
+        ref={props.inputRef}
+        value={props.value ? formateDate(props.value.toDate()) : undefined}
+        {...props.inputProps}
+        readOnly
       />
       <button
         disabled={props.disabled}
@@ -48,12 +51,7 @@ function CustomField(props: ButtonFieldProps) {
     </div>
   );
 }
-export default function DatePicker({
-  value,
-  onChange,
-
-  ...props
-}: Props) {
+export default function DatePicker({ value, onChange, ...props }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <div>
@@ -69,7 +67,10 @@ export default function DatePicker({
           field: { setOpen } as any,
           popper: { dir: "ltr" },
         }}
-        onChange={(v) => onChange && onChange((v as Dayjs).toDate())}
+        onChange={(v) => {
+          if (!v) return;
+          onChange?.(v.toDate());
+        }}
         {...props}
       />
     </div>

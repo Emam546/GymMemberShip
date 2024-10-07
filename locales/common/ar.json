@@ -5,7 +5,8 @@
     "print": "اطبع",
     "activate": "فعل",
     "add": "اضف",
-    "attend": "حضر"
+    "attend": "حضر",
+    "send": "ارسل"
   },
   "messages": {
     "updated": "تم تحديث المستند بنجاح",

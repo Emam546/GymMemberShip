@@ -10,6 +10,7 @@ declare global {
           activate: "Activate";
           add: string;
           attend: string;
+          send: string;
         };
         messages: {
           updated: "the document updated successfully";

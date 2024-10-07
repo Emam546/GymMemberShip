@@ -1,5 +1,9 @@
 {
     "User": "User",
     "Plan": "Plan",
-    "createdAt": "Created At"
+    "createdAt": "Created At",
+    "message": {
+        "noPayment": "there is't a selected subscription",
+        "validNumber": "the number is not valid"
+    }
 }

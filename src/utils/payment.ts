@@ -39,6 +39,5 @@ export function remainingDays(
   // if (payment.separated) return days - curDays;
   const startDate = new Date(payment.startAt || payment.createdAt);
   const daysStarted = getDifferenceInDays(startDate, new Date());
-  console.log(days, daysStarted, payment.logsCount);
   return Math.max(0, Math.min(days - daysStarted, days - payment.logsCount));
 }

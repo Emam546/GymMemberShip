@@ -5,7 +5,7 @@ import { MessageMedia } from "whatsapp-web.js";
 import whatsappClient, { isConnected } from "@serv/whatsapp";
 const router = Router();
 const registerValidator = new Validator({
-  number: [{ regExp: /^[1-9]\d{6,14}$/gi }, "string", "required"],
+  number: [{ regExp: /^[1-9]\d{6,14}$/i }, "string", "required"],
   messages: [
     {
       message: ["string"],

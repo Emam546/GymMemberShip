@@ -26,7 +26,7 @@ export interface FormData {
   endAt: Date;
   paid: DataBase.Price;
   remaining: DataBase.Price;
-  trainerId: string;
+  trainerId?: string;
 }
 export interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -72,7 +72,13 @@ export default function AddUserPayment({ plans, onData, trainers }: Props) {
   register("startAt", { valueAsDate: true, value: new Date() });
   register("endAt", { valueAsDate: true, value: new Date() });
   return (
-    <form onSubmit={handleSubmit(onData)} autoComplete="off">
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        if (data["trainerId"] == "") delete data["trainerId"];
+        await onData(data);
+      })}
+      autoComplete="off"
+    >
       <Grid2>
         <div>
           <SelectPlan

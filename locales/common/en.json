@@ -5,7 +5,8 @@
     "print": "Print",
     "activate": "Activate",
     "add": "Add",
-    "attend":"Attend"
+    "attend": "Attend",
+    "send": "send"
   },
   "messages": {
     "updated": "the document updated successfully",

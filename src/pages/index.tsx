@@ -133,14 +133,6 @@ export default function Page({ plans, trainers }: Props) {
                 </div>
               </div>
               <UserInfoForm user={query.data?.user} />
-              <div className="tw-mt-5">
-                <div>
-                  <div className="tw-flex tw-mx-auto tw-w-[20rem]"></div>
-                  <div className="tw-w-full tw-flex tw-justify-center">
-                    <p className="mb-0">{query.data?.user.name}</p>
-                  </div>
-                </div>
-              </div>
             </MainCard>
             <MainCard containerClassName="tw-flex-1">
               <CardTitle>{t("payments.title")}</CardTitle>

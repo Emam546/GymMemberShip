@@ -30,19 +30,75 @@ describe("send a file", () => {
       .expect(200);
   });
   test("send a file", async () => {
-    const res = await agent.post("/api/admin/whatsapp").field(
-      "data",
-      JSON.stringify({
-        number: "201080741858",
-        messages: [
-          {
-            data: image.toString("base64"),
-            type: mime.contentType("sample.jpg"),
-          },
-        ],
-      })
-    );
-    console.log(JSON.stringify(res.body));
-    expect(res.statusCode).eq(200);
+    const res = await agent
+      .post("/api/admin/whatsapp")
+      .field(
+        "data",
+        JSON.stringify({
+          number: number,
+          messages: [
+            {
+              data: image.toString("base64"),
+              type: mime.contentType("sample.jpg"),
+            },
+          ],
+        })
+      )
+      .expect(200);
+  });
+  test("send two files after each time", async () => {
+    const res = await agent
+      .post("/api/admin/whatsapp")
+      .field(
+        "data",
+        JSON.stringify({
+          number: number,
+          messages: [
+            {
+              data: image.toString("base64"),
+              type: mime.contentType("sample.jpg"),
+            },
+            {
+              data: image.toString("base64"),
+              type: mime.contentType("sample.jpg"),
+            },
+            {
+              data: image.toString("base64"),
+              type: mime.contentType("sample.jpg"),
+            },
+          ],
+        })
+      )
+      .expect(200);
+  });
+  test("send two requests to test regex", async () => {
+    await agent
+      .post("/api/admin/whatsapp")
+      .field(
+        "data",
+        JSON.stringify({
+          number: number,
+          messages: [
+            {
+              message: "Hello World",
+            },
+          ],
+        })
+      )
+      .expect(200);
+    await agent
+      .post("/api/admin/whatsapp")
+      .field(
+        "data",
+        JSON.stringify({
+          number: number,
+          messages: [
+            {
+              message: "Hello World",
+            },
+          ],
+        })
+      )
+      .expect(200);
   });
 });

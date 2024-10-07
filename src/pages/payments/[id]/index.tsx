@@ -13,6 +13,7 @@ import PaymentInfoForm from "@src/components/pages/payments/info";
 import DeletePaymentForm from "@src/components/pages/payments/info/deleteForm";
 import LogsPaymentInfo from "@src/components/pages/payments/logs";
 import { useTranslation } from "react-i18next";
+import { getAllTrainers } from "@serv/routes/admin/trainers";
 
 interface Props {
   doc: DataBase.WithId<
@@ -22,8 +23,9 @@ interface Props {
     >
   >;
   plans: DataBase.WithId<DataBase.Models.Plans>[];
+  trainers: DataBase.WithId<DataBase.Models.Trainers>[];
 }
-export default function Page({ doc: initData, plans }: Props) {
+export default function Page({ doc: initData, plans, trainers }: Props) {
   const [doc, setDoc] = useState(initData);
   const { t } = useTranslation("/payments/[id]");
 
@@ -47,6 +49,7 @@ export default function Page({ doc: initData, plans }: Props) {
               adminId: doc.adminId?._id || "",
               trainerId: doc.trainerId?._id,
             }}
+            trainers={trainers}
             plans={plans}
             user={doc.userId}
             onData={async (data) => {
@@ -84,6 +87,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
       };
     const payment = await getPayment(ctx.params.id as string);
     const plans = await getAllPlans();
+    const trainers = await getAllTrainers();
     return {
       props: {
         doc: MakeItSerializable({
@@ -94,6 +98,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
           return {
             ...MakeItSerializable(plan),
             _id: plan._id.toString(),
+          };
+        }),
+        trainers: trainers.map((trainer) => {
+          return {
+            ...MakeItSerializable(trainer),
+            _id: trainer._id.toString(),
           };
         }),
       },

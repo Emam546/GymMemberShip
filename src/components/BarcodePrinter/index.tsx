@@ -15,6 +15,8 @@ import { createContext, useState } from "react";
 import { formateDate } from "@src/utils";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import EnvVars from "@serv/declarations/major/EnvVars";
+import axios from "axios";
+import requester from "@src/utils/axios";
 
 export function Group({
   title,
@@ -41,7 +43,7 @@ type Doc = DataBase.Populate.Model<
   "userId" | "planId" | "trainerId"
 >;
 type State = {
-  setUser(data: Doc): Promise<jsPDF>;
+  setUser(data: Doc): Promise<string>;
 };
 export const BarCodeContext = createContext<State>({
   setUser() {
@@ -71,16 +73,12 @@ export const BarcodePrintProvider = ({
   useEffect(() => {
     if (!payment || result.length == 0) return;
     (async () => {
-      const doc = new jsPDF();
       if (!ref.current) return;
       const input = ref.current;
       const canvas = await html2canvas(input);
-      const pageWidth = doc.internal.pageSize.getWidth();
-
       const imgData = canvas.toDataURL("image/png");
-      doc.addImage(imgData, "PNG", margins, margins, pageWidth - margins, 0);
       result.forEach((val) => {
-        val(doc);
+        val(imgData);
       });
       result.length = 0;
       return;
@@ -89,7 +87,6 @@ export const BarcodePrintProvider = ({
 
   return (
     <>
-      {/*  */}
       <div className="tw-fixed tw-top-0 tw-left-0 -tw-z-[100000] tw-appearance-none tw-opacity-0">
         <div ref={ref}>
           <div className="tw-grid tw-grid-cols-[auto,1fr] tw-grid-rows-1">
@@ -158,18 +155,55 @@ export const BarcodePrintProvider = ({
 export function usePrintBarCode({
   ...opt
 }: Omit<
+  UseMutationOptions<jsPDF, unknown, Parameters<State["setUser"]>, unknown>,
+  "mutationFn"
+>) {
+  const print = useContext(BarCodeContext).setUser;
+  return useMutation({
+    async mutationFn(params: Parameters<State["setUser"]>) {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const imageData = await print(...params);
+      doc.addImage(imageData, "PNG", margins, margins, pageWidth - margins, 0);
+      return doc;
+    },
+    ...opt,
+  });
+}
+export function useSendBarcodeAsImage({
+  ...opt
+}: Omit<
   UseMutationOptions<
-    Awaited<ReturnType<State["setUser"]>>,
     unknown,
-    Parameters<State["setUser"]>,
+    unknown,
+    { data: Parameters<State["setUser"]>; phone: string },
     unknown
   >,
   "mutationFn"
 >) {
   const print = useContext(BarCodeContext).setUser;
   return useMutation({
-    mutationFn(doc: Parameters<State["setUser"]>) {
-      return print(...doc);
+    async mutationFn(params) {
+      const imageData = await print(...params.data);
+      const formData = new FormData();
+      const num = params.phone.startsWith("+")
+        ? params.phone.slice(1)
+        : params.phone;
+      const data = {
+        number: num,
+        messages: [
+          {
+            data: imageData.replace(/^data:image\/(png|jpeg);base64,/, ""),
+            type: "image/png",
+          },
+        ],
+      };
+      formData.append("data", JSON.stringify(data));
+      await requester.post("/api/admin/whatsapp", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     },
     ...opt,
   });
