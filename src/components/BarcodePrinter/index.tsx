@@ -120,11 +120,11 @@ export const BarcodePrintProvider = ({
                     height={80}
                     displayValue={false}
                     margin={"0px" as unknown as number}
-                    value={"670118be1681bf319ceacf47"}
+                    value={payment?.userId?.barcode.toString() || "555"}
                   />
                 </div>
                 <div className="tw-w-full tw-flex tw-justify-center">
-                  <p className="mb-0">{"670118be1681bf319ceacf47"}</p>
+                  <p className="mb-0">{payment?.userId?.barcode || "555"}</p>
                 </div>
               </div>
             </div>

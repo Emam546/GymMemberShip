@@ -36,8 +36,10 @@ function PhoneNumberWithForm<FormValues extends FieldValues>({
           id={id}
           international
           countryCallingCodeEditable={false}
-          defaultCountry="EG"
-          country="EG"
+          defaultCountry={
+            (process.env.NEXT_PUBLIC_GYM_PHONE_COUNTRY as "EG") ?? "EG"
+          }
+          country={process.env.NEXT_PUBLIC_GYM_PHONE_COUNTRY ?? "EG"}
           placeholder="Enter phone number"
           inputComponent={FInput}
           className={classNames("form-control", style.phone_number)}

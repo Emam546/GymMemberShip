@@ -167,7 +167,7 @@ function ManageUsersNavBar() {
           href="/payments"
           title={t("payments.label")}
         />
-        <LinkElem icon={Whatsapp.src} href="/users" title={"Whatsapp"} />
+        <LinkElem icon={Whatsapp.src} href="/users/whatsapp" title={"Whatsapp"} />
         <LinkElem icon={PlansIcon.src} href="/plans" title={t("plans.label")} />
         <LinkElem
           icon={TrainersIcon.src}

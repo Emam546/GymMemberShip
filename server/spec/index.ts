@@ -6,9 +6,11 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import mongoose from "mongoose";
 import { expect } from "chai";
 import Admins from "@serv/models/admins";
+import { InitDataBase } from "@serv/db/init";
 
 beforeAll(async () => {
   await connect(EnvVars.mongo.url);
+  await InitDataBase();
 });
 afterAll(async () => {
   await mongoose.disconnect();

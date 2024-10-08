@@ -38,7 +38,7 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
         <div className="tw-flex tw-items-center tw-justify-between">
           <CardTitle>{t("Update User Data")}</CardTitle>
           <div>
-            <CopyText text={doc._id}>ID:{doc._id}</CopyText>
+            <CopyText text={doc.barcode.toString()}>Barcode:{doc.barcode}</CopyText>
           </div>
         </div>
         <MainCard>

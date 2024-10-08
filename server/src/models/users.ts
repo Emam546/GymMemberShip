@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import mongoose from "mongoose";
+import mongoose, { CallbackError } from "mongoose";
 import Admins from "./admins";
+import Counter from "./counter";
 const schema = new mongoose.Schema<DataBase.Models.User>(
   {
     age: Number,
@@ -21,11 +22,31 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
       type: mongoose.Schema.Types.ObjectId,
       ref: Admins.modelName,
     } as never,
+    barcode: { unique: true, type: Number },
     provider_type: String,
     providerId: String,
   },
   { minimize: false }
 );
+// Pre-save hook to auto-increment userNumber
+schema.pre("save", async function (next) {
+  if (!this.isNew && this.barcode != undefined) {
+    return next(); // Only generate a number for new users
+  }
+
+  try {
+    const counter = await Counter.findOneAndUpdate(
+      { name: "user" }, // Assuming you have a single counter for users
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true } // Create if it doesn't exist
+    );
+
+    this.barcode = counter.seq;
+    next();
+  } catch (err) {
+    next(err as CallbackError);
+  }
+});
 schema.index({ createdAt: -1 });
 schema.index({ adminId: 1, createdAt: -1 });
 schema.index({ provider_id: 1, provider_type: 1 });

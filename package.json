@@ -122,7 +122,7 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@faker-js/faker": "^8.1.0",
+    "@faker-js/faker": "^8.4.1",
     "@types/bcrypt": "^5.0.0",
     "@types/bootstrap": "^5.2.6",
     "@types/chai": "^4.3.6",

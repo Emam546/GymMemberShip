@@ -126,8 +126,8 @@ export default function Page({ plans, trainers }: Props) {
                 <CardTitle>{t("user.title")}</CardTitle>
                 <div>
                   {query.data && (
-                    <CopyText text={query.data?.user._id}>
-                      ID:{query.data?.user._id}
+                    <CopyText text={query.data?.user.barcode.toString()}>
+                      barcode:{query.data?.user.barcode}
                     </CopyText>
                   )}
                 </div>

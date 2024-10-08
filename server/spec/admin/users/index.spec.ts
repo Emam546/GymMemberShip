@@ -13,6 +13,7 @@ describe("POST", () => {
     expect(testUser.email).toBe(user.email);
     expect(testUser.phone).toBe(user.phone);
     expect(testUser.details.whyDidYouCame).toBe(user.details.whyDidYouCame);
+    expect(typeof testUser.barcode).toBe("number");
   });
   describe("wrong", () => {
     test("email", async () => {
@@ -129,6 +130,36 @@ describe("GET", () => {
       expect(response.body.data).not.toBeUndefined();
       expect(response.body.data.length).toBe(1);
       expect(response.body.data[0]._id).toBe(user._id);
+    });
+  });
+  describe("get by barcode", () => {
+    let user: DataBase.WithId<DataBase.Models.User>;
+    beforeAll(async () => {
+      user = await createUserRequest();
+    });
+    test("With Exact barcode", async () => {
+      const query = {
+        barcode: user.barcode,
+      };
+      const response = await agent.get("/api/admin/users").query(query);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBe(1);
+    });
+    test("With empty barcode", async () => {
+      const query = {
+        barcode: "",
+      };
+      const response = await agent.get("/api/admin/users").query(query);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBe(0);
+    });
+    test("Test with unexistedid", async () => {
+      const query = {
+        barcode: "",
+      };
+      const response = await agent.get("/api/admin/users").query(query);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBe(0);
     });
   });
 });

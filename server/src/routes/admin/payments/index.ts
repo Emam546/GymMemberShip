@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import "@serv/validator/database";
@@ -8,6 +9,7 @@ import Plans from "@serv/models/plans";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
 import Trainers from "@serv/models/trainers";
+import QueryCount from "./query";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
@@ -42,6 +44,8 @@ const registerQuery = new Validator({
   endAt: ["numeric"],
   skip: ["numeric"],
   limit: ["numeric"],
+  active: ["string", { in: ["true", "false"] }],
+  remaining: ["accepted"],
   ".": ["required"],
 });
 export async function getPayments(
@@ -55,10 +59,11 @@ export async function getPayments(
     "trainerId",
   ]
 ) {
+  const currentDate = new Date();
   const result = registerQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
-  const { skip, limit, startAt, endAt } = result.data;
+  const { skip, limit, startAt, endAt, active, remaining } = result.data;
   const matchQuery: Record<string, unknown> = { ...match };
   if (startAt || endAt) {
     matchQuery["createdAt"] = {
@@ -66,7 +71,28 @@ export async function getPayments(
       $gte: parseInt(startAt as string) || 0,
     };
   }
-
+  if (typeof active != "undefined") {
+    if (active == "true") {
+      matchQuery["$and"] = [
+        { endAt: { $gt: currentDate } },
+        {
+          $expr: {
+            $lt: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
+          },
+        },
+      ];
+    } else if (active == "false") {
+      matchQuery["$or"] = [
+        { endAt: { $lte: currentDate } },
+        {
+          $expr: {
+            $gte: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
+          },
+        },
+      ];
+    }
+  }
+  if (remaining) matchQuery["remaining"] = { $gt: 0 };
   const queryMongo = Payments.find(matchQuery)
     .hint(hint)
     .skip(parseInt(skip as string) || 0)
@@ -87,21 +113,46 @@ const registerProfitQuery = new Validator({
   year: ["accepted"],
   month: ["accepted"],
   day: ["accepted"],
+  active: ["string", { in: ["true", "false"] }],
+  remaining: ["accepted"],
+  ".": ["required"],
 });
 export async function getPaymentsProfit(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 }
 ) {
+  const currentDate = new Date();
   const result = registerProfitQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalidData", result.errors);
-  const matchQuery: {
-    createdAt?: {
-      $gte?: unknown;
-      $lte?: unknown;
-    };
-  } = { ...match };
+
+  const matchQuery: Record<string, any> = { ...match };
+
+  const { active, remaining } = result.data;
+  if (remaining) matchQuery["remaining"] = { $gt: 0 };
+
+  if (typeof active != "undefined") {
+    if (active == "true") {
+      matchQuery["$and"] = [
+        { endAt: { $gt: currentDate } },
+        {
+          $expr: {
+            $lt: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
+          },
+        },
+      ];
+    } else if (active == "false") {
+      matchQuery["$or"] = [
+        { endAt: { $lte: currentDate } },
+        {
+          $expr: {
+            $gte: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
+          },
+        },
+      ];
+    }
+  }
   const ID: Record<string, unknown> = {
     currency: "$paid.type",
   };
@@ -116,9 +167,11 @@ export async function getPaymentsProfit(
         parseInt(result.data.endAt as string)
       );
   }
+
   if (result.data?.year) ID["year"] = { $year: "$createdAt" };
   if (result.data?.month) ID["month"] = { $month: "$createdAt" };
   if (result.data?.day) ID["day"] = { $dayOfMonth: "$createdAt" };
+
   const payments = await Payments.aggregate([
     {
       $match: matchQuery,
@@ -145,5 +198,6 @@ router.get("/profit", async (req, res) => {
   const payments = await getPaymentsProfit(req.query);
   res.status(200).sendSuccess(payments);
 });
+router.use("/query", QueryCount);
 router.use(IdRouter);
 export default router;

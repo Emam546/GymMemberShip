@@ -57,14 +57,14 @@ describe("GET", () => {
     expect(res.body.data).instanceOf(Array);
     expect(res.body.data.length).lte(5);
   });
-  test("Test Skip", async () => {
-    const res = await agent.get("/api/admin/payments").expect(200);
-    expect(res.body.data).instanceOf(Array);
-    const res2 = await agent
+
+  test("remaining type", async () => {
+    const res = await agent
       .get("/api/admin/payments")
-      .query({ skip: 1 })
-      .expect(200);
-    expect(res.body.data).not.deep.eq(res2.body.data);
+      .query({ remaining: true });
+    expect(res.body.data).instanceOf(Array);
+    const doc: DataBase.Models.Payments[] = res.body.data;
+    expect(doc.find((doc) => doc.remaining > 0));
   });
 });
 describe("User Methods", () => {

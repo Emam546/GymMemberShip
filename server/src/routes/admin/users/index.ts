@@ -42,6 +42,7 @@ const registerQuery = new Validator({
   skip: ["numeric"],
   limit: ["numeric"],
   ".": ["required"],
+  barcode: ["string", "numeric"],
 });
 router.get("/", async (req, res) => {
   const result = registerQuery.passes(req.query);
@@ -57,6 +58,7 @@ router.get("/", async (req, res) => {
     skip,
     limit,
     name,
+    barcode,
   } = result.data;
   const query: RootFilterQuery<DataBase.Models.User> = {};
   if (tallMin || tallMax) {
@@ -78,6 +80,11 @@ router.get("/", async (req, res) => {
     };
   }
   if (name) query["name"] = { $regex: name, $options: "i" };
+  if (typeof barcode != "undefined") {
+    const b = parseInt(barcode);
+    if (isNaN(b)) return res.status(200).sendSuccess([]);
+    query["barcode"] = b;
+  }
   const results = await Users.find(query)
     .hint({
       createdAt: -1,

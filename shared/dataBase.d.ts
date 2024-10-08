@@ -22,6 +22,10 @@ declare global {
       };
     }
     namespace Models {
+      interface Counter {
+        name: string;
+        seq: number;
+      }
       interface Trainers {
         name: string;
         email?: string;
@@ -44,6 +48,7 @@ declare global {
           whyDidYouCame?: string;
         };
         providerId?: string;
+        barcode: number;
         provider_type?: "facebook" | "google" | "linkedin";
       }
       interface Plans {
