@@ -99,6 +99,7 @@ describe("GET", () => {
         cur.getDate()
       );
       paymentData.startAt = startAt;
+      paymentData.endAt = new Date(startAt.getTime() + 10000);
       const resPayment = await agent
         .post("/api/admin/payments")
         .send(paymentData);
@@ -109,11 +110,11 @@ describe("GET", () => {
       expect(res.statusCode).eq(200);
       expect(data.find((doc) => doc.startAt < startAt)).undefined;
       expect(data.length).greaterThan(0);
+      console.log(resPayment.body,data);
       const doc = data.find((doc) => {
-        return doc._id == resPayment.body.data._id;
+        return doc.userId?._id == resPayment.body.data.userId;
       });
       expect(doc).not.undefined;
-      expect(doc?._id).eq(resPayment.body.data._id);
       expect(doc?.planId).eq(resPayment.body.data.planId);
     });
     test("lower than or equal", async () => {

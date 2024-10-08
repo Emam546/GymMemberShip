@@ -54,7 +54,6 @@ router.get("/", async (req, res) => {
     firstQuery["startAt"] = {};
     if (startAt) firstQuery["startAt"]["$gte"] = new Date(startAt as string);
     if (endAt) firstQuery["startAt"]["$lte"] = new Date(endAt as string);
-    console.log(endAt);
   }
   if (remaining) firstQuery["remaining"] = { $gt: 0 };
 
@@ -92,7 +91,7 @@ router.get("/", async (req, res) => {
       $match: firstQuery,
     },
     {
-      $sort: { endAt: -1 }, // Optionally sort by endAt in ascending order
+      $sort: { endAt: -1 }, // Optionally sort by endAt in descending order
     },
     {
       $group: {
