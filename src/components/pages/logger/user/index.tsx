@@ -50,4 +50,3 @@ export default function UserInfoForm({ user }: Props) {
     </div>
   );
 }
-i18n.addLoadUrl("/components/users/form", "form:user");

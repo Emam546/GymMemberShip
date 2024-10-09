@@ -15,15 +15,14 @@ router.get("/", async (req, res) => {
 const registerValidator = new Validator({
   name: ["string", "required"],
   password: ["string", "required"],
-  email: ["string",],
+  email: ["string"],
   phone: ["string"],
   type: ["string", { in: ["admin", "assistant"] }, "required"],
-  
 });
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   result.data;
   const user = new Admins({
     ...result.data,

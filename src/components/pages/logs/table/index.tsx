@@ -45,7 +45,7 @@ function Shower({
   trainer,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation("logs:table");
+  const { t } = useTranslation("table:logs");
   return (
     <>
       <tr>
@@ -151,7 +151,7 @@ export function LogInfoGenerator({
   onDelete,
   ...props
 }: PaymentProps) {
-  const { t } = useTranslation("logs:table");
+  const { t } = useTranslation("table:logs");
   return (
     <PaginationManager noElems={t("paragraph")} {...props}>
       <div className="table-responsive">
@@ -212,7 +212,7 @@ import {
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "logs:table": {
+      "table:logs": {
         th: {
           Id: "Id";
           User: "User";
@@ -238,4 +238,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/logs/table", "logs:table");

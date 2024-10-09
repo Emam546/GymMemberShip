@@ -3,7 +3,6 @@ import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import { serverStart } from "@serv/command";
 import path from "path";
 import { getEnv } from "./utils";
-import { createStartWindow } from "./lib/start";
 
 const appName = app.getPath("exe");
 
@@ -19,7 +18,6 @@ export class ExpressServer {
   async runServer() {
     if (ExpressServer.expressProcess) return false;
     console.log("start server");
-
     ExpressServer.expressProcess =
       await new Promise<ChildProcessWithoutNullStreams>((res, rej) => {
         const expressAppProcess = spawn(`${appName}`, command, {

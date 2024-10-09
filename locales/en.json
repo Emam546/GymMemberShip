@@ -1,0 +1,417 @@
+{
+  "translation": {
+    "buttons": {
+      "submit": "Submit",
+      "update": "Update",
+      "print": "Print",
+      "activate": "Activate",
+      "add": "Add",
+      "attend": "Attend",
+      "send": "send"
+    },
+    "messages": {
+      "updated": "the document updated successfully",
+      "added": "the document added successfully",
+      "deleted": "document deleted successfully",
+      "whatsapp": {
+        "sended": "messages was sent successfully"
+      }
+    }
+  },
+  "form:admin": {
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "password": "password",
+    "type": "Type"
+  },
+  "table:admins": {
+    "td": {
+      "Deleted": "Deleted",
+      "block.label": "block",
+      "delete": {
+        "title": "Delete User",
+        "desc": "Once you click Delete, The user will be blocked form the database and he will have no more access on the server",
+        "accept": "Delete {{name}}",
+        "deny": "Keep"
+      }
+    },
+    "th": {
+      "id": "ID",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "email",
+      "delete": "delete",
+      "type": "Type"
+    },
+    "noData": "There is no admins so far"
+  },
+  "barcode:print": {
+    "data": {
+      "name": "User Name",
+      "type": "Subscription type",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "trainer": {
+        "notExist": "Not Exist",
+        "label": "Trainer Name"
+      }
+    }
+  },
+  "input:budget": {
+    "shouldPay": {
+      "paragraph": "the amount to be paid is {{val}}"
+    }
+  },
+  "input:datePicker": {
+    "endDate": {
+      "paragraph": "The Payment should be ended at {{val}}"
+    }
+  },
+  "inputs:planType": {
+    "type": {
+      "label": "Choose Type",
+      "default": "Choose Type",
+      "opt": {
+        "day": "Day",
+        "Month": "Month",
+        "year": "Year"
+      }
+    },
+    "amount.label": "Amount of Type in Days"
+  },
+  "inputs:selectPlan": {
+    "default": "Choose Plan"
+  },
+  "dashboard": {
+    "Sales OverView": "Sales OverView",
+    "Yearly Breakup": "Yearly Breakup",
+    "last year": "last year",
+    "Monthly Earnings": "Monthly Earnings",
+    "last month": "last month",
+    "percent": {
+      "num": "{{val}}%"
+    }
+  },
+  "form:attend": {
+    "table": {
+      "th": {
+        "attended": "AttendedDays",
+        "remaining": "Remaining Days",
+        "total": "Total Days"
+      }
+    }
+  },
+  "table:logs": {
+    "th": {
+      "Id": "Id",
+      "User": "User",
+      "paymentLink": "Payment Link",
+      "Logged At": "Logged At",
+      "Delete": "Delete",
+      "Plan": "Plan",
+      "admin": "admin",
+      "trainer": "Trainer"
+    },
+    "td": {
+      "trainer.notExist": "Not Exist",
+      "deleted": "Deleted",
+      "model": {
+        "title": "Delete User",
+        "desc": "Once you click Delete, The log will be deleted from his history",
+        "accept": "Delete Log",
+        "deny": "Keep"
+      }
+    },
+    "paragraph": "There is no Logs so far"
+  },
+  "payments:deleteForm": {
+    "paragraph": "Once you delete the payment, it cannot be undone. This is permanent.",
+    "delete.button": "Delete Payment",
+    "model": {
+      "accept": "Delete",
+      "title": "Are you sure you want to delete the payment?",
+      "desc": "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.",
+      "deny": "Keep The Payment"
+    }
+  },
+  "payments:filter": {
+    "Start at": "Start at",
+    "End At": "End at"
+  },
+  "payment:form:update": {
+    "User": "User",
+    "Plan": "Plan",
+    "createdAt": "Created At",
+    "message": {
+      "noPayment": "there is't a selected subscription",
+      "validNumber": "the number is not valid"
+    }
+  },
+  "table:payments": {
+    "Deleted": "Deleted",
+    "Link": "Link",
+    "head": {
+      "Id": "Id",
+      "User": "User",
+      "Plan": "Plan",
+      "Link": "Link",
+      "Paid": "Paid",
+      "Created At": "Created At",
+      "End At": "End At",
+      "A/R/T": "A/R/T",
+      "Attend": "Attend",
+      "Delete": "Delete",
+      "admin": "Creator",
+      "startedAt": "Started At",
+      "remainingMoney": "Remaining Money"
+    },
+    "There is no payments": "There is no payments"
+  },
+  "form:add:plan": {
+    "Plan Name": "Plan Name",
+    "Day Price": "Day Price",
+    "Month Price": "Month Price",
+    "Year Price": "Year Price",
+    "Plan description": "Plan description",
+    "errors": {
+      "currency": "Please select a currency",
+      "price": "Please set the price or set it to 0"
+    }
+  },
+  "plan:info": {
+    "There is no plans so far please add some plans": "There is no plans so far please add some plans",
+    "model": {
+      "title": "Delete Plan",
+      "desc": "Once you click delete, The Plan and associated data will be permanently deleted and cannot be restored.",
+      "accept": "Delete {{name}} Plan",
+      "deny": "Keep"
+    }
+  },
+  "sideBar": {
+    "user": {
+      "label": "User",
+      "/users/add": "Add User",
+      "/users/search": "Search for User"
+    },
+    "sell": {
+      "label": "Sell"
+    },
+    "payments": {
+      "label": "Payments"
+    },
+    "whatsapp": {
+      "label": "whatsapp"
+    },
+    "dashboard": {
+      "label": "Dashboard"
+    },
+    "trainers": {
+      "label": "Trainers"
+    },
+    "setting": {
+      "label": "Settings",
+      "/admins": "Manage Admins",
+      "/products": "Manage Products"
+    },
+    "logout": {
+      "label": "LogOut"
+    },
+    "plans": {
+      "label": "Plans",
+      "/plans": "Manage Plans",
+      "/plans/add": "Add Plan"
+    }
+  },
+  "form:trainers": {
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "table:trainers": {
+    "td": {
+      "Deleted": "Deleted",
+      "block.label": "block",
+      "delete": {
+        "title": "Delete Trainer",
+        "desc": "Once you click Delete, The user will be deleted form the database",
+        "accept": "Delete {{name}}",
+        "deny": "Keep"
+      }
+    },
+    "th": {
+      "id": "Id",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "email",
+      "delete": "Delete"
+    },
+    "noData": "There is no trainers so far"
+  },
+  "payment:add": {
+    "Choose Course": "Choose Course",
+    "payment": {
+      "endAt": "This payment should be end at {{val}}"
+    },
+    "paid": {
+      "label": "The amount paid",
+      "required": {
+        "currency": "Please select a currency",
+        "num": "Please set the course price or set it to 0"
+      },
+      "placeholder": "eg.120"
+    },
+    "remaining": "Remaining",
+    "endAt": "End At",
+    "startAt": "Start At",
+    "trainer": {
+      "label": "Trainer",
+      "default": "Choose Trainer"
+    }
+  },
+  "users:deleteForm": {
+    "paragraph": "Once you delete this account, it cannot be undone, This is permanent.",
+    "Delete Account": "Delete Account",
+    "model": {
+      "accept": "Delete",
+      "title": "Are you sure you want to delete this account?",
+      "desc": "Once you click delete, this account and associated data will be permanently deleted and cannot be restored. Alternatively if you block it, the next time you want to edit or update your data you won't have to start from scratch.",
+      "deny": "Keep The Account"
+    }
+  },
+  "filter:users": {
+    "name.placeholder": "Search By Name"
+  },
+  "form:user": {
+    "User Name": "User Name",
+    "Phone": "Phone",
+    "Age": "Age",
+    "Tall in centimeter": "Tall in centimeter",
+    "Weight in Kg": "Weight in Kg",
+    "Why did you come": "Why did you come"
+  },
+  "table:users": {
+    "td": {
+      "Deleted": "Deleted",
+      "block.label": "block",
+      "delete": {
+        "title": "Block User",
+        "desc": "Once you click Block, The user will be blocked form the courses and he will have no more access on teh server",
+        "accept": "Block {{name}}",
+        "deny": "Keep"
+      }
+    },
+    "th": {
+      "Id": "Id",
+      "Name": "Name",
+      "admin": "Creator",
+      "Age/Tall/Weight": "Age/Tall/Weight",
+      "Plan": "Plan",
+      "Created At": "Created At",
+      "Blocked": "Blocked"
+    },
+    "There is no users so far": "There is no users so far"
+  },
+  "/admins": {
+    "title": "Admins",
+    "create.title": "Create Admin"
+  },
+  "/admins/[id]": {
+    "update.title": "Update Admin Data",
+    "payments.title": "Payments"
+  },
+  "/dashboard": {
+    "Recent Transactions": "Recent Transactions",
+    "Recent Users": "Recent Users",
+    "transactions": {
+      "receivePayment": "Payment received from {{name}} of {{price}}"
+    }
+  },
+  "/index": {
+    "title": "Home",
+    "admin": {
+      "name": "Admin Name"
+    },
+    "payments": {
+      "title": "Payments"
+    },
+    "addPayment": {
+      "title": "Add payment"
+    },
+    "user": {
+      "title": "Users Info"
+    }
+  },
+  "/logs": {
+    "title": "Logs",
+    "Logs": "Logs",
+    "Total Count": "Total Count"
+  },
+  "/payments": {
+    "title": "Payments",
+    "Payments": "Payments",
+    "Earnings": "Earnings",
+    "Total Count": "Total Count"
+  },
+  "/payments/[id]": {
+    "title": "{{val}} Payment",
+    "Update Payment Data": "Update Payment Data",
+    "User Logs": "User Logs"
+  },
+  "/plan": {
+    "title": "Plans",
+    "Plans": "Plans",
+    "Add Plan": "Add Plan"
+  },
+  "/plan/add": {
+    "title": "Add Plans",
+    "Add Plan": "Add Plan",
+    "Go To Plans": "Go To Plans"
+  },
+  "/plan/[id]": {
+    "Update Plan Data": "Update Plan Data",
+    "Payments": "Payments",
+    "Go To Plans": "Go To Plans",
+    "Go To Users Logs": "Go To Users Logs",
+    "Go To Plan Payments": "Go To Plan's Payments"
+  },
+  "/plans/[id]/payments": {
+    "title": "{{name}} Payments",
+    "Plan Payments": "Plan Payments",
+    "Total Count": "Total Count",
+    "Earnings": "Earnings"
+  },
+  "/plans/[id]/logs": {
+    "title": "{{name}} Logs",
+    "Plan Logs": "Plan Logs",
+    "Total Count": "Total Count"
+  },
+  "/trainers": {
+    "page.title": "Trainers",
+    "elems.title": "Trainers",
+    "add.title": "Add Trainer"
+  },
+  "/trainers/[id]": {
+    "update.title": "Update Trainer Data",
+    "logs.title": "Logs",
+    "chart.label": "User Logs",
+    "count.title": "Total Count"
+  },
+  "/users": {
+    "title": "Users",
+    "Users": "Users"
+  },
+  "/users/[id]": {
+    "title": "Users",
+    "Users": "Users"
+  },
+  "/users/[id]/logs": {
+    "Update User Data": "Update User Data",
+    "Payments": "Payments",
+    "Go To Logs": "Go To Logs"
+  },
+  "/users/add": {
+    "title": "Users",
+    "Users": "Users"
+  }
+}

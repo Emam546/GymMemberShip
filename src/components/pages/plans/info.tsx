@@ -86,4 +86,4 @@ export default function PlansInfoGetter({ plans, setPlans }: Props) {
     </>
   );
 }
-i18n.addLoadUrl("/components/plans/info", "plan:info");
+

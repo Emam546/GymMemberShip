@@ -21,7 +21,7 @@ const registerValidator = new Validator({
 router.post("/", async (req, res) => {
   const result = await registerValidator.asyncPasses(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   await IncrementPaymentLogs(result.data.paymentId, 1);
   const log = new Logs({
     ...result.data,

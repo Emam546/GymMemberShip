@@ -42,6 +42,7 @@ export default function UserInfoForm({
       onSubmit={handleSubmit((data: any) => {
         ObjectEntries(data).forEach(([key, val]) => {
           if (typeof val == "number" && isNaN(val)) delete data[key];
+          if (!val) delete data[key];
         });
         return onData(data);
       })}
@@ -119,4 +120,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/users/form", "form:user");

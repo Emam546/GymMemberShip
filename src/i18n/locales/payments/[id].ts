@@ -10,4 +10,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/payments/[id]", "/payments/[id]");
+

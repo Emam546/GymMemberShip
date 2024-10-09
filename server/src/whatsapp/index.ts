@@ -1,15 +1,38 @@
 /* eslint-disable no-console */
+// eslint-disable-next-line node/no-process-env
 import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
-// eslint-disable-next-line node/no-process-env
-const Chrome_Path = process.env.CHROME_PATH;
+import path from "path";
+const Chrome_PATH = process.env.CHROME_PATH;
+function getChromiumExecPath() {
+  return path
+    .join(
+      path.resolve(
+        __dirname,
+        "../../../node_modules/whatsapp-web.js/node_modules/puppeteer-core/.local-chromium/win64-1045629/chrome-win"
+      ),
+      "chrome.exe"
+    )
+    .replace("app.asar", "app.asar.unpacked");
+}
+console.log(getChromiumExecPath());
 const whatsappClient = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: Chrome_Path
-    ? {
-        executablePath: Chrome_Path,
-      }
-    : undefined,
+  puppeteer: {
+    executablePath: Chrome_PATH ?? getChromiumExecPath(),
+    headless: true,
+    defaultViewport: null,
+    args: [
+      "--fast-start",
+      "--disable-extensions",
+      "--no-sandbox",
+      "--disable-gpu",
+      "--remote-debugging-port=9222",
+      "--headless",
+      "--start-maximized",
+    ],
+    ignoreHTTPSErrors: true,
+  },
 });
 export let isConnected = false;
 export function connectWhatsapp(timeOut = 5000) {
@@ -32,9 +55,9 @@ export function connectWhatsapp(timeOut = 5000) {
 }
 whatsappClient.on("qr", (qr) => {
   console.log(`QR:${qr}`);
-  qrcode.generate(qr, { small: true });
+  if (!process.env.ELECTRON_RUN_AS_NODE) qrcode.generate(qr, { small: true });
 });
-whatsappClient.on("authenticated", (auth) => {
+whatsappClient.on("authenticated", () => {
   isConnected = true;
 });
 whatsappClient.on("disconnected", (reason) => {

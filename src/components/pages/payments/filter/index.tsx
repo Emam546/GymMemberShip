@@ -15,17 +15,8 @@ export interface Props {
 import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
-declare global {
-  namespace I18ResourcesType {
-    interface Resources {
-      "payments:filter": {
-        "Start at": "Start at";
-        "End At": "End at";
-      };
-    }
-  }
-}
-i18n.addLoadUrl("/components/payments/filter", "payments:filter");
+
+
 
 export type DefaultData = DataType;
 export default function TimeStartEndSelector({ onData, values }: Props) {
@@ -65,4 +56,14 @@ export default function TimeStartEndSelector({ onData, values }: Props) {
       </Grid2>
     </div>
   );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "payments:filter": {
+        "Start at": "Start at";
+        "End At": "End at";
+      };
+    }
+  }
 }

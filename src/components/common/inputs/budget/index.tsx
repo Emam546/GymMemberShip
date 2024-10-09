@@ -74,4 +74,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/common/budget", "input:budget");

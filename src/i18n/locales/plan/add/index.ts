@@ -10,4 +10,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/plan/add", "/plan/add");

@@ -6,43 +6,57 @@ import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 import CheckInput from "@src/components/common/checkInput";
 export interface DataType {
-  isActive: boolean;
+  active?: boolean;
   remaining?: true;
+}
+interface FormValues extends DataType {
+  applyActive: boolean;
 }
 export interface Props {
   onData: (data: DataType) => Promise<any> | any;
-  values: DataType;
+  values?: DataType;
 }
 export type DefaultData = DataType;
-export default function TimeStartEndSelector({ onData, values }: Props) {
-  const { handleSubmit, register, getValues, watch } = useForm<DataType>({
-    defaultValues: values,
-    values,
+export default function PaymentsDataFilter({ onData, values }: Props) {
+  const { register, getValues, watch } = useForm<FormValues>({
+    defaultValues: {
+      applyActive: true,
+    },
   });
   const { t } = useTranslation("payments:filter");
   useDebounceEffect(
     () => {
       const data = getValues();
-      onData({ ...data, remaining: data.remaining || undefined });
+      onData({
+        active: data.applyActive ? data.active : undefined,
+        remaining: data.remaining || undefined,
+      });
     },
     1000,
-    [watch()]
+    [JSON.stringify(watch())]
   );
   return (
     <div>
-      <Grid2>
+      <div className="tw-flex tw-gap-4">
+        <CheckInput
+          label={"Apply Active"}
+          id={"apply-active"}
+          defaultChecked
+          {...register("applyActive")}
+        />
         <CheckInput
           label={"is Active"}
           id={"is-active"}
+          disabled={!watch("applyActive")}
           defaultChecked
-          {...register("isActive")}
+          {...register("active")}
         />
-        <CheckInput
-          {...register("isActive")}
-          label={"Has remaining money"}
-          id={"has-money"}
-        />
-      </Grid2>
+      </div>
+      <CheckInput
+        {...register("remaining")}
+        label={"Has remaining money"}
+        id={"has-money"}
+      />
     </div>
   );
 }
@@ -56,4 +70,3 @@ declare global {
     }
   }
 }
-// i18n.addLoadUrl("/components/payments/filter", "payments:filter");

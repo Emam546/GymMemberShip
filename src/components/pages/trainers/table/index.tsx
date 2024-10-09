@@ -160,4 +160,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/trainers/table", "table:trainers");
+

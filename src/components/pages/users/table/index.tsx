@@ -225,4 +225,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/users/table", "table:users");

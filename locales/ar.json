@@ -1,0 +1,417 @@
+{
+  "translation": {
+    "buttons": {
+      "submit": "ارسل",
+      "update": "تحديث",
+      "print": "اطبع",
+      "activate": "فعل",
+      "add": "اضف",
+      "attend": "حضر",
+      "send": "ارسل"
+    },
+    "messages": {
+      "updated": "تم تحديث المستند بنجاح",
+      "added": "تمت إضافة المستند بنجاح",
+      "deleted": "تم حذف المستند بنجاح",
+      "whatsapp": {
+        "sended": "تم إرسال الرسائل بنجاح"
+      }
+    }
+  },
+  "form:admin": {
+    "name": "اسم",
+    "phone": "هاتف",
+    "email": "بريد إلكتروني",
+    "password": "كلمة المرور",
+    "type": "الصلاحيات"
+  },
+  "table:admins": {
+    "td": {
+      "Deleted": "محذوف",
+      "block.label": "حاجز",
+      "delete": {
+        "title": "حذف المستخدم",
+        "desc": "بمجرد النقر فوق \"حذف\"، سيتم حظر المستخدم من قاعدة البيانات ولن يتمكن من الوصول إلى الخادم",
+        "accept": "امسح {{name}}",
+        "deny": "يحفظ"
+      }
+    },
+    "th": {
+      "id": "ID",
+      "name": "اسم",
+      "phone": "هاتف",
+      "email": "بريد إلكتروني",
+      "delete": "امسح",
+      "type": "الصلاحيات"
+    },
+    "noData": "لا يوجد مشرفين حتى الآن"
+  },
+  "barcode:print": {
+    "data": {
+      "name": "اسم المستخدم",
+      "type": "نوع الاشتراك",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء",
+      "trainer": {
+        "notExist": "غير موجود",
+        "label": "إسم المدرب"
+      }
+    }
+  },
+  "input:budget": {
+    "shouldPay": {
+      "paragraph": "المبلغ الذي واجب دفعه هو {{val}}"
+    }
+  },
+  "input:datePicker": {
+    "endDate": {
+      "paragraph": "يجب أن ينتهي الاشتراك عند {{val}}"
+    }
+  },
+  "inputs:planType": {
+    "type": {
+      "label": "اختر النوع",
+      "default": "اختر النوع",
+      "opt": {
+        "day": "يوم",
+        "Month": "شهر",
+        "year": "سنة"
+      }
+    },
+    "amount.label": "كمية النوع بالايام"
+  },
+  "inputs:selectPlan": {
+    "default": "اختر الخطة"
+  },
+  "dashboard": {
+    "Sales OverView": "نظرة عامة على المبيعات",
+    "Yearly Breakup": "الأرباح السنويه",
+    "last year": "العام الماضي",
+    "Monthly Earnings": "الأرباح الشهرية",
+    "last month": "الشهر الماضي",
+    "percent": {
+      "num": "%{{val}}"
+    }
+  },
+  "form:attend": {
+    "table": {
+      "th": {
+        "attended": "أيام الحضور",
+        "remaining": "الأيام المتبقية",
+        "total": "إجمالي الأيام"
+      }
+    }
+  },
+  "table:logs": {
+    "th": {
+      "Id": "Id",
+      "User": "مستخدم",
+      "paymentLink": "رابط الدفع",
+      "Logged At": "تم تسجيل الدخول في",
+      "Delete": "احذف",
+      "Plan": "الخطه",
+      "admin": "المنشي",
+      "trainer": "مدرب"
+    },
+    "td": {
+      "trainer.notExist": "غير موجود",
+      "deleted": "محذوف",
+      "model": {
+        "title": "حذف التسجيل",
+        "desc": "بمجرد النقر فوق حظر، سيتم حذف التسجيل من سجله",
+        "accept": "حذف الدفع",
+        "deny": "اترك"
+      }
+    },
+    "paragraph": "لا يوجد سجلات حتى الآن"
+  },
+  "payments:deleteForm": {
+    "paragraph": "بمجرد حذف الدفعة، لا يمكن التراجع عنها. ",
+    "delete.button": "حذف الدفع",
+    "model": {
+      "accept": "امسح",
+      "title": "هل أنت متأكد أنك تريد حذف الدفعة؟",
+      "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف الدفعة والبيانات المرتبطة بها نهائيًا ولا يمكن استعادتها.",
+      "deny": "احتفظ بالدفع"
+    }
+  },
+  "payments:filter": {
+    "Start at": "ابدأ في",
+    "End At": "تنتهي عند"
+  },
+  "payment:form:update": {
+    "User": "المستخدم",
+    "Plan": "الخطه",
+    "createdAt": "تم الإنشاء في",
+    "message": {
+      "noPayment": "لا يوجد اشتراك محدد",
+      "validNumber": "الرقم غير صالح"
+    }
+  },
+  "table:payments": {
+    "Deleted": "محذوف",
+    "Link": "رابط",
+    "head": {
+      "Id": "Id",
+      "User": "مستخدم",
+      "Plan": "الخظه",
+      "Link": "رابط",
+      "Paid": "مدفوع",
+      "Created At": "تم الإنشاء في",
+      "End At": "نهاية عند",
+      "A/R/T": "المجموع/الباقي/الحضور",
+      "Attend": "حضر",
+      "Delete": "امسح",
+      "admin": "المنشي",
+      "startedAt": "بدأ في",
+      "remainingMoney": "الأموال المتبقية"
+    },
+    "There is no payments": "لا يوجد أي مدفوعات"
+  },
+  "form:add:plan": {
+    "Plan Name": "اسم الخطة",
+    "Day Price": "سعر اليوم",
+    "Month Price": "سعر الشهر",
+    "Year Price": "سعر السنة",
+    "Plan description": "وصف الخطة",
+    "errors": {
+      "currency": "الرجاء تحديد العملة",
+      "price": "يرجى تحديد السعر أو ضبطه على 0"
+    }
+  },
+  "plan:info": {
+    "There is no plans so far please add some plans": "لا توجد خطط حتى الآن يرجى إضافة بعض الخطط",
+    "model": {
+      "title": "حذف الخطة",
+      "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف الخطة والبيانات المرتبطة بها نهائيًا ولا يمكن استعادتها.",
+      "accept": "حذف خطة {{name}}.",
+      "deny": "اترك"
+    }
+  },
+  "sideBar": {
+    "user": {
+      "label": "مستخدم",
+      "/users/add": "إضافة مستخدم",
+      "/users/search": "البحث عن المستخدم"
+    },
+    "sell": {
+      "label": "البيع"
+    },
+    "payments": {
+      "label": "المبيعات"
+    },
+    "whatsapp": {
+      "label": "واتس اب"
+    },
+    "dashboard": {
+      "label": "لوحة القيادة"
+    },
+    "trainers": {
+      "label": "المدربين"
+    },
+    "setting": {
+      "label": "إعدادات",
+      "/admins": "إدارة المسؤولين",
+      "/products": "إدارة المنتجات"
+    },
+    "logout": {
+      "label": "تسجيل الخروج"
+    },
+    "plans": {
+      "label": "الخطط",
+      "/plans": "إدارة الخطط",
+      "/plans/add": "أضف خطة"
+    }
+  },
+  "form:trainers": {
+    "name": "اسم",
+    "phone": "هاتف",
+    "email": "بريد إلكتروني"
+  },
+  "table:trainers": {
+    "td": {
+      "Deleted": "تم الحذف",
+      "block.label": "حاجز",
+      "delete": {
+        "title": "حذف المدرب",
+        "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف المستخدم من قاعدة البيانات",
+        "accept": "امسح {{name}}",
+        "deny": "يحفظ"
+      }
+    },
+    "th": {
+      "id": "Id",
+      "name": "اسم",
+      "phone": "هاتف",
+      "email": "بريد إلكتروني",
+      "delete": "امسح"
+    },
+    "noData": "لا يوجد مدربين حتى الآن"
+  },
+  "payment:add": {
+    "Choose Course": "اختر الدورة",
+    "payment": {
+      "endAt": "يجب أن تنتهي هذه الدفعة عند {{val}}"
+    },
+    "paid": {
+      "label": "المبلغ المدفوع",
+      "required": {
+        "currency": "الرجاء تحديد العملة",
+        "num": "يرجى ضبط سعر الدورة أو ضبطه على 0"
+      },
+      "placeholder": "على سبيل المثال.120"
+    },
+    "remaining": "متبقي",
+    "endAt": "ينتهي في",
+    "startAt": "يبدا في",
+    "trainer": {
+      "label": "مدرب",
+      "default": "اختر المدرب"
+    }
+  },
+  "users:deleteForm": {
+    "paragraph": "بمجرد حذف هذا الحساب، لا يمكن التراجع عن هذا الإجراء، فهذا أمر دائم.",
+    "Delete Account": "حذف الحساب",
+    "model": {
+      "accept": "امسح",
+      "title": "هل أنت متأكد أنك تريد حذف هذا الحساب؟",
+      "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف هذا الحساب والبيانات المرتبطة به نهائيًا ولا يمكن استعادتهما. ",
+      "deny": "احتفظ بالحساب"
+    }
+  },
+  "filter:users": {
+    "name.placeholder": "البحث بالاسم"
+  },
+  "form:user": {
+    "User Name": "اسم المستخدم",
+    "Phone": "هاتف",
+    "Age": "عمر",
+    "Tall in centimeter": "الطول بالسنتيمتر",
+    "Weight in Kg": "الوزن بالكيلو جرام",
+    "Why did you come": "لماذا أتيت"
+  },
+  "table:users": {
+    "td": {
+      "Deleted": "محذوف",
+      "block.label": "احظر",
+      "delete": {
+        "title": "حظر المستخدم",
+        "desc": "بمجرد النقر فوق حظر، سيتم حظر المستخدم من الدورات التدريبية ولن يتمكن من الوصول إلى الخادم",
+        "accept": "احظر {{name}}",
+        "deny": "اترك"
+      }
+    },
+    "th": {
+      "Id": "Id",
+      "Name": "اسم",
+      "admin": "المنشي",
+      "Age/Tall/Weight": "العمر/الطول/الوزن",
+      "Plan": "الخطه",
+      "Created At": "تم الإنشاء في",
+      "Blocked": "محظور"
+    },
+    "There is no users so far": "لا يوجد مستخدمين حتى الآن"
+  },
+  "/admins": {
+    "title": "المشرفين",
+    "create.title": "إنشاء مشرف"
+  },
+  "/admins/[id]": {
+    "update.title": "تحديث بيانات المسؤول",
+    "payments.title": "المدفوعات"
+  },
+  "/dashboard": {
+    "Recent Transactions": "المعاملات الأخيرة",
+    "Recent Users": "المستخدمون الجدد",
+    "transactions": {
+      "receivePayment": "تم استلام المبلغ من {{name}} ل {{price}}"
+    }
+  },
+  "/index": {
+    "title": "الصفحه الرئيسيه",
+    "admin": {
+      "name": "اسم المشرف"
+    },
+    "payments": {
+      "title": "الاشتراكات"
+    },
+    "addPayment": {
+      "title": "إضافة اشتراك"
+    },
+    "user": {
+      "title": "معلومات المستخدمين"
+    }
+  },
+  "/logs": {
+    "title": "سجلات",
+    "Logs": "سجلات",
+    "Total Count": "العدد الإجمالي"
+  },
+  "/payments": {
+    "title": "المدفوعات",
+    "Payments": "المدفوعات",
+    "Earnings": "الأرباح",
+    "Total Count": "العدد الإجمالي"
+  },
+  "/payments/[id]": {
+    "title": "{{val}} دفع",
+    "Update Payment Data": "تحديث بيانات الدفع",
+    "User Logs": "سجلات المستخدم"
+  },
+  "/plan": {
+    "title": "الخطط",
+    "Plans": "الخطط",
+    "Add Plan": "أضف خطة"
+  },
+  "/plan/add": {
+    "title": "أضف الخطط",
+    "Add Plan": "أضف خطة",
+    "Go To Plans": "انتقل إلى الخطط"
+  },
+  "/plan/[id]": {
+    "Update Plan Data": "تحديث بيانات الخطة",
+    "Payments": "المدفوعات",
+    "Go To Plans": "انتقل إلى الخطط",
+    "Go To Users Logs": "انتقل إلى سجلات المستخدمين",
+    "Go To Plan Payments": "انتقل إلى مدفوعات الخطة"
+  },
+  "/plans/[id]/payments": {
+    "title": "{{name}} المدفوعات",
+    "Plan Payments": "مدفوعات الخطة",
+    "Total Count": "العدد الإجمالي",
+    "Earnings": "الأرباح"
+  },
+  "/plans/[id]/logs": {
+    "title": "{{name}} سجلات",
+    "Plan Logs": "سجلات الخطة",
+    "Total Count": "العدد الإجمالي"
+  },
+  "/trainers": {
+    "page.title": "المدربين",
+    "elems.title": "المدربين",
+    "add.title": "إضافة مدرب"
+  },
+  "/trainers/[id]": {
+    "update.title": "تحديث بيانات المدرب",
+    "logs.title": "سجلات",
+    "chart.label": "سجلات المستخدم",
+    "count.title": "العدد الإجمالي"
+  },
+  "/users": {
+    "title": "المستخدمين",
+    "Users": "المستخدمين"
+  },
+  "/users/[id]": {
+    "title": "المستخدمين",
+    "Users": "المستخدمين"
+  },
+  "/users/[id]/logs": {
+    "Update User Data": "تحديث بيانات المستخدم",
+    "Payments": "المدفوعات",
+    "Go To Logs": "انتقل إلى السجلات"
+  },
+  "/users/add": {
+    "title": "المستخدمين",
+    "Users": "المستخدمين"
+  }
+}

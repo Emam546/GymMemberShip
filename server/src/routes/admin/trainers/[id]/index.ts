@@ -28,7 +28,7 @@ router.post("/:id", async (req, res) => {
   const user = res.locals.trainer as Document<DataBase.Models.Trainers>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
 
   const newTrainer = await Trainers.findByIdAndUpdate(
     user._id,

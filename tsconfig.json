@@ -21,8 +21,7 @@
       "@utils/*": ["./utils/*"],
       "@app/*": ["./app/*"],
       "@shared/renderer/*": ["./app/renderer/shared/*"],
-      "@locales/*": ["./src/i18n/locales/*"],
-      "@sources/*": ["./sources/*"]
+      "@locales/*": ["./src/i18n/locales/*"]
     },
     "skipLibCheck": true,
     "plugins": [

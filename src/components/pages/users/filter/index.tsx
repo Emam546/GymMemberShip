@@ -1,4 +1,3 @@
-
 import { Grid2 } from "@src/components/grid";
 import { useForm } from "react-hook-form";
 import { ObjectEntries } from "@src/utils";
@@ -30,6 +29,7 @@ export default function UsersFilter({ onData }: Props) {
       onSubmit={handleSubmit((data: any) => {
         ObjectEntries(data).forEach(([key, val]) => {
           if (typeof val == "number" && isNaN(val)) delete data[key];
+          if (!val) delete data[key];
         });
         return onData(data);
       })}
@@ -56,4 +56,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/users/filter", "filter:users");

@@ -21,7 +21,7 @@ router.use("/:id", async (req, res, next) => {
   res.locals.user = await getUser(req.params.id, []);
   next();
 });
-router.get("/:id", async(req, res) => {
+router.get("/:id", async (req, res) => {
   res.status(200).sendSuccess(await getUser(req.params.id));
 });
 const registerUpdate = new Validator({
@@ -41,7 +41,7 @@ router.post("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.User>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const newUser = await Users.findByIdAndUpdate(
     user._id,
     {

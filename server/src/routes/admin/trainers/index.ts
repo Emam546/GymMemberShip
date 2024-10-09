@@ -13,7 +13,7 @@ const registerValidator = new Validator({
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   result.data;
   const trainer = new Trainers({
     ...result.data,

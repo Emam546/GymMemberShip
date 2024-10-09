@@ -12,7 +12,7 @@ const router = Router();
 router.use("/admins/auth/", AuthRouter);
 router.use((req, res, next) => {
   if (!req.isAuthenticated())
-    return res.status(HttpStatusCodes.UNAUTHORIZED).SendFailed("UnAuthorized");
+    return res.status(HttpStatusCodes.UNAUTHORIZED).sendFailed("UnAuthorized");
   next();
 });
 router.use("/users", userRouter);

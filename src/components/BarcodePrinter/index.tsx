@@ -5,7 +5,6 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import Logo from "@sources/src/logo.png";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Barcode from "react-barcode";
@@ -17,7 +16,6 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import requester from "@src/utils/axios";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import { ValidateData } from "@src/utils/fileConverter";
 
 export function Group({
   title,
@@ -130,7 +128,7 @@ export const BarcodePrintProvider = ({
             </div>
             <div className="tw-bg-[#1D1D1A] tw-h-full tw-flex-1 tw-max-w-fit tw-flex tw-items-center">
               <img
-                src={Logo.src}
+                src={"/images/src/logo"}
                 alt="Logo"
                 className="tw-p-6 tw-max-w-[20rem] tw-w-full"
               />
@@ -235,5 +233,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/barcode/print", "barcode:print");
-i18n.addLoadUrl("/components/payments/info", "payment:form:update");

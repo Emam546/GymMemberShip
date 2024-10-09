@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
 import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
@@ -22,7 +23,7 @@ const registerValidator = new Validator({
 router.post("/", async (req, res) => {
   const result = registerValidator.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const user = new Users({
     ...result.data,
     createdBy: "admin",
@@ -33,6 +34,8 @@ router.post("/", async (req, res) => {
 });
 const registerQuery = new Validator({
   name: ["string"],
+  startAt: ["isDate"],
+  endAt: ["isDate"],
   ageMin: ["numeric"],
   ageMax: ["numeric"],
   tallMin: ["numeric"],
@@ -42,12 +45,11 @@ const registerQuery = new Validator({
   skip: ["numeric"],
   limit: ["numeric"],
   ".": ["required"],
-  barcode: ["string", "numeric"],
 });
 router.get("/", async (req, res) => {
   const result = registerQuery.passes(req.query);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const {
     ageMax,
     ageMin,
@@ -58,9 +60,16 @@ router.get("/", async (req, res) => {
     skip,
     limit,
     name,
-    barcode,
+    startAt,
+    endAt,
   } = result.data;
   const query: RootFilterQuery<DataBase.Models.User> = {};
+
+  if (startAt || endAt) {
+    query["createdAt"] = {};
+    if (startAt) query["createdAt"]["$gte"] = new Date(startAt as string);
+    if (endAt) query["createdAt"]["$lte"] = new Date(endAt as string);
+  }
   if (tallMin || tallMax) {
     query["tall"] = {
       $lte: parseInt(tallMax as string) || Infinity,
@@ -96,10 +105,9 @@ const registerQueryParam = new Validator({
 router.get("/barcode", async (req, res) => {
   const result = registerQueryParam.passes(req.query);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const { barcode } = result.data;
   if (!barcode) return res.status(200).sendSuccess([]);
-
   const results = await Users.find({ barcode: parseInt(barcode) })
     .hint({
       barcode: 1,

@@ -30,7 +30,7 @@ router.post("/:id", async (req, res) => {
   const user = res.locals.user as Document<DataBase.Models.Admins>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const newUser = await Admins.findByIdAndUpdate(
     user._id,
     {

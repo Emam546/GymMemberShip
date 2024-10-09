@@ -111,4 +111,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/common/datepicker", "input:datePicker");
+

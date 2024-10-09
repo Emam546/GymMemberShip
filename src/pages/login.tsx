@@ -9,7 +9,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import requester from "@src/utils/axios";
-import Logo from "@sources/src/logo.png";
+// import Logo from "@sources/src/logo.png";
 import { useLogUser } from "@src/components/UserProvider";
 import ImagesBg from "@src/components/bg";
 export interface FormValues {
@@ -48,7 +48,7 @@ export default function Login({ admins }: Props) {
       className="body-wrapper tw-bg-cover tw-bg-no-repeat tw-bg-center login"
       data-layout="vertical"
       style={{
-        backgroundImage: `url("${image.src}")`,
+        backgroundImage: `url("${image}")`,
       }}
     >
       <div className="overflow-hidden position-relative min-vh-100 d-flex align-items-center justify-content-center tw-py-6">
@@ -58,7 +58,7 @@ export default function Login({ admins }: Props) {
               <div className="mb-0 card tw-bg-black/90">
                 <div className="card-body">
                   <div className="py-3 text-center text-nowrap logo-img d-block w-100">
-                    <img src={Logo.src} width={180} alt="logo" />
+                    <img src={"/images/src/logo"} width={180} alt="logo" />
                   </div>
                   <p className="text-center">Login</p>
                   <form

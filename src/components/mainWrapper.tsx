@@ -59,7 +59,7 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
         <div
           className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-contain -tw-z-10"
           style={{
-            backgroundImage: `url(${image.src})`,
+            backgroundImage: `url("${image}")`,
           }}
         />
         <Header />

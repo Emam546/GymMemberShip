@@ -26,59 +26,40 @@ i18n
       },
     },
   });
-i18n.curPromises = [];
-i18n.addLoadResource = (f) => {
-  i18n.curPromises.push(f);
-  return i18n;
-};
 (function (proxy) {
   i18n.changeLanguageAndLoad = async (lng, ...a) => {
     await i18n.loadR(lng || i18n.language);
     return await proxy(lng, ...a);
   };
 })(i18n.changeLanguage);
-
-i18n.loadR = async (lng) => {
-  await Promise.all(i18n.curPromises.map((f) => f(lng)));
-};
 function mergePath(...paths: string[]): string {
-  let [a, ...r] = paths;
+  let a = paths[0];
+  const [, ...r] = paths;
   a = a.endsWith("/") ? a.slice(0, -1) : a;
   a = a.startsWith("/") ? a.slice(1) : a;
   if (r.length) return `${a}/${mergePath(...r)}`;
   return a;
 }
 const publicPath = "./locales";
-i18n.addLoadUrl = function (path, ns) {
-  this.addLoadResource(async (lng) => {
-    if (typeof this.getResourceBundle(lng, ns) != "undefined") return;
-
-    const filepath = mergePath(path, `${lng}.json`);
-    if (typeof window == "undefined") {
-      try {
-        const fs = require("fs");
-        const fileContent = fs.readFileSync(
-          mergePath(publicPath, filepath),
-          "utf8"
-        );
-        const data = JSON.parse(fileContent);
-        this.addResourceBundle(lng, ns as string, data, true, true);
-      } catch (err) {
-        console.log(filepath);
-        console.log("Error", err);
-      }
-    } else {
-      try {
-        const res = await requester.get(`locales/${filepath}`);
-        if (!res.data) return;
-        this.addResourceBundle(lng, ns as string, res.data, true, true);
-      } catch (error) {
-        console.log(filepath);
-        console.log("error 2", error);
-      }
-    }
-  });
-  return this;
+i18n.loadR = async function (lng) {
+  if (typeof window == "undefined") {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const fs = require("fs");
+    const fileContent = fs.readFileSync(
+      mergePath(publicPath, `${lng}.json`),
+      "utf8"
+    );
+    const data = JSON.parse(fileContent);
+    Object.entries(data).forEach(([key, val]) => {
+      this.addResourceBundle(lng, key as string, val, true, true);
+    });
+  } else {
+    const res = await requester.get(`locales/${lng}.json`);
+    if (!res.data) return;
+    Object.entries(res.data).forEach(([key, val]) => {
+      this.addResourceBundle(lng, key as string, val, true, true);
+    });
+  }
 };
 
 i18n.updated = false;

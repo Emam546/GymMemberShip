@@ -31,7 +31,7 @@ router.post("/:id", async (req, res) => {
   const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const newPlan = await Plans.findByIdAndUpdate(
     plan._id,
     {

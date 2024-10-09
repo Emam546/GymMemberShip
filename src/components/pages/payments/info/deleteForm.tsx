@@ -69,4 +69,4 @@ export default function DeletePaymentForm({
     </div>
   );
 }
-i18n.addLoadUrl("/components/payments/deleteForm", "payments:deleteForm");
+

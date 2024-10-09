@@ -51,7 +51,7 @@ router.post("/:id", async (req, res) => {
   const payment = res.locals.payment as Document<DataBase.Models.Payments>;
   const result = registerUpdate.passes(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const newPayment = await Payments.findByIdAndUpdate(
     payment._id,
     {

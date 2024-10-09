@@ -7,7 +7,7 @@ express.response.sendSuccess = function (data, msg = "Success") {
     data: data,
   });
 };
-express.response.SendFailed = function (msg, err) {
+express.response.sendFailed = function (msg, err) {
   return this.json({
     status: false,
     msg: msg,
@@ -22,7 +22,7 @@ declare global {
         data: T,
         msg?: string
       ): ReturnType<ExpressResponse["json"]>;
-      SendFailed(
+      sendFailed(
         msg: string,
         err?: unknown
       ): ReturnType<ExpressResponse["json"]>;

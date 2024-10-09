@@ -24,4 +24,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/common", "translation");
+

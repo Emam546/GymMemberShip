@@ -15,4 +15,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/dashboard", "dashboard");

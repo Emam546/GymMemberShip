@@ -274,4 +274,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/index", "/index");

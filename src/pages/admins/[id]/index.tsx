@@ -81,4 +81,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/admins/[id]", "/admins/[id]");

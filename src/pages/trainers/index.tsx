@@ -62,7 +62,6 @@ export default function Page({ trainers: initPlans }: Props) {
                 setTrainers((pre) =>
                   pre.filter(({ _id }) => _id != trainer._id)
                 );
-                alert(t("messages.deleted", { ns: "translation" }));
               }}
             />
           </MainCard>
@@ -97,4 +96,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/trainers", "/trainers");

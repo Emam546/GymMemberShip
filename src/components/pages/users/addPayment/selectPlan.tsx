@@ -42,9 +42,6 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl(
-  "/components/common/selectPlan",
-  "inputs:selectPlan"
-);
+
 
 export default SelectPlan;

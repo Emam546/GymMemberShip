@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
   const currentDate = new Date();
   const result = await registerQuery.asyncPasses(req.query);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const firstQuery: Record<string, any> = {};
   const { active, remaining, startAt, endAt } = result.data;
   if (typeof active != "undefined") {
@@ -139,7 +139,7 @@ router.get("/", async (req, res) => {
     ...[
       {
         $lookup: {
-          from: 'plans', // Collection name of the users
+          from: "plans", // Collection name of the users
           localField: "planId", // Field in Payments document
           foreignField: "_id", // Field in Users document
           as: "planId",
@@ -150,7 +150,7 @@ router.get("/", async (req, res) => {
       },
       {
         $lookup: {
-          from: 'admins', // Collection name of the users
+          from: "admins", // Collection name of the users
           localField: "adminId", // Field in Payments document
           foreignField: "_id", // Field in Users document
           as: "adminId",

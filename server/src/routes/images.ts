@@ -2,26 +2,25 @@ import { Router } from "express";
 import path from "path";
 import fs from "fs";
 const router = Router();
-const Imagespath = "./sources/backgrounds";
-router.get("/names", (req, res) => {
-  res.sendSuccess(fs.readdirSync(Imagespath));
-});
-router.get("/:name", (req, res) => {
-  const imageName = req.params.name;
-
+const ImagesPath = "./sources/";
+router.get("/*", (req, res) => {
+  const paths = (req.params as { 0: string })[0];
+  const dynamicPaths = paths; // Split the path into individual segments
   // Define possible extensions to search for
   const extensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 
   // Check for the image with any of the extensions
   const ext = extensions.find((ext) => {
-    const imagePath = path.join("./sources/backgrounds", `${imageName}${ext}`);
+    const imagePath = path.join(ImagesPath, `${dynamicPaths}${ext}`);
     if (fs.existsSync(imagePath)) return true;
     return false;
   });
 
   // If an image is found, send it, otherwise send a 404 error
   if (ext) {
-    res.sendFile(path.join("./sources/backgrounds", `${imageName}${ext}`));
+    res.sendFile(path.join(ImagesPath, `${dynamicPaths}${ext}`), {
+      root: process.cwd(),
+    });
   } else {
     res.status(404).send("Image not found");
   }

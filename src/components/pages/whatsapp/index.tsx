@@ -3,6 +3,10 @@ import { useForm } from "react-hook-form";
 import React from "react";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import { WhatsappButtonStyle } from "@src/components/common/buttons/whatsapp";
+import { hasOwnProperty } from "@src/utils";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import requester from "@src/utils/axios";
+import { useTranslation } from "react-i18next";
 
 export interface FormData {
   message: string;
@@ -81,6 +85,53 @@ export default function MessageDataForm({
     </form>
   );
 }
+type Doc = DataBase.WithId<DataBase.Models.User>;
+export interface MessageDataUsersProps extends Omit<Props, "onData"> {
+  OnUsers: () => Promise<Doc[]> | Doc[];
+}
+export function MessageDataUsers({ OnUsers, ...props }: MessageDataUsersProps) {
+  const { t } = useTranslation();
+  return (
+    <MessageDataForm
+      onData={async function (dataMessages: DataType) {
+        const users = await OnUsers();
+        users.map(async (val) => {
+          const formData = new FormData();
+          const phone = val?.phone;
+          if (!phone || !isValidPhoneNumber(phone)) return;
+          const num = phone.startsWith("+") ? phone.slice(1) : phone;
+          const data = {
+            number: num,
+            messages: dataMessages.messages.map((data, i) => {
+              if (hasOwnProperty(data, "message")) {
+                return {
+                  message: data.message,
+                };
+              }
+              formData.append(i.toString(), data.file);
+              return {
+                file: i,
+              };
+            }),
+          };
+          formData.append("data", JSON.stringify(data));
+          try {
+            await requester.post("/api/admin/whatsapp", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+          } catch (err) {
+            console.error(val?.name);
+            console.error(err);
+          }
+          alert(t("messages.whatsapp.sended", { ns: "translation" }));
+        });
+      }}
+      {...props}
+    />
+  );
+}
 // declare global {
 //   namespace I18ResourcesType {
 //     interface Resources {
@@ -95,4 +146,3 @@ export default function MessageDataForm({
 //     }
 //   }
 // }
-// i18n.addLoadUrl("/components/users/form", "form:user");

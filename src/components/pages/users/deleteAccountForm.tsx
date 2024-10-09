@@ -64,4 +64,4 @@ export default function DeleteAccountForm({ id }: { id: string }) {
     </div>
   );
 }
-i18n.addLoadUrl("/components/users/deleteForm", "users:deleteForm");
+

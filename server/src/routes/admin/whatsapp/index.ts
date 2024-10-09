@@ -18,7 +18,7 @@ const registerValidator = new Validator({
 type Message = { message: string } | { file: number };
 router.use((req, res, next) => {
   if (!isConnected)
-    return res.status(400).SendFailed("whatsapp is not connected");
+    return res.status(400).sendFailed("whatsapp is not connected");
   next();
 });
 export function hasOwnProperty<K extends PropertyKey, T>(
@@ -30,11 +30,11 @@ export function hasOwnProperty<K extends PropertyKey, T>(
 
 router.post("/", async (req, res) => {
   if (!req.headers["content-type"]?.startsWith("multipart/form-data"))
-    return res.status(400).SendFailed("invalid Content Type");
+    return res.status(400).sendFailed("invalid Content Type");
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const result = registerValidator.passes(req.body["data"]);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const chatId = `${result.data.number}@c.us`;
   for (let i = 0; i < result.data.messages.length; i++) {
     const element = (result.data.messages as Message[])[i];
@@ -46,11 +46,11 @@ router.post("/", async (req, res) => {
     if (!file)
       return res
         .status(400)
-        .SendFailed(`there is no files to be upload on ${i} index`);
+        .sendFailed(`there is no files to be upload on ${i} index`);
     if (file instanceof Array)
       return res
         .status(400)
-        .SendFailed(`the ${i} index should contain one file`);
+        .sendFailed(`the ${i} index should contain one file`);
     const data = new MessageMedia(
       file.mimetype,
       file.data.toString("base64"),

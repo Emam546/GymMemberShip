@@ -58,4 +58,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/common/planType", "inputs:planType");

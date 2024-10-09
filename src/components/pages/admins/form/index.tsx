@@ -26,17 +26,20 @@ export default function AdminInfoForm({
   buttonName,
   onData,
 }: Props) {
-  const { register, handleSubmit, formState, control } = useForm<DataType>({
-    values: defaultData,
-  });
+  const { register, handleSubmit, formState, control, reset } =
+    useForm<DataType>({
+      values: defaultData,
+    });
   const { t } = useTranslation("form:admin");
   return (
     <form
-      onSubmit={handleSubmit((data: any) => {
+      onSubmit={handleSubmit(async (data: any) => {
         ObjectEntries(data).forEach(([key, val]) => {
           if (typeof val == "number" && isNaN(val)) delete data[key];
+          if (!val) delete data[key];
         });
-        return onData(data);
+        await onData(data);
+        reset();
       })}
       autoComplete="off"
     >
@@ -51,14 +54,14 @@ export default function AdminInfoForm({
           id={"name-input"}
           title={t("password")}
           {...register("password", { required: true })}
-          err={formState.errors.name}
+          err={formState.errors.password}
         />
         <PhoneNumberWithForm
           id={"phone-input"}
           title={t("phone")}
           control={control}
           name="phone"
-          err={formState.errors.name}
+          err={formState.errors.phone}
         />
         <MainInput
           id={"age-input"}
@@ -92,4 +95,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/admins/form", "form:admin");

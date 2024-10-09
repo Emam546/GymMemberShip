@@ -1,7 +1,0 @@
-{
-  "Recent Transactions": "Recent Transactions",
-  "Recent Users": "Recent Users",
-  "transactions": {
-    "receivePayment": "Payment received from {{name}} of {{price}}"
-  }
-}

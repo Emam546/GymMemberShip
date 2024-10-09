@@ -84,7 +84,7 @@ const App = function ({ Component, pageProps, translations, user }: AppG) {
   );
 };
 
-App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
+App.getInitialProps = async ({ Component, ctx }: AppContext) => {
   // Retrieve language from cookies on the server side
   const cookies = ctx.req?.headers.cookie || "";
   const langFromCookie =
@@ -94,7 +94,6 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
       ?.split("=")[1] ||
     i18n.language ||
     "en"; // Default to 'en' if not found
-  // Change i18next language
   await i18n.changeLanguage(langFromCookie);
   const appProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)

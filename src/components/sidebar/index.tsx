@@ -8,7 +8,6 @@ import { IsAdminComp } from "../wrappers";
 import UserIcon from "./icons/personal-information.png";
 import GraphIcon from "./icons/graph.png";
 import PlansIcon from "./icons/project-management.png";
-import Logo from "@sources/src/logo.png";
 import TrainersIcon from "./icons/personal.png";
 import SettingsIcon from "./icons/settings.png";
 import Whatsapp from "./icons/whatsapp.png";
@@ -167,10 +166,13 @@ function ManageUsersNavBar() {
           href="/payments"
           title={t("payments.label")}
         />
-        <LinkElem
+        <DropLinksElem
           icon={Whatsapp.src}
-          href="/payments/whatsapp"
-          title={"Whatsapp"}
+          hrefs={[
+            { href: "/users/whatsapp", label: "users" },
+            { href: "/payments/whatsapp", label: "subscriptions" },
+          ]}
+          title={"whatsapp"}
         />
         <LinkElem icon={PlansIcon.src} href="/plans" title={t("plans.label")} />
         <LinkElem
@@ -216,7 +218,7 @@ export default function Header() {
               href="/"
               className="hover:tw-bg-yellow-600/10 tw-block tw-p-3 tw-h-[7rem] tw-rounded"
             >
-              <img src={Logo.src} className="tw-h-full" alt="Logo" />
+              <img src="/images/src/logo" className="tw-h-full" alt="Logo" />
             </Link>
           </div>
           <nav className="">
@@ -269,4 +271,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/sidebar", "sideBar");

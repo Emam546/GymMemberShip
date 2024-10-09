@@ -317,4 +317,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/payments/table", "table:payments");
+

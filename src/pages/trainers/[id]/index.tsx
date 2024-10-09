@@ -331,4 +331,3 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/pages/trainers/[id]", "/trainers/[id]");

@@ -42,7 +42,7 @@ router.post("/:id/logs", async (req, res) => {
   >;
   const result = await registerValidator.asyncPasses(req.body);
   if (!result.state)
-    return res.status(400).SendFailed("invalid Data", result.errors);
+    return res.status(400).sendFailed("invalid Data", result.errors);
   const log = new Logs({
     paymentId: payment._id.toString(),
     planId: payment.toObject().planId,

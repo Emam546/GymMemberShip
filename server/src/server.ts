@@ -12,7 +12,7 @@ import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
 import passport from "./passport.config";
 import fileUpload from "express-fileupload";
 import parseMultiFormData from "./middleware/parseMultiForm";
-
+import imagesRoute from "./routes/images";
 import session from "express-session";
 // **** Init express **** //
 const app = express();
@@ -48,7 +48,7 @@ const folderToHost = "./locales";
 app.use("/locales", express.static(folderToHost));
 // Add APIs
 app.use("/api", baseRoute);
-
+app.use("/images", imagesRoute);
 // Setup error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
@@ -57,8 +57,8 @@ app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
   let status = HttpStatusCodes.BAD_REQUEST;
   if (err instanceof RouteError) status = err.status;
   if (err instanceof RouteErrorHasError) error = err.err;
-  console.error(err);
-  return res.status(status).SendFailed(err.message, error);
+  logger.err(err);
+  return res.status(status).sendFailed(err.message, error);
 }) as any);
 
 export default app;

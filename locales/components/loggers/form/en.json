@@ -1,9 +1,0 @@
-{
-  "table": {
-    "th": {
-      "attended": "AttendedDays",
-      "remaining": "Remaining Days",
-      "total": "Total Days"
-    }
-  }
-}

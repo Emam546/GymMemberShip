@@ -262,5 +262,4 @@ declare global {
     }
   }
 }
-i18n.addLoadUrl("/components/payments/info", "payment:form:update");
-i18n.addLoadUrl("/components/users/addPayment", "payment:add");
+

@@ -3,6 +3,7 @@ appId: com.gym-membership.app
 appImage:
   artifactName: ${name}-${version}.${ext}
 asarUnpack:
+  - "node_modules/puppeteer-core/.local-chromium/**/*"
   - resources/**
 directories:
   buildResources: build

@@ -15,7 +15,7 @@ router.post("/login", (req, res, next) => {
       message: { message: string }
     ) => {
       if (err) throw err;
-      if (!user) return res.status(403).SendFailed(message.message);
+      if (!user) return res.status(403).sendFailed(message.message);
       req.logIn(user, () => {
         res.sendSuccess(user);
       });
@@ -23,7 +23,7 @@ router.post("/login", (req, res, next) => {
   )(req, res, next);
 });
 router.get("/check", (req, res) => {
-  if (!req.user) return res.status(403).SendFailed("not authorized");
+  if (!req.user) return res.status(403).sendFailed("not authorized");
   return res.status(200).sendSuccess(req.user);
 });
 router.get("/logout", (req, res) => {

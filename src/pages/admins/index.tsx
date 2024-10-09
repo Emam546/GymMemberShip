@@ -53,8 +53,6 @@ export default function Page({ admins: initAdmins }: Props) {
           <AdminInfoForm
             onData={async (data) => {
               const user = await mutate.mutateAsync(data);
-              setAdmins([...admins, user]);
-              alert(t("messages.added", { ns: "translation" }));
             }}
             buttonName={t("buttons.add", { ns: "translation" })}
           />
@@ -110,4 +108,3 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-i18n.addLoadUrl("/pages/admins", "/admins");
