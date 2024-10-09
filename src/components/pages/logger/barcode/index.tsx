@@ -1,5 +1,6 @@
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SuccessButton } from "@src/components/button";
 import ErrorShower from "@src/components/common/error";
 import { ErrorInputShower } from "@src/components/common/inputs/main";
 import { StyledInput } from "@src/components/common/inputs/styles";
@@ -22,7 +23,7 @@ export default function BarcodeSearcher({ onSetUserId }: Props) {
   const getBarcode = useMutation({
     mutationFn(barcode: number) {
       return requester.get<Routes.ResponseSuccess<Result[]>>(
-        "/api/admin/users",
+        "/api/admin/users/barcode",
         {
           params: { barcode: barcode.toString() },
         }
@@ -53,21 +54,20 @@ export default function BarcodeSearcher({ onSetUserId }: Props) {
             placeholder="Barcode"
             className="placeholder:tw-text-gray-600 rtl:tw-rounded-l-none ltr:tw-rounded-r-none"
           />
-          <ErrorInputShower err={formState.errors.search} />
         </div>
         <div>
-          <button
-            type="reset"
-            onClick={() => {
-              onSetUserId(undefined);
-              reset();
-            }}
-            className="tw-bg-red-500 hover:tw-bg-red-600 tw-text-white tw-border-none tw-px-3 tw-self-stretch tw-block tw-h-full ltr:tw-rounded-r-lg rtl:tw-rounded-l-lg"
+          <SuccessButton
+            type="submit"
+            className="tw-text-white tw-border-none tw-px-3 tw-self-stretch tw-block tw-h-full tw-rounded-none ltr:tw-rounded-r-lg rtl:tw-rounded-l-lg"
           >
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
+            <FontAwesomeIcon
+              className="rtl:tw-rotate-180"
+              icon={faArrowRight}
+            />
+          </SuccessButton>
         </div>
       </div>
+      <ErrorInputShower err={formState.errors.search} />
       <ErrorShower error={getBarcode.error} />
     </form>
   );

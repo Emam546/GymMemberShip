@@ -3,6 +3,9 @@ import { Router } from "express";
 import { PipelineStage, RootFilterQuery } from "mongoose";
 import Payments from "@serv/models/payments";
 import Validator from "validator-checker-js";
+import Users from "@serv/models/users";
+import plans from "@serv/models/plans";
+import admins from "@serv/models/admins";
 
 const router = Router();
 const registerQuery = new Validator({
@@ -132,6 +135,32 @@ router.get("/", async (req, res) => {
       $limit: parseInt(limit as string) || Infinity, // Get the first document
     });
   }
+  aggregate.push(
+    ...[
+      {
+        $lookup: {
+          from: 'plans', // Collection name of the users
+          localField: "planId", // Field in Payments document
+          foreignField: "_id", // Field in Users document
+          as: "planId",
+        },
+      },
+      {
+        $unwind: "$planId", // Unwind the user array to treat it as an object
+      },
+      {
+        $lookup: {
+          from: 'admins', // Collection name of the users
+          localField: "adminId", // Field in Payments document
+          foreignField: "_id", // Field in Users document
+          as: "adminId",
+        },
+      },
+      {
+        $unwind: "$adminId", // Unwind the user array to treat it as an object
+      },
+    ]
+  );
   const queryRes = await Payments.aggregate(aggregate);
   return res.status(200).sendSuccess(queryRes);
 });

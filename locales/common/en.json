@@ -11,6 +11,9 @@
   "messages": {
     "updated": "the document updated successfully",
     "added": "the document added successfully",
-    "deleted": "document deleted successfully"
+    "deleted": "document deleted successfully",
+    "whatsapp": {
+      "sended": "messages was sent successfully"
+    }
   }
 }

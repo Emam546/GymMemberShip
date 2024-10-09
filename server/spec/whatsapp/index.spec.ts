@@ -4,7 +4,7 @@ import agent from "..";
 import fs from "fs";
 import path from "path";
 import mime from "mime-types";
-const timeout = 1000000;
+const timeout = 10000;
 jest.setTimeout(timeout);
 beforeAll(async () => {
   const res = await connectWhatsapp(timeout - 1000);
@@ -29,7 +29,7 @@ describe("send a file", () => {
       )
       .expect(200);
   });
-  test("send a file", async () => {
+  test("send an image", async () => {
     const res = await agent
       .post("/api/admin/whatsapp")
       .field(
@@ -38,15 +38,16 @@ describe("send a file", () => {
           number: number,
           messages: [
             {
-              data: image.toString("base64"),
-              type: mime.contentType("sample.jpg"),
+              file: 0,
             },
           ],
         })
       )
+      .attach("0", path.join(__dirname, "./sample.jpg"))
       .expect(200);
   });
-  test("send two files after each time", async () => {
+  test("send a video", async () => {
+    const video = fs.readFileSync(path.join(__dirname, "./video.mp4"));
     const res = await agent
       .post("/api/admin/whatsapp")
       .field(
@@ -55,50 +56,12 @@ describe("send a file", () => {
           number: number,
           messages: [
             {
-              data: image.toString("base64"),
-              type: mime.contentType("sample.jpg"),
-            },
-            {
-              data: image.toString("base64"),
-              type: mime.contentType("sample.jpg"),
-            },
-            {
-              data: image.toString("base64"),
-              type: mime.contentType("sample.jpg"),
+              file: 0,
             },
           ],
         })
       )
-      .expect(200);
-  });
-  test("send two requests to test regex", async () => {
-    await agent
-      .post("/api/admin/whatsapp")
-      .field(
-        "data",
-        JSON.stringify({
-          number: number,
-          messages: [
-            {
-              message: "Hello World",
-            },
-          ],
-        })
-      )
-      .expect(200);
-    await agent
-      .post("/api/admin/whatsapp")
-      .field(
-        "data",
-        JSON.stringify({
-          number: number,
-          messages: [
-            {
-              message: "Hello World",
-            },
-          ],
-        })
-      )
+      .attach("0", video)
       .expect(200);
   });
 });

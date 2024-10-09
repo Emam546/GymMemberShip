@@ -1,4 +1,4 @@
-import "./locale";
+
 import { Grid2 } from "@src/components/grid";
 import { useForm } from "react-hook-form";
 import { ObjectEntries } from "@src/utils";
@@ -15,7 +15,7 @@ export interface Props {
 }
 export type DefaultData = DataType;
 export default function UsersFilter({ onData }: Props) {
-  const { t } = useTranslation("filter:users")
+  const { t } = useTranslation("filter:users");
   const { register, handleSubmit, formState, getValues, watch } =
     useForm<DataType>();
   useDebounceEffect(
@@ -46,3 +46,14 @@ export default function UsersFilter({ onData }: Props) {
     </form>
   );
 }
+import i18n from "@src/i18n";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "filter:users": {
+        "name.placeholder": "Search By Name";
+      };
+    }
+  }
+}
+i18n.addLoadUrl("/components/users/filter", "filter:users");

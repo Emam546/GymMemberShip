@@ -47,6 +47,7 @@ schema.pre("save", async function (next) {
     next(err as CallbackError);
   }
 });
+schema.index({ barcode: 1 });
 schema.index({ createdAt: -1 });
 schema.index({ adminId: 1, createdAt: -1 });
 schema.index({ provider_id: 1, provider_type: 1 });

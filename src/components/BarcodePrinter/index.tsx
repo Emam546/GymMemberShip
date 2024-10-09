@@ -15,9 +15,9 @@ import { createContext, useState } from "react";
 import { formateDate } from "@src/utils";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import EnvVars from "@serv/declarations/major/EnvVars";
-import axios from "axios";
 import requester from "@src/utils/axios";
 import { isValidPhoneNumber } from "react-phone-number-input";
+import { ValidateData } from "@src/utils/fileConverter";
 
 export function Group({
   title,
@@ -115,11 +115,11 @@ export const BarcodePrintProvider = ({
                 </Group>
               </div>
               <div className="tw-px-5 tw-mt-3">
-                <div className="tw-flex tw-mx-auto">
+                <div className="tw-flex tw-justify-center">
                   <Barcode
                     height={80}
                     displayValue={false}
-                    margin={"0px" as unknown as number}
+                    margin={0 as number}
                     value={payment?.userId?.barcode.toString() || "555"}
                   />
                 </div>
@@ -198,12 +198,15 @@ export function useSendBarcodeAsImage({
         number: num,
         messages: [
           {
-            data: imageData.replace(/^data:image\/(png|jpeg);base64,/, ""),
-            type: "image/png",
+            file: 0,
           },
         ],
       };
       formData.append("data", JSON.stringify(data));
+      const response = await fetch(imageData);
+      const blob = await response.blob();
+      const file = new File([blob], "image.png", { type: "image/png" });
+      formData.append("0", file);
       await requester.post("/api/admin/whatsapp", formData, {
         headers: {
           "Content-Type": "multipart/form-data",

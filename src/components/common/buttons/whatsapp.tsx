@@ -18,10 +18,9 @@ export function WhatsappButton<T>({
   const mutate = useMutation({
     mutationFn: fn,
   });
-  const { t } = useTranslation("translation");
   return (
     <div {...containerProps}>
-      <SuccessButton
+      <WhatsappButtonStyle
         type="button"
         onClick={(e) => {
           e.preventDefault();
@@ -31,10 +30,21 @@ export function WhatsappButton<T>({
         disabled={mutate.isLoading}
         {...props}
       >
-        <FontAwesomeIcon icon={faWhatsapp} />
-        {children ? children : <span>{t("buttons.send")}</span>}
-      </SuccessButton>
+        {children}
+      </WhatsappButtonStyle>
       <ErrorShower error={mutate.error as Error} />
     </div>
+  );
+}
+export function WhatsappButtonStyle({
+  children,
+  ...props
+}: ComponentProps<"button">) {
+  const { t } = useTranslation("translation");
+  return (
+    <SuccessButton className="tw-flex tw-items-center tw-gap-1" {...props}>
+      <FontAwesomeIcon icon={faWhatsapp as any} />
+      {children ? children : <span>{t("buttons.send")}</span>}
+    </SuccessButton>
   );
 }

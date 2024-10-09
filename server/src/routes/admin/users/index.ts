@@ -80,17 +80,31 @@ router.get("/", async (req, res) => {
     };
   }
   if (name) query["name"] = { $regex: name, $options: "i" };
-  if (typeof barcode != "undefined") {
-    const b = parseInt(barcode);
-    if (isNaN(b)) return res.status(200).sendSuccess([]);
-    query["barcode"] = b;
-  }
   const results = await Users.find(query)
     .hint({
       createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity)
+    .populate("adminId");
+  res.status(200).sendSuccess(results);
+});
+const registerQueryParam = new Validator({
+  ".": ["required"],
+  barcode: ["string", "numeric", "required"],
+});
+router.get("/barcode", async (req, res) => {
+  const result = registerQueryParam.passes(req.query);
+  if (!result.state)
+    return res.status(400).SendFailed("invalid Data", result.errors);
+  const { barcode } = result.data;
+  if (!barcode) return res.status(200).sendSuccess([]);
+
+  const results = await Users.find({ barcode: parseInt(barcode) })
+    .hint({
+      barcode: 1,
+    })
+    .limit(1)
     .populate("adminId");
   res.status(200).sendSuccess(results);
 });

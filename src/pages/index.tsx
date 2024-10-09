@@ -26,6 +26,7 @@ import { getAllPlans } from "@serv/routes/admin/plans";
 import { GetServerSideProps } from "next";
 import i18n from "@src/i18n";
 import { getAllTrainers } from "@serv/routes/admin/trainers";
+import BarcodeSearcher from "@src/components/pages/logger/barcode";
 
 interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -51,8 +52,7 @@ const perPage = 7;
 export default function Page({ plans, trainers }: Props) {
   const router = useRouter();
   const date = new Date();
-  const { t } = useTranslation("/index");
-
+  const { t } = useTranslation("/index")
   const month = useFormateDate({
     weekday: "long",
   });
@@ -61,7 +61,6 @@ export default function Page({ plans, trainers }: Props) {
     router.query.userId as string
   );
   const userState = isString(userId) && mongoose.Types.ObjectId.isValid(userId);
-  const [strInput, setStrInput] = useState("");
   const query = useQuery({
     queryKey: ["barcode", userId],
     queryFn: async () => {
@@ -96,13 +95,6 @@ export default function Page({ plans, trainers }: Props) {
         { scroll: false }
       );
   }, [query.data]);
-  useEffect(() => {
-    const state = mongoose.Types.ObjectId.isValid(strInput);
-    if (!state) return;
-    setUserId(strInput);
-    setStrInput("");
-  }, [strInput]);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const auth = useAuth()!;
   const currentPayment = query.data?.payments.find(
     (payment) => payment._id == selectedPayment
@@ -163,30 +155,11 @@ export default function Page({ plans, trainers }: Props) {
           <div className="tw-flex-1">
             <div className="card tw-mb-3">
               <div className="tw-py-4 card-body">
-                <div className="tw-flex tw-justify-center">
-                  <div className="tw-flex-1">
-                    <StyledInput
-                      onChange={(e) => {
-                        setStrInput(e.currentTarget.value);
-                      }}
-                      value={strInput}
-                      placeholder="Barcode"
-                      className="placeholder:tw-text-gray-600 rtl:tw-rounded-l-none ltr:tw-rounded-r-none"
-                    />
-                    <ErrorShower error={query.error} />
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => {
-                        setUserId(undefined);
-                        setStrInput("");
-                      }}
-                      className="tw-bg-red-500 hover:tw-bg-red-600 tw-text-white tw-border-none tw-px-3 tw-self-stretch tw-block tw-h-full ltr:tw-rounded-r-lg rtl:tw-rounded-l-lg"
-                    >
-                      <FontAwesomeIcon icon={faXmark} />
-                    </button>
-                  </div>
-                </div>
+                <BarcodeSearcher
+                  onSetUserId={function (id?: string): void {
+                    setUserId(id);
+                  }}
+                />
               </div>
             </div>
             <MainCard
@@ -228,7 +201,9 @@ export default function Page({ plans, trainers }: Props) {
             <AddUserPayment
               trainers={trainers}
               onData={async (data) => {
-                if (!query.data) return;
+                if (!query.data) {
+                  return alert("there is no selected user");
+                }
                 const req = await requester.post<
                   Routes.ResponseSuccess<
                     DataBase.WithId<DataBase.Models.Payments>

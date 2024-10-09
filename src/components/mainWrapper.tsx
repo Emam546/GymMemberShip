@@ -79,6 +79,6 @@ export default function MainWrapper({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  if (router.pathname == "/login") return children;
+  if (["/login"].includes(router.pathname)) return children;
   return <MainApp>{children}</MainApp>;
 }

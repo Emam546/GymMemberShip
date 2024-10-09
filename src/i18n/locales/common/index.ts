@@ -15,7 +15,10 @@ declare global {
         messages: {
           updated: "the document updated successfully";
           added: "the document added successfully";
-          deleted: string;
+          deleted: "document deleted successfully";
+          whatsapp: {
+            sended: "messages was sent successfully";
+          };
         };
       };
     }

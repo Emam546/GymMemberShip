@@ -1,6 +1,5 @@
 import Validator from "validator-checker-js";
 import { Router } from "express";
-import Users from "@serv/models/users";
 import { MessageMedia } from "whatsapp-web.js";
 import whatsappClient, { isConnected } from "@serv/whatsapp";
 const router = Router();
@@ -9,15 +8,14 @@ const registerValidator = new Validator({
   messages: [
     {
       message: ["string"],
-      type: ["string"],
-      data: ["string"],
+      file: ["integer"],
     },
     "array",
     ["required"],
   ],
   ".": ["required"],
 });
-type Message = { message: string } | { data: string; type: string };
+type Message = { message: string } | { file: number };
 router.use((req, res, next) => {
   if (!isConnected)
     return res.status(400).SendFailed("whatsapp is not connected");
@@ -44,7 +42,21 @@ router.post("/", async (req, res) => {
       await whatsappClient.sendMessage(chatId, element.message);
       continue;
     }
-    const data = new MessageMedia(element.type, element.data);
+    const file = req.files?.[element.file.toString()];
+    if (!file)
+      return res
+        .status(400)
+        .SendFailed(`there is no files to be upload on ${i} index`);
+    if (file instanceof Array)
+      return res
+        .status(400)
+        .SendFailed(`the ${i} index should contain one file`);
+    const data = new MessageMedia(
+      file.mimetype,
+      file.data.toString("base64"),
+      file.name
+    );
+
     await whatsappClient.sendMessage(chatId, data);
   }
   res.status(200).sendSuccess(true);

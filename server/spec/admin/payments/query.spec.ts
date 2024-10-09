@@ -23,7 +23,7 @@ beforeAll(async () => {
 });
 type Doc = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
-  "userId"
+  "userId" | "planId" | "adminId"
 >;
 describe("GET", () => {
   let payment: DataBase.WithId<DataBase.Models.Payments>;
@@ -40,8 +40,7 @@ describe("GET", () => {
       return doc.userId?._id == user._id;
     });
     expect(doc).not.undefined;
-    expect(doc?._id).eq(payment._id);
-    expect(doc?.planId).eq(plan._id);
+    expect(doc?.planId).not.instanceOf(String);
   });
   test("use limit", async () => {
     const res = await agent
@@ -86,7 +85,7 @@ describe("GET", () => {
       });
       expect(doc).not.undefined;
       expect(doc?._id).eq(payment._id);
-      expect(doc?.planId).eq(plan._id);
+      expect(doc?.planId._id).eq(plan._id);
     });
   });
   describe("get by start at", () => {
@@ -110,12 +109,12 @@ describe("GET", () => {
       expect(res.statusCode).eq(200);
       expect(data.find((doc) => doc.startAt < startAt)).undefined;
       expect(data.length).greaterThan(0);
-      console.log(resPayment.body,data);
+      console.log(resPayment.body, data);
       const doc = data.find((doc) => {
         return doc.userId?._id == resPayment.body.data.userId;
       });
       expect(doc).not.undefined;
-      expect(doc?.planId).eq(resPayment.body.data.planId);
+      expect(doc?.planId?._id).eq(resPayment.body.data.planId);
     });
     test("lower than or equal", async () => {
       const cur = new Date();

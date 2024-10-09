@@ -1,9 +1,15 @@
 /* eslint-disable no-console */
 import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
-// Initialize client with LocalAuth
+// eslint-disable-next-line node/no-process-env
+const Chrome_Path = process.env.CHROME_PATH;
 const whatsappClient = new Client({
   authStrategy: new LocalAuth(),
+  puppeteer: Chrome_Path
+    ? {
+        executablePath: Chrome_Path,
+      }
+    : undefined,
 });
 export let isConnected = false;
 export function connectWhatsapp(timeOut = 5000) {

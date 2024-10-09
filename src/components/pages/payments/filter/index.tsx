@@ -42,12 +42,7 @@ export default function TimeStartEndSelector({ onData, values }: Props) {
     [watch("startAt"), watch("endAt")]
   );
   return (
-    <form
-      onSubmit={handleSubmit((data: any) => {
-        return onData(data);
-      })}
-      autoComplete="off"
-    >
+    <div>
       <Grid2>
         <WrapElem label={t("Start at")}>
           <DatePicker
@@ -68,6 +63,6 @@ export default function TimeStartEndSelector({ onData, values }: Props) {
           />
         </WrapElem>
       </Grid2>
-    </form>
+    </div>
   );
 }

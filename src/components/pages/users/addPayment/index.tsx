@@ -75,6 +75,7 @@ export default function AddUserPayment({ plans, onData, trainers }: Props) {
     <form
       onSubmit={handleSubmit(async (data) => {
         if (data["trainerId"] == "") delete data["trainerId"];
+
         await onData(data);
       })}
       autoComplete="off"
