@@ -85,7 +85,7 @@ describe("GET", () => {
       });
       expect(doc).not.undefined;
       expect(doc?._id).eq(payment._id);
-      expect(doc?.planId._id).eq(plan._id);
+      expect(doc?.planId?._id).eq(plan._id);
     });
   });
   describe("get by start at", () => {

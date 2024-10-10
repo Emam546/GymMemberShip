@@ -68,6 +68,6 @@ router.delete("/:id", async (req, res) => {
   await Logs.deleteMany({ paymentId: payment._id });
   res.status(200).sendSuccess(newPayment);
 });
-router.use(LogsRouter);
+router.use("/:id/logs",LogsRouter);
 
 export default router;

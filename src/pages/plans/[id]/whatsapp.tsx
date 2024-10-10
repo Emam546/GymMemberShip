@@ -1,4 +1,3 @@
-import "@locales/users";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -10,38 +9,51 @@ import { useTranslation } from "react-i18next";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
 } from "@src/components/pages/payments/filter";
+import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
 import PrintPaymentsQuery from "@src/components/pages/users/queryPayment/print";
 import FilterUsersData, {
   DataType as FilterUsersDataType,
 } from "@src/components/pages/users/filter/filterUsersData";
-import { MessageDataUsers } from "@src/components/pages/whatsapp";
-import UsersTable from "@src/components/pages/users/table";
-import PrintUserPayments from "@src/components/pages/payments/print";
-type FormData = TimeStartEndSelectorDataType & FilterUsersDataType;
+import MessageDataForm, {
+  MessageDataUsers,
+} from "@src/components/pages/whatsapp";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { hasOwnProperty } from "@src/utils";
+import PaymentsDataFilter, {
+  DataType as PaymentsDataFilterFilter,
+} from "@src/components/pages/payments/filter/PaymentsData";
+import { useRouter } from "next/router";
+import PrintPlanPaymentsQuery from "@src/components/pages/plans/query";
+
+type FormData = TimeStartEndSelectorDataType &
+  FilterUsersDataType &
+  PaymentsDataFilterFilter;
 const perLoad = 20;
 
-export default function Page() {
+export default function Page({  }) {
+  const id = useRouter().query.id as string;
   const curDate = new Date();
   const { t } = useTranslation("/users");
   const [filter, setFilter] = useState<FormData>({
     startAt: new Date(
       curDate.getFullYear(),
-      curDate.getMonth() - 8,
-      curDate.getDate()
+      curDate.getMonth(),
+      curDate.getDate() - 8
     ),
     endAt: curDate,
+    active: true,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments","users", "query", "infinity", filter],
+    queryKey: ["payments", "plans", id, "query", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<
           DataBase.Populate.Model<
-            DataBase.WithId<DataBase.Models.User>,
-            "adminId"
+            DataBase.WithId<DataBase.Models.Payments>,
+            "adminId" | "userId" | "planId"
           >[]
         >
-      >(`/api/admin/users`, {
+      >(`/api/admin/plans/${id}/payments/query`, {
         params: {
           skip: perLoad * pageParam,
           limit: perLoad,
@@ -56,7 +68,7 @@ export default function Page() {
       return undefined;
     },
   });
-  const users = QueryInfinity.data?.pages
+  const payments = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
   return (
@@ -67,14 +79,27 @@ export default function Page() {
       <BigCard className="tw-min-h-screen">
         <div className="tw-flex tw-justify-between">
           <CardTitle>{t("Users")}</CardTitle>
+          <div>
+            <PrintPlanPaymentsQuery
+              query={{
+                ...filter,
+              }}
+              id={id}
+            />
+          </div>
         </div>
         <MainCard className="tw-my-4">
           <TimeStartEndSelector
             values={filter}
             onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
           />
-          <div className="tw-mt-5">
+          <div className="tw-my-5">
             <FilterUsersData
+              onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+            />
+          </div>
+          <div className="tw-mt-10">
+            <PaymentsDataFilter
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>
@@ -86,19 +111,20 @@ export default function Page() {
               const users = await requester.get<
                 Routes.ResponseSuccess<
                   DataBase.Populate.Model<
-                    DataBase.WithId<DataBase.Models.User>,
-                    "adminId"
+                    DataBase.WithId<DataBase.Models.Payments>,
+                    "adminId" | "userId" | "planId"
                   >[]
                 >
-              >(`/api/admin/users`, {
+              >(`/api/admin/plans/${id}/payments/query`, {
                 params: {
                   ...filter,
                 },
               });
-              return users.data.data.map((val) => ({
-                ...val,
-                adminId: val.adminId?._id || "",
-              }));
+              return users.data.data
+                .map((val) => val.userId)
+                .filter(
+                  (val) => val != undefined
+                ) as DataBase.WithId<DataBase.Models.User>[];
             }}
             buttonName={t("buttons.send", { ns: "translation" })}
           />
@@ -116,23 +142,31 @@ export default function Page() {
                 error={QueryInfinity.error}
               />
               <div>
-                {users && (
-                  <UsersTable
-                    perPage={users.length}
+                {payments && (
+                  <PaymentInfoGenerator
+                    perPage={payments.length}
                     page={0}
-                    totalCount={users.length}
-                    users={users.map((user, i) => ({
+                    totalCount={payments.length}
+                    payments={payments.map((payment, i) => ({
                       order: i,
-                      user: { ...user, adminId: user.adminId?._id || "" },
-                      admin: user.adminId,
+                      payment: {
+                        ...payment,
+                        userId: payment.userId?._id || "",
+                        planId: payment.planId?._id || "",
+                        adminId: payment.adminId?._id || "",
+                      },
+                      admin: payment.adminId,
+                      plan: payment.planId,
+                      user: payment.userId,
                     }))}
                     headKeys={[
                       "order",
-                      "name",
-                      "createdAt",
-                      "blocked",
-                      "age/tall/weight",
-                      "admin",
+                      "user",
+                      "paid",
+                      "link",
+                      "remainingMoney",
+                      "log",
+                      "endAt",
                       "admin",
                     ]}
                   />

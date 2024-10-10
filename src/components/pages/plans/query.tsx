@@ -7,12 +7,18 @@ type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Payments>,
   "planId" | "userId" | "adminId" | "trainerId"
 >;
-export default function PrintPaymentsQuery({ query }: { query: unknown }) {
+export default function PrintPlanPaymentsQuery({
+  query,
+  id,
+}: {
+  query: unknown;
+  id: string;
+}) {
   return (
     <PrintButton
       fn={async () => {
         const payments = await requester.get<Routes.ResponseSuccess<Payment[]>>(
-          `/api/admin/payments/query`,
+          `/api/admin/plans/${id}/payments/query`,
           { params: query }
         );
         const body = payments.data.data.map<string[]>((doc, i) => {
@@ -23,7 +29,6 @@ export default function PrintPaymentsQuery({ query }: { query: unknown }) {
           return [
             (i + 1).toString(),
             doc.userId?.name || "",
-            doc.planId?.name || "",
             `${doc.paid}EGP`,
             `${doc.remaining}EGP`,
             formateDate(new Date(doc.createdAt)),
@@ -32,17 +37,7 @@ export default function PrintPaymentsQuery({ query }: { query: unknown }) {
         });
 
         const doc = createTableDoc(
-          [
-            [
-              "Id",
-              "User",
-              "Plan",
-              "Paid Price",
-              "Remaining",
-              "Started At",
-              "End At",
-            ],
-          ],
+          [["Id", "User", "Paid Price", "Remaining", "Started At", "End At"]],
           body
         );
         await printJsDoc(doc, `${new Date().getTime()}-payments.pdf`);

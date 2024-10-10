@@ -10,6 +10,7 @@ import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
 import Trainers from "@serv/models/trainers";
 import QueryCount from "./query";
+import { Query, Document, SortOrder } from "mongoose";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
@@ -57,7 +58,8 @@ export async function getPayments(
     "userId",
     "adminId",
     "trainerId",
-  ]
+  ],
+  sort: Record<string, SortOrder> = {}
 ) {
   const currentDate = new Date();
   const result = registerQuery.passes(query);
@@ -96,7 +98,8 @@ export async function getPayments(
   const queryMongo = Payments.find(matchQuery)
     .hint(hint)
     .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity);
+    .limit(parseInt(limit as string) || Infinity)
+    .sort(sort);
   const payments = await populate.reduce(
     (query, val) => query.populate(val),
     queryMongo

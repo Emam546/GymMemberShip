@@ -57,6 +57,6 @@ router.delete("/:id", async (req, res) => {
   res.status(200).sendSuccess(newUser);
 });
 
-router.use("/:id", paymentsRouter);
-router.use("/:id", logsRouter);
+router.use("/:id/payments", paymentsRouter);
+router.use("/:id/logs", logsRouter);
 export default router;

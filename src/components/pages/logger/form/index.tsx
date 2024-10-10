@@ -93,8 +93,8 @@ export function AttendPerson({
     },
   });
   const attend = useAttend({
-    onSuccess() {
-      if (!payment) return;
+    onSuccess(data) {
+      if (!payment || !data) return;
       onIncrement({ ...payment, logsCount: payment.logsCount + 1 });
       reset();
     },
@@ -172,7 +172,10 @@ export function AttendPerson({
 
           <ShouldPaidBudget
             label={t2("paid.label")}
-            priceProps={register("paid")}
+            priceProps={{
+              ...register("paid", { valueAsNumber: true }),
+              type: "number",
+            }}
             price={paidType(
               watch("plan"),
               payment?.planId?.prices[watch("plan.type")]
@@ -303,4 +306,3 @@ declare global {
     }
   }
 }
-

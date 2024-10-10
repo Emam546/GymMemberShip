@@ -141,7 +141,7 @@ describe("GET", () => {
       const query = {
         barcode: user.barcode,
       };
-      const response = await agent.get("/api/admin/users").query(query);
+      const response = await agent.get("/api/admin/users/barcode").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data.length).toBe(1);
     });
@@ -149,7 +149,7 @@ describe("GET", () => {
       const query = {
         barcode: "",
       };
-      const response = await agent.get("/api/admin/users").query(query);
+      const response = await agent.get("/api/admin/users/barcode").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data.length).toBe(0);
     });
@@ -157,7 +157,7 @@ describe("GET", () => {
       const query = {
         barcode: "",
       };
-      const response = await agent.get("/api/admin/users").query(query);
+      const response = await agent.get("/api/admin/users/barcode").query(query);
       expect(response.statusCode).toBe(200);
       expect(response.body.data.length).toBe(0);
     });

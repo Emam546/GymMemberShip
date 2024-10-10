@@ -6,6 +6,7 @@ import Validator from "validator-checker-js";
 import Users from "@serv/models/users";
 import plans from "@serv/models/plans";
 import admins from "@serv/models/admins";
+import { RouteErrorHasError } from "@serv/declarations/classes";
 
 const router = Router();
 const registerQuery = new Validator({
@@ -25,11 +26,11 @@ const registerQuery = new Validator({
   remaining: [{ in: ["true", "false"] }, "string"],
   ".": ["required"],
 });
-router.get("/", async (req, res) => {
+export function getAggregateOptions(q: unknown) {
   const currentDate = new Date();
-  const result = await registerQuery.asyncPasses(req.query);
+  const result = registerQuery.passes(q);
   if (!result.state)
-    return res.status(400).sendFailed("invalid Data", result.errors);
+    throw new RouteErrorHasError(400, "invalid Data", result.errors);
   const firstQuery: Record<string, any> = {};
   const { active, remaining, startAt, endAt } = result.data;
   if (typeof active != "undefined") {
@@ -139,17 +140,6 @@ router.get("/", async (req, res) => {
     ...[
       {
         $lookup: {
-          from: "plans", // Collection name of the users
-          localField: "planId", // Field in Payments document
-          foreignField: "_id", // Field in Users document
-          as: "planId",
-        },
-      },
-      {
-        $unwind: "$planId", // Unwind the user array to treat it as an object
-      },
-      {
-        $lookup: {
           from: "admins", // Collection name of the users
           localField: "adminId", // Field in Payments document
           foreignField: "_id", // Field in Users document
@@ -158,6 +148,25 @@ router.get("/", async (req, res) => {
       },
       {
         $unwind: "$adminId", // Unwind the user array to treat it as an object
+      },
+    ]
+  );
+  return aggregate;
+}
+router.get("/", async (req, res) => {
+  const aggregate = getAggregateOptions(req.query);
+  aggregate.push(
+    ...[
+      {
+        $lookup: {
+          from: "plans", // Collection name of the users
+          localField: "planId", // Field in Payments document
+          foreignField: "_id", // Field in Users document
+          as: "planId",
+        },
+      },
+      {
+        $unwind: "$planId", // Unwind the user array to treat it as an object
       },
     ]
   );

@@ -64,7 +64,11 @@ export default function Page({ doc }: Props) {
             label={t("Go To Plan Payments")}
             href={`/plans/${doc._id}/payments`}
           />
-          <GoToButton label={t("Go To Plans")} href="/plans" />
+
+          <GoToButton
+            label={"Go To Plans'Users"}
+            href={`/plans/${doc._id}/whatsapp`}
+          />
         </IsAdminComp>
       </div>
     </div>

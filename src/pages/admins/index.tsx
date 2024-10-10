@@ -14,6 +14,7 @@ import { getAdmins } from "@serv/routes/admin/admins";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import connect from "@serv/db/connect";
 import { useAuth, useLogUser } from "@src/components/UserProvider";
+import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 interface Props {
   admins: DataBase.WithId<DataBase.Models.Admins>[];
 }
@@ -48,34 +49,36 @@ export default function Page({ admins: initAdmins }: Props) {
         <title>{t("title")}</title>
       </Head>
       <BigCard>
-        <CardTitle>{t("create.title")}</CardTitle>
-        <MainCard>
-          <AdminInfoForm
-            onData={async (data) => {
-              const user = await mutate.mutateAsync(data);
-            }}
-            buttonName={t("buttons.add", { ns: "translation" })}
-          />
-        </MainCard>
-        <MainCard>
-          <AdminsTable
-            perPage={admins.length}
-            page={0}
-            admins={admins.map((admin, i) => {
-              return {
-                order: i,
-                admin: admin,
-              };
-            })}
-            onDelete={async (admin) => {
-              await deleteAdmin.mutateAsync(admin);
-              setAdmins((pre) => pre.filter((c) => c._id != admin._id));
-              if (auth?._id == admin._id) login.mutate(null);
-            }}
-            totalCount={admins.length}
-            headKeys={["delete", "email", "name", "order", "phone", "type"]}
-          />
-        </MainCard>
+        <RedirectIfNotAdmin>
+          <CardTitle>{t("create.title")}</CardTitle>
+          <MainCard>
+            <AdminInfoForm
+              onData={async (data) => {
+                const user = await mutate.mutateAsync(data);
+              }}
+              buttonName={t("buttons.add", { ns: "translation" })}
+            />
+          </MainCard>
+          <MainCard>
+            <AdminsTable
+              perPage={admins.length}
+              page={0}
+              admins={admins.map((admin, i) => {
+                return {
+                  order: i,
+                  admin: admin,
+                };
+              })}
+              onDelete={async (admin) => {
+                await deleteAdmin.mutateAsync(admin);
+                setAdmins((pre) => pre.filter((c) => c._id != admin._id));
+                if (auth?._id == admin._id) login.mutate(null);
+              }}
+              totalCount={admins.length}
+              headKeys={["delete", "email", "name", "order", "phone", "type"]}
+            />
+          </MainCard>
+        </RedirectIfNotAdmin>
       </BigCard>
     </>
   );
@@ -107,4 +110,3 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     },
   };
 };
-

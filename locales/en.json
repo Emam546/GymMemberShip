@@ -7,7 +7,7 @@
       "activate": "Activate",
       "add": "Add",
       "attend": "Attend",
-      "send": "send"
+      "send": "Send"
     },
     "messages": {
       "updated": "the document updated successfully",
@@ -413,5 +413,12 @@
   "/users/add": {
     "title": "Users",
     "Users": "Users"
+  },
+  "attend:messages": {
+    "messages": {
+      "finished": "the user is already has no remaining days? \n do you want to add more logs>",
+      "userAttendedAlready": "The user has already attended this day  \n do you want to add a one more log again?",
+      "logAdded": "a log was added successfully"
+    }
   }
 }

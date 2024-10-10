@@ -8,7 +8,7 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/:id/logs", async (req, res) => {
+router.get("/", async (req, res) => {
   const payment = res.locals.payment as Document<DataBase.Models.User>;
   const logs = await getLogs(
     req.query,
@@ -34,7 +34,7 @@ export async function IncrementPaymentLogs(id: string, dir: number) {
 const registerValidator = new Validator({
   trainerId: [{ existedId: { path: Trainers.modelName } }],
 });
-router.post("/:id/logs", async (req, res) => {
+router.post("/", async (req, res) => {
   const payment = res.locals.payment as Document<
     DataBase.Models.Payments,
     DataBase.Models.Payments,
@@ -58,7 +58,7 @@ router.post("/:id/logs", async (req, res) => {
   const logSave = await log.save();
   res.status(200).sendSuccess({ log: logSave, count: newPayment });
 });
-router.get("/:id/logs/count", async (req, res) => {
+router.get("/count", async (req, res) => {
   const payment = res.locals.payment as Document<DataBase.Models.User>;
   const logs = await Logs.countDocuments({ paymentId: payment._id }).hint({
     paymentId: 1,

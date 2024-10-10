@@ -48,6 +48,6 @@ router.delete("/:id", async (req, res) => {
   res.status(200).sendSuccess(newPlan);
 });
 
-router.use("/:id", logsRouter);
-router.use("/:id", paymentsRouter);
+router.use("/:id/logs", logsRouter);
+router.use("/:id/payments", paymentsRouter);
 export default router;

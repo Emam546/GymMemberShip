@@ -9,7 +9,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { E, TH } from "@src/components/common/table";
-
+import {
+  ExtendedPaginationProps,
+  PaginationManager,
+} from "@src/components/pagination";
+import { useAttend } from "@src/hooks/payments";
 export interface ElemProps {
   order: number;
   payment: Omit<
@@ -285,12 +289,7 @@ export function PaymentInfoGenerator({
     </PaginationManager>
   );
 }
-import i18n from "@src/i18n";
-import {
-  ExtendedPaginationProps,
-  PaginationManager,
-} from "@src/components/pagination";
-import { useAttend } from "@src/hooks/payments";
+
 declare global {
   namespace I18ResourcesType {
     interface Resources {
@@ -317,4 +316,3 @@ declare global {
     }
   }
 }
-

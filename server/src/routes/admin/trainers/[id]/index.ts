@@ -45,5 +45,5 @@ router.delete("/:id", async (req, res) => {
   const newTrainer = await Trainers.findByIdAndDelete(user._id);
   res.status(200).sendSuccess(newTrainer);
 });
-router.use("/:id", logsRouter);
+router.use("/:id/logs", logsRouter);
 export default router;
