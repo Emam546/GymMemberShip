@@ -347,13 +347,13 @@
     "Logs": "Logs",
     "Total Count": "Total Count"
   },
-  "/payments": {
+  "/subscriptions": {
     "title": "Payments",
     "Payments": "Payments",
     "Earnings": "Earnings",
     "Total Count": "Total Count"
   },
-  "/payments/[id]": {
+  "/subscriptions/[id]": {
     "title": "{{val}} Payment",
     "Update Payment Data": "Update Payment Data",
     "User Logs": "User Logs"
@@ -375,7 +375,7 @@
     "Go To Users Logs": "Go To Users Logs",
     "Go To Plan Payments": "Go To Plan's Payments"
   },
-  "/plans/[id]/payments": {
+  "/plans/[id]/subscriptions": {
     "title": "{{name}} Payments",
     "Plan Payments": "Plan Payments",
     "Total Count": "Total Count",

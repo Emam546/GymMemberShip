@@ -27,11 +27,11 @@ export function useAttend({
       const request = await requester.get<
         Routes.ResponseSuccess<
           DataBase.Populate.Model<
-            DataBase.WithId<DataBase.Models.Payments>,
+            DataBase.WithId<DataBase.Models.Subscriptions>,
             "adminId" | "userId" | "planId" | "trainerId"
           >
         >
-      >(`/api/admin/payments/${paymentId}`);
+      >(`/api/admin/subscriptions/${paymentId}`);
       const rDays = remainingDays(request.data.data);
       if (rDays <= 0 && !confirm(t("messages.finished"))) return null;
       const requestLogs = await requester.get<
@@ -57,7 +57,7 @@ export function useAttend({
 
       const data = await requester.post<
         Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Logs>>
-      >(`/api/admin/payments/${paymentId}/logs`, body);
+      >(`/api/admin/subscriptions/${paymentId}/logs`, body);
       return data.data.data;
     },
     onSuccess(...args) {
@@ -75,7 +75,7 @@ declare global {
         messages: {
           finished: string;
           userAttendedAlready: string;
-          logAdded:""
+          logAdded: "";
         };
       };
     }

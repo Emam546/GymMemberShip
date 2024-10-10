@@ -38,7 +38,7 @@ export function Group({
 
 // Create a Context
 type Doc = DataBase.Populate.Model<
-  DataBase.WithId<DataBase.Models.Payments>,
+  DataBase.WithId<DataBase.Models.Subscriptions>,
   "userId" | "planId" | "trainerId"
 >;
 type State = {

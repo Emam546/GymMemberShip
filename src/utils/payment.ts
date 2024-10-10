@@ -1,7 +1,7 @@
 export function paidType<
   T extends number | undefined,
   G extends T extends number ? number : undefined
->(plan: DataBase.Models.Payments["plan"], price: T): G {
+>(plan: DataBase.Models.Subscriptions["plan"], price: T): G {
   if (typeof price == "undefined") return undefined as G;
   switch (plan.type) {
     case "day":
@@ -31,7 +31,7 @@ function getDifferenceInDays(date1: Date, date2: Date) {
 
 export function remainingDays(
   payment: Pick<
-    DataBase.Models.Payments,
+    DataBase.Models.Subscriptions,
     "plan" | "createdAt" | "startAt" | "endAt" | "logsCount"
   >
 ) {

@@ -11,7 +11,7 @@ export interface Props {
 }
 type S = Routes.ResponseSuccess<
   DataBase.Populate.Model<
-    DataBase.WithId<DataBase.Models.Payments>,
+    DataBase.WithId<DataBase.Models.Subscriptions>,
     "planId" | "adminId" | "trainerId"
   >[]
 >;

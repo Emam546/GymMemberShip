@@ -4,7 +4,7 @@
 import mongoose from "mongoose";
 import User from "./users";
 import Plans from "./plans";
-import Payment from "./payments";
+import Payment from "./subscriptions";
 import Admins from "./admins";
 import Trainers from "./trainers";
 const schema = new mongoose.Schema<DataBase.Models.Logs>(
@@ -29,7 +29,6 @@ const schema = new mongoose.Schema<DataBase.Models.Logs>(
       type: mongoose.Schema.Types.ObjectId,
       ref: Trainers.modelName,
     } as never,
-    createdBy: String,
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Admins.modelName,

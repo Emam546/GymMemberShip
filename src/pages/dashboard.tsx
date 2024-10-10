@@ -1,6 +1,6 @@
 import { BigCard, MainCard } from "@src/components/card";
 import { GetServerSideProps } from "next";
-import Payments from "@serv/models/payments";
+import Payments from "@serv/models/subscriptions";
 import Head from "next/head";
 import {
   YearsAndMonthEarnings,
@@ -17,7 +17,10 @@ import UsersTable, {
 } from "@src/components/pages/users/table";
 import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
-import { getPayments, getPaymentsProfit } from "@serv/routes/admin/payments";
+import {
+  getPayments,
+  getPaymentsProfit,
+} from "@serv/routes/admin/subscriptions";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";

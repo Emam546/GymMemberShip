@@ -1,17 +1,14 @@
-import whatsappClient, { connectWhatsapp } from "@serv/whatsapp";
+import { connectWhatsapp } from "@serv/whatsapp";
 import { expect } from "chai";
 import agent from "..";
-import fs from "fs";
 import path from "path";
-import mime from "mime-types";
-const timeout = 10000;
+const timeout = 60 * 1000 * 2;
 jest.setTimeout(timeout);
 beforeAll(async () => {
   const res = await connectWhatsapp(timeout - 1000);
   expect(res).true;
 });
 const number = "201080741858";
-const image = fs.readFileSync(path.join(__dirname, "./sample.jpg"));
 describe("send a file", () => {
   test("send successfully", async () => {
     await agent
@@ -47,7 +44,6 @@ describe("send a file", () => {
       .expect(200);
   });
   test("send a video", async () => {
-    const video = fs.readFileSync(path.join(__dirname, "./video.mp4"));
     const res = await agent
       .post("/api/admin/whatsapp")
       .field(
@@ -61,7 +57,7 @@ describe("send a file", () => {
           ],
         })
       )
-      .attach("0", video)
+      .attach("0", path.join(__dirname, "./video.mp4"))
       .expect(200);
   });
 });

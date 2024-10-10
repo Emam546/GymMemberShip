@@ -2,7 +2,7 @@ import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 export function createAdminData(): Omit<
   DataBase.Models.Admins,
-  "createdAt" | "createdBy"
+  "createdAt" 
 > {
   return {
     name: faker.person.fullName(),

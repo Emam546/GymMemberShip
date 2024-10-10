@@ -4,7 +4,7 @@ import { PrintButton } from "@src/components/common/printButton";
 import { printJsDoc } from "@src/utils/print";
 import requester from "@src/utils/axios";
 type Payment = DataBase.Populate.Model<
-  DataBase.WithId<DataBase.Models.Payments>,
+  DataBase.WithId<DataBase.Models.Subscriptions>,
   "planId" | "userId" | "adminId" | "trainerId"
 >;
 export default function PrintPlanPaymentsQuery({
@@ -18,7 +18,7 @@ export default function PrintPlanPaymentsQuery({
     <PrintButton
       fn={async () => {
         const payments = await requester.get<Routes.ResponseSuccess<Payment[]>>(
-          `/api/admin/plans/${id}/payments/query`,
+          `/api/admin/plans/${id}/subscriptions/query`,
           { params: query }
         );
         const body = payments.data.data.map<string[]>((doc, i) => {

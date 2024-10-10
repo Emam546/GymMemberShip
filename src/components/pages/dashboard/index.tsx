@@ -116,7 +116,7 @@ export function YearsAndMonthEarnings({
 }
 export interface RecentPaymentsProps {
   payments: DataBase.WithId<
-    DataBase.Models.Payments & {
+    DataBase.Models.Subscriptions & {
       userId: DataBase.WithId<DataBase.Models.User>;
     }
   >[];

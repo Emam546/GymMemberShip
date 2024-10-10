@@ -163,14 +163,14 @@ function ManageUsersNavBar() {
       <IsAdminComp>
         <LinkElem
           icon={GraphIcon.src}
-          href="/payments"
+          href="/subscriptions"
           title={t("payments.label")}
         />
         <DropLinksElem
           icon={Whatsapp.src}
           hrefs={[
             { href: "/users/whatsapp", label: "users" },
-            { href: "/payments/whatsapp", label: "subscriptions" },
+            { href: "/subscriptions/whatsapp", label: "subscriptions" },
           ]}
           title={"whatsapp"}
         />

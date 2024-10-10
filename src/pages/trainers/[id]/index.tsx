@@ -16,8 +16,8 @@ import ErrorShower from "@src/components/common/error";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import TimeStartEndSelector, {
   DataType,
-} from "@src/components/pages/payments/filter";
-import PrintUserPayments from "@src/components/pages/payments/print";
+} from "@src/components/pages/subscriptions/filter";
+import PrintUserPayments from "@src/components/pages/subscriptions/print";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";

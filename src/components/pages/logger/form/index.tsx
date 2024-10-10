@@ -15,7 +15,7 @@ import { paidType, remainingDays } from "@src/utils/payment";
 import BudgetInput, {
   ShouldPaidBudget,
 } from "@src/components/common/inputs/budget";
-import { useAttend } from "@src/hooks/payments";
+import { useAttend } from "@src/hooks/subscriptions";
 import SelectInput from "@src/components/common/inputs/select";
 import {
   usePrintBarCode,
@@ -32,11 +32,11 @@ export interface Data {
   paid: DataBase.Price;
 }
 interface FormData extends Data {
-  plan: DataBase.Models.Payments["plan"];
+  plan: DataBase.Models.Subscriptions["plan"];
   trainerId?: string;
 }
 type Doc = DataBase.Populate.Model<
-  DataBase.WithId<DataBase.Models.Payments>,
+  DataBase.WithId<DataBase.Models.Subscriptions>,
   "planId" | "adminId" | "userId"
 >;
 

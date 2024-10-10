@@ -4,7 +4,7 @@ import Plans from "@serv/models/plans";
 import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
 import logsRouter from "./logs";
-import paymentsRouter from "./payments";
+import paymentsRouter from "./subscriptions";
 const router = Router();
 export async function getPlan(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id))
@@ -49,5 +49,5 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.use("/:id/logs", logsRouter);
-router.use("/:id/payments", paymentsRouter);
+router.use("/:id/subscriptions", paymentsRouter);
 export default router;

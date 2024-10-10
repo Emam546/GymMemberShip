@@ -4,11 +4,11 @@ import "@serv/validator/database";
 import Validator from "validator-checker-js";
 import Users from "@serv/models/users";
 import Plans from "@serv/models/plans";
-import Payments from "@serv/models/payments";
+import Payments from "@serv/models/subscriptions";
 import Logs from "@serv/models/log";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
-import { IncrementPaymentLogs } from "@serv/routes/admin/payments/[id]/logs";
+import { IncrementPaymentLogs } from "@serv/routes/admin/subscriptions/[id]/logs";
 import Trainers from "@serv/models/trainers";
 const router = Router();
 const registerValidator = new Validator({
@@ -26,7 +26,6 @@ router.post("/", async (req, res) => {
   const log = new Logs({
     ...result.data,
     adminId: req.user?._id,
-    createdBy: "Admin",
   } as DataBase.Models.Logs);
   const logSave = await log.save();
   res.status(200).sendSuccess(logSave);

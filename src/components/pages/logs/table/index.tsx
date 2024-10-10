@@ -96,7 +96,7 @@ function Shower({
         </E>
         <E val="paymentLink" heads={headKeys}>
           <td>
-            <Link href={`/payments/${log.paymentId}`}>Link</Link>
+            <Link href={`/subscriptions/${log.paymentId}`}>Link</Link>
           </td>
         </E>
         <E val="createdAt" heads={headKeys}>

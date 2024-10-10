@@ -3,7 +3,7 @@ import mongoose, { Document } from "mongoose";
 import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import { RouteError } from "@serv/declarations/classes";
-import paymentsRouter from "./payments";
+import paymentsRouter from "./subscriptions";
 import logsRouter from "./logs";
 const router = Router();
 export async function getUser(
@@ -57,6 +57,6 @@ router.delete("/:id", async (req, res) => {
   res.status(200).sendSuccess(newUser);
 });
 
-router.use("/:id/payments", paymentsRouter);
+router.use("/:id/subscriptions", paymentsRouter);
 router.use("/:id/logs", logsRouter);
 export default router;

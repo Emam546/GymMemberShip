@@ -2,13 +2,13 @@ import { faker } from "@faker-js/faker";
 import { createLog } from "./utils";
 import agent from "@test/index";
 import { expect } from "chai";
-import { createPaymentRequest } from "../payments/utils";
+import { createPaymentRequest } from "../subscriptions/utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
 let log: DataBase.WithId<DataBase.Models.Logs>;
 let user: DataBase.WithId<DataBase.Models.User>;
 let plan: DataBase.WithId<DataBase.Models.Plans>;
-let payment: DataBase.WithId<DataBase.Models.Payments>;
+let payment: DataBase.WithId<DataBase.Models.Subscriptions>;
 beforeAll(async () => {
   user = await createUserRequest();
   plan = await createPlanRequest();

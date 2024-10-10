@@ -13,7 +13,7 @@ declare global {
         planId: Models.Plans;
         userId: Models.User;
         trainerId: Models.Trainers;
-        paymentId: Models.Payments;
+        paymentId: Models.Subscriptions;
       }
       type _Dic<T, Name extends keyof _G & keyof T> = DataBase.WithId<_G[Name]>;
 
@@ -22,6 +22,14 @@ declare global {
       };
     }
     namespace Models {
+      interface Payments {
+        type: string;
+        userId?: string;
+        createdAt: Date;
+        adminId: string;
+        paid: Price;
+        remaining: Price;
+      }
       interface Counter {
         name: string;
         seq: number;
@@ -33,7 +41,6 @@ declare global {
       }
       interface User {
         createdAt: Date;
-        createdBy: "admin";
         adminId: string;
         blocked?: boolean;
         name?: string;
@@ -65,23 +72,30 @@ declare global {
         userId: string;
         paymentId: string;
         planId: string;
-        createdBy: "Admin";
         adminId: string;
         trainerId?: string;
       }
-      interface Payments {
+      interface ProductPayments extends Payments {
+        products: {
+          productId: string;
+          num: number;
+        }[];
+      }
+      interface Products {
+        price: { default: Price };
+        num: { default: number };
+        barcode: string;
+        name: string;
+      }
+      interface Subscriptions extends Payments {
+        type: "subscription";
         logsCount: number;
         planId: string;
         userId: string;
         plan: { type: PlansType; num: number };
-        createdAt: Date;
         startAt: Date;
         endAt: Date;
-        createdBy: "Admin";
-        adminId: string;
         trainerId?: string;
-        paid: Price;
-        remaining: Price;
       }
       interface Admins {
         name: string;

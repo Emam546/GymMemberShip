@@ -9,14 +9,14 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
-} from "@src/components/pages/payments/filter";
+} from "@src/components/pages/subscriptions/filter";
 import PrintPaymentsQuery from "@src/components/pages/users/queryPayment/print";
 import FilterUsersData, {
   DataType as FilterUsersDataType,
 } from "@src/components/pages/users/filter/filterUsersData";
 import { MessageDataUsers } from "@src/components/pages/whatsapp";
 import UsersTable from "@src/components/pages/users/table";
-import PrintUserPayments from "@src/components/pages/payments/print";
+import PrintUserPayments from "@src/components/pages/subscriptions/print";
 type FormData = TimeStartEndSelectorDataType & FilterUsersDataType;
 const perLoad = 20;
 
@@ -32,7 +32,7 @@ export default function Page() {
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments","users", "query", "infinity", filter],
+    queryKey: ["payments", "users", "query", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<

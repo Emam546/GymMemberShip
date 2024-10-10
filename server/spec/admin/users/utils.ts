@@ -3,7 +3,7 @@ import agent from "@test/index";
 
 export function createUserData(): Omit<
   DataBase.Models.User,
-  "createdAt" | "createdBy" | "adminId" | "barcode"
+  "createdAt"  | "adminId" | "barcode"
 > {
   return {
     name: faker.person.fullName(),

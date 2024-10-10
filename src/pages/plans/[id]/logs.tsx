@@ -8,7 +8,7 @@ import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import TimeStartEndSelector, {
   DataType,
-} from "@src/components/pages/payments/filter";
+} from "@src/components/pages/subscriptions/filter";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LogInfoGenerator } from "@src/components/pages/logs/table";
@@ -246,7 +246,6 @@ const Page: NextPage<Props> = function Page({ doc }) {
                       }
                     );
                   }}
-                  
                 />
               )}
             </div>

@@ -26,7 +26,6 @@ router.post("/", async (req, res) => {
     return res.status(400).sendFailed("invalid Data", result.errors);
   const user = new Users({
     ...result.data,
-    createdBy: "admin",
     adminId: req.user?._id,
   } as DataBase.Models.User);
   const savedUser = await user.save();

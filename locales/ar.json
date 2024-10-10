@@ -347,13 +347,13 @@
     "Logs": "سجلات",
     "Total Count": "العدد الإجمالي"
   },
-  "/payments": {
+  "/subscriptions": {
     "title": "المدفوعات",
     "Payments": "المدفوعات",
     "Earnings": "الأرباح",
     "Total Count": "العدد الإجمالي"
   },
-  "/payments/[id]": {
+  "/subscriptions/[id]": {
     "title": "{{val}} دفع",
     "Update Payment Data": "تحديث بيانات الدفع",
     "User Logs": "سجلات المستخدم"
@@ -375,7 +375,7 @@
     "Go To Users Logs": "انتقل إلى سجلات المستخدمين",
     "Go To Plan Payments": "انتقل إلى مدفوعات الخطة"
   },
-  "/plans/[id]/payments": {
+  "/plans/[id]/subscriptions": {
     "title": "{{name}} المدفوعات",
     "Plan Payments": "مدفوعات الخطة",
     "Total Count": "العدد الإجمالي",

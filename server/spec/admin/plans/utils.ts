@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 export function createPlanData(): Omit<
   DataBase.Models.Plans,
-  "createdAt" | "createdBy" | "adminId"
+  "createdAt" | "adminId"
 > {
   return {
     name: faker.person.fullName(),

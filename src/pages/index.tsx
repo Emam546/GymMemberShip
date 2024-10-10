@@ -15,7 +15,7 @@ import requester from "@src/utils/axios";
 import { isString } from "@src/utils/types";
 import ErrorShower from "@src/components/common/error";
 import UserInfoForm from "@src/components/pages/logger/user";
-import UserPaymentsTable from "@src/components/pages/logger/payments/table";
+import UserPaymentsTable from "@src/components/pages/logger/subscriptions/table";
 import { useTranslation } from "react-i18next";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,7 +44,7 @@ export function Item({ className, ...props }: ComponentProps<"div">) {
   );
 }
 type PaymentType = DataBase.Populate.Model<
-  DataBase.WithId<DataBase.Models.Payments>,
+  DataBase.WithId<DataBase.Models.Subscriptions>,
   "planId" | "adminId" | "trainerId"
 >;
 
@@ -52,7 +52,7 @@ const perPage = 7;
 export default function Page({ plans, trainers }: Props) {
   const router = useRouter();
   const date = new Date();
-  const { t } = useTranslation("/index")
+  const { t } = useTranslation("/index");
   const month = useFormateDate({
     weekday: "long",
   });
@@ -69,7 +69,7 @@ export default function Page({ plans, trainers }: Props) {
       >(`/api/admin/users/${userId}`);
       const payments = await requester.get<
         Routes.ResponseSuccess<PaymentType[]>
-      >(`/api/admin/users/${userId}/payments`);
+      >(`/api/admin/users/${userId}/subscriptions`);
       return {
         user: req.data.data,
         payments: payments.data.data,
@@ -181,7 +181,7 @@ export default function Page({ plans, trainers }: Props) {
                 onUpdate={async function (data) {
                   if (!currentPayment) return;
                   await requester.post(
-                    `/api/admin/payments/${currentPayment._id}`,
+                    `/api/admin/subscriptions/${currentPayment._id}`,
                     data
                   );
                   alert(t("messages.updated", { ns: "translation" }));
@@ -206,9 +206,9 @@ export default function Page({ plans, trainers }: Props) {
                 }
                 const req = await requester.post<
                   Routes.ResponseSuccess<
-                    DataBase.WithId<DataBase.Models.Payments>
+                    DataBase.WithId<DataBase.Models.Subscriptions>
                   >
-                >(`/api/admin/payments`, {
+                >(`/api/admin/subscriptions`, {
                   ...data,
                   userId: query.data.user._id,
                 });

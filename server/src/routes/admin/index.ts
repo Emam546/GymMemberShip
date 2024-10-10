@@ -1,7 +1,7 @@
 import { Router } from "express";
 import userRouter from "./users";
 import plansRouter from "./plans";
-import paymentsRouter from "./payments";
+import paymentsRouter from "./subscriptions";
 import LogsRouter from "./log";
 import AdminsRouter from "./admins";
 import TrainersRouter from "./trainers";
@@ -17,7 +17,7 @@ router.use((req, res, next) => {
 });
 router.use("/users", userRouter);
 router.use("/plans", plansRouter);
-router.use("/payments", paymentsRouter);
+router.use("/subscriptions", paymentsRouter);
 router.use("/logs", LogsRouter);
 router.use("/admins", AdminsRouter);
 router.use("/trainers", TrainersRouter);

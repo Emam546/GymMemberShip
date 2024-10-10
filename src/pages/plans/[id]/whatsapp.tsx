@@ -8,8 +8,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
-} from "@src/components/pages/payments/filter";
-import { PaymentInfoGenerator } from "@src/components/pages/payments/table";
+} from "@src/components/pages/subscriptions/filter";
+import { PaymentInfoGenerator } from "@src/components/pages/subscriptions/table";
 import PrintPaymentsQuery from "@src/components/pages/users/queryPayment/print";
 import FilterUsersData, {
   DataType as FilterUsersDataType,
@@ -21,7 +21,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { hasOwnProperty } from "@src/utils";
 import PaymentsDataFilter, {
   DataType as PaymentsDataFilterFilter,
-} from "@src/components/pages/payments/filter/PaymentsData";
+} from "@src/components/pages/subscriptions/filter/PaymentsData";
 import { useRouter } from "next/router";
 import PrintPlanPaymentsQuery from "@src/components/pages/plans/query";
 
@@ -30,7 +30,7 @@ type FormData = TimeStartEndSelectorDataType &
   PaymentsDataFilterFilter;
 const perLoad = 20;
 
-export default function Page({  }) {
+export default function Page({}) {
   const id = useRouter().query.id as string;
   const curDate = new Date();
   const { t } = useTranslation("/users");
@@ -49,11 +49,11 @@ export default function Page({  }) {
       const users = await requester.get<
         Routes.ResponseSuccess<
           DataBase.Populate.Model<
-            DataBase.WithId<DataBase.Models.Payments>,
+            DataBase.WithId<DataBase.Models.Subscriptions>,
             "adminId" | "userId" | "planId"
           >[]
         >
-      >(`/api/admin/plans/${id}/payments/query`, {
+      >(`/api/admin/plans/${id}/subscriptions/query`, {
         params: {
           skip: perLoad * pageParam,
           limit: perLoad,
@@ -111,11 +111,11 @@ export default function Page({  }) {
               const users = await requester.get<
                 Routes.ResponseSuccess<
                   DataBase.Populate.Model<
-                    DataBase.WithId<DataBase.Models.Payments>,
+                    DataBase.WithId<DataBase.Models.Subscriptions>,
                     "adminId" | "userId" | "planId"
                   >[]
                 >
-              >(`/api/admin/plans/${id}/payments/query`, {
+              >(`/api/admin/plans/${id}/subscriptions/query`, {
                 params: {
                   ...filter,
                 },

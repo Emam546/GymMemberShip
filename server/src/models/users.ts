@@ -17,7 +17,6 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
     createdAt: { type: Date, default: Date.now, immutable: true },
     blocked: { type: Boolean, default: false },
     emailVerified: { type: Boolean, default: false },
-    createdBy: String,
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Admins.modelName,

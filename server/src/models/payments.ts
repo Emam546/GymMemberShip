@@ -1,31 +1,14 @@
 import mongoose from "mongoose";
 import User from "./users";
-import Plans from "./plans";
 import Admins from "./admins";
-import Trainers from "./trainers";
-const schema = new mongoose.Schema<DataBase.Models.Payments>(
+const schema = new mongoose.Schema<DataBase.Models.Subscriptions>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
-    startAt: { type: Date, default: Date.now, required: true },
-    endAt: { type: Date, default: Date.now, required: true },
-    logsCount: { type: Number, default: 0 },
     paid: { type: Number, required: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: User.modelName,
-      required: true,
     } as never,
-    planId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: Plans.modelName,
-      required: true,
-    } as never,
-    trainerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: Trainers.modelName,
-    } as never,
-    plan: { type: Object, required: true },
-    createdBy: String,
     remaining: { type: Number, default: 0, required: true },
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,13 +17,12 @@ const schema = new mongoose.Schema<DataBase.Models.Payments>(
   },
   { minimize: false }
 );
-schema.index({ userId: 1, createdAt: -1 });
-schema.index({ planId: 1, createdAt: -1 });
-schema.index({ adminId: 1, createdAt: -1 });
-schema.index({ trainerId: 1, createdAt: -1 });
-schema.index({ createdAt: -1 });
+schema.index({ __t: 1 });
+schema.index({ adminId: 1, createdAt: -1, __t: 1 });
+schema.index({ userId: 1, createdAt: -1, __t: 1 });
+schema.index({ createdAt: -1, __t: 1 });
 export default ((mongoose.models && mongoose.models.payments) ||
   mongoose.model(
     "payments",
     schema
-  )) as mongoose.Model<DataBase.Models.Payments>;
+  )) as mongoose.Model<DataBase.Models.Subscriptions>;

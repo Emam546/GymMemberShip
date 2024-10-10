@@ -9,8 +9,8 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
-import PrintUsersPayments from "@src/components/pages/users/payments/print";
-import PaymentInfoGenerator from "@src/components/pages/users/payments/table";
+import PrintUsersPayments from "@src/components/pages/users/subscriptions/print";
+import PaymentInfoGenerator from "@src/components/pages/users/subscriptions/table";
 import { getUser } from "@serv/routes/admin/users/[id]";
 import AddUserPayment from "@src/components/pages/users/addPayment";
 import { getAllPlans } from "@serv/routes/admin/plans";
@@ -38,7 +38,9 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
         <div className="tw-flex tw-items-center tw-justify-between">
           <CardTitle>{t("Update User Data")}</CardTitle>
           <div>
-            <CopyText text={doc.barcode.toString()}>Barcode:{doc.barcode}</CopyText>
+            <CopyText text={doc.barcode.toString()}>
+              Barcode:{doc.barcode}
+            </CopyText>
           </div>
         </div>
         <MainCard>
@@ -72,7 +74,7 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
           <AddUserPayment
             trainers={trainers}
             onData={async ({ ...data }) => {
-              await requester.post("/api/admin/payments", {
+              await requester.post("/api/admin/subscriptions", {
                 ...data,
                 userId: doc._id,
               });

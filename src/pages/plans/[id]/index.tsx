@@ -9,8 +9,8 @@ import { MakeItSerializable } from "@src/utils";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
 import { getPlan } from "@serv/routes/admin/plans/[id]";
-import PrintPlanPayments from "@src/components/pages/plans/payments/print";
-import PaymentInfoGenerator from "@src/components/pages/plans/payments/table";
+import PrintPlanPayments from "@src/components/pages/plans/subscriptions/print";
+import PaymentInfoGenerator from "@src/components/pages/plans/subscriptions/table";
 import { useTranslation } from "react-i18next";
 import { IsAdminComp } from "@src/components/wrappers";
 
@@ -62,7 +62,7 @@ export default function Page({ doc }: Props) {
           />
           <GoToButton
             label={t("Go To Plan Payments")}
-            href={`/plans/${doc._id}/payments`}
+            href={`/plans/${doc._id}/subscriptions`}
           />
 
           <GoToButton

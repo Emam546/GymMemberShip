@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mongoose, { Document } from "mongoose";
 import Logs from "@serv/models/log";
-import { IncrementPaymentLogs } from "@serv/routes/admin/payments/[id]/logs";
+import { IncrementPaymentLogs } from "@serv/routes/admin/subscriptions/[id]/logs";
 const router = Router();
 
 router.use("/:id", async (req, res, next) => {

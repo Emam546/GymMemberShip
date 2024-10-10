@@ -15,7 +15,6 @@ function getChromiumExecPath() {
     )
     .replace("app.asar", "app.asar.unpacked");
 }
-console.log(getChromiumExecPath());
 const whatsappClient = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
