@@ -8,6 +8,7 @@ import TrainersRouter from "./trainers";
 import AuthRouter from "./admins/login";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import whatsapp from "./whatsapp";
+import products from "./products";
 const router = Router();
 router.use("/admins/auth/", AuthRouter);
 router.use((req, res, next) => {
@@ -22,4 +23,5 @@ router.use("/logs", LogsRouter);
 router.use("/admins", AdminsRouter);
 router.use("/trainers", TrainersRouter);
 router.use("/whatsapp", whatsapp);
+router.use("/products", products);
 export default router;

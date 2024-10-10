@@ -32,13 +32,6 @@ export default function Page({ products: initProducts }: Props) {
       alert(t("messages.added", { ns: "translation" }));
     },
   });
-  const deleteAdmin = useMutation({
-    async mutationFn(data: DataBase.WithId<DataBase.Models.Products>) {
-      await requester.delete<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Products>>
-      >(`/api/admin/products/${data._id}`);
-    },
-  });
 
   return (
     <>
@@ -56,36 +49,7 @@ export default function Page({ products: initProducts }: Props) {
               buttonName={t("buttons.add", { ns: "translation" })}
             />
           </MainCard>
-          <MainCard>
-            <ProductsTable
-              perPage={products.length}
-              page={0}
-              products={products.map((product, i) => {
-                return {
-                  order: i,
-                  product: product,
-                };
-              })}
-              onUpdate={async (product, data) => {
-                await requester.post<
-                  Routes.ResponseSuccess<
-                    DataBase.WithId<DataBase.Models.Products>
-                  >
-                >(`/api/admin/products/${product._id}`, data);
-                setProducts((pre) => {
-                  const i = pre.findIndex((c) => c._id == product._id);
-                  pre[i] = { ...pre[i], ...data };
-                  return [...pre];
-                });
-              }}
-              onDelete={async (product) => {
-                await deleteAdmin.mutateAsync(product);
-                setProducts((pre) => pre.filter((c) => c._id != product._id));
-              }}
-              totalCount={products.length}
-              headKeys={["delete", "name", "order", "amount", "price"]}
-            />
-          </MainCard>
+          {/* <MainCard></MainCard> */}
         </BigCard>
       </RedirectIfNotAdmin>
     </>

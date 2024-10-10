@@ -29,8 +29,9 @@ const schema = new mongoose.Schema<DataBase.Models.Subscriptions>(
 
 schema.index({ planId: 1, createdAt: -1, __t: 1 });
 schema.index({ trainerId: 1, createdAt: -1, __t: 1 });
+
 export default ((mongoose.models && mongoose.models.subscriptions) ||
-  Payments.discriminator<DataBase.Models.Subscriptions>(
+  Payments.discriminator(
     "subscriptions",
     schema
   )) as mongoose.Model<DataBase.Models.Subscriptions>;

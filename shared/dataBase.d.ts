@@ -82,9 +82,8 @@ declare global {
         }[];
       }
       interface Products {
-        price: { default: Price };
-        num: { default: number };
-        barcode: string;
+        price: Price;
+        num: number;
         name: string;
       }
       interface Subscriptions extends Payments {

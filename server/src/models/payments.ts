@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./users";
 import Admins from "./admins";
-const schema = new mongoose.Schema<DataBase.Models.Subscriptions>(
+const schema = new mongoose.Schema<DataBase.Models.Payments>(
   {
     createdAt: { type: Date, default: Date.now, immutable: true },
     paid: { type: Number, required: true },
@@ -21,8 +21,9 @@ schema.index({ __t: 1 });
 schema.index({ adminId: 1, createdAt: -1, __t: 1 });
 schema.index({ userId: 1, createdAt: -1, __t: 1 });
 schema.index({ createdAt: -1, __t: 1 });
+
 export default ((mongoose.models && mongoose.models.payments) ||
   mongoose.model(
     "payments",
     schema
-  )) as mongoose.Model<DataBase.Models.Subscriptions>;
+  )) as mongoose.Model<DataBase.Models.Payments>;

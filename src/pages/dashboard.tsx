@@ -1,6 +1,6 @@
 import { BigCard, MainCard } from "@src/components/card";
 import { GetServerSideProps } from "next";
-import Payments from "@serv/models/subscriptions";
+import Subscriptions from "@serv/models/subscriptions";
 import Head from "next/head";
 import {
   YearsAndMonthEarnings,
@@ -76,13 +76,17 @@ export default function Page({ earnings, payments, users, sales }: Props) {
     </>
   );
 }
-export async function getLastUsers() {
+async function getLastUsers() {
   const results = await Users.find({}).hint({ createdAt: -1 }).limit(5);
   return await Promise.all(
     results.map<Promise<UserTableProps["users"][0]>>(async (doc, i) => {
-      const payment = await Payments.findOne({ userId: doc._id }).hint({
+      const payment = await Subscriptions.findOne({
+        userId: doc._id,
+        __t: "subscription",
+      }).hint({
         userId: 1,
         createdAt: -1,
+        __t: 1,
       });
       if (!payment)
         return {
@@ -214,7 +218,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     },
   };
 };
-import i18n from "@src/i18n";
 declare global {
   namespace I18ResourcesType {
     interface Resources {
