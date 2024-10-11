@@ -58,7 +58,7 @@ export function Provider({ children }: { children: ReactNode }) {
                   backgroundImage: `url("${image}")`,
                 }}
               />
-              {children}
+              <LoadingBar>{children}</LoadingBar>
             </BarcodePrintProvider>
           </FrameProvider>
         </LocalizationProvider>
@@ -87,7 +87,6 @@ const App = function ({ Component, pageProps, translations, user }: AppG) {
     <Provider>
       <UserProvider state={user}>
         {/* <ConnectedBar /> */}
-        <LoadingBar />
 
         {Component.getLayout ? (
           Component.getLayout(<Component {...pageProps} />)
