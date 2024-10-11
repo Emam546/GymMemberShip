@@ -41,6 +41,7 @@ export default defineConfig({
         input: {
           update: resolve(__dirname, "app/renderer/update.html"),
           start: resolve(__dirname, "app/renderer/start.html"),
+          qrCode: resolve(__dirname, "app/renderer/qrCode.html"),
         },
       },
     },

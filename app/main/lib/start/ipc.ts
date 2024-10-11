@@ -33,7 +33,6 @@ export const HandleMethods: HandelMethodsType = {
     // Check for the image with any of the extensions
     const ext = extensions.find((ext) => {
       const imagePath = path.join(ImagesPath, `${src}${ext}`);
-      console.log(imagePath);
       if (fs.existsSync(imagePath)) return true;
       return false;
     });

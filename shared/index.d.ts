@@ -39,6 +39,11 @@ interface ApiRender extends IpcRenderer {
     channel: Key,
     ...args: Parameters<(ApiMain.OnMethods & ApiMain.OnceMethods)[Key]>
   ): void;
+
+  sendSync<Key extends keyof (ApiMain.OnMethods & ApiMain.OnceMethods)>(
+    channel: Key,
+    ...args: Parameters<(ApiMain.OnMethods & ApiMain.OnceMethods)[Key]>
+  ): ReturnType<(ApiMain.HandleMethods & ApiMain.HandleOnceMethods)[Key]>;
   invoke<Key extends keyof (ApiMain.HandleMethods & ApiMain.HandleOnceMethods)>(
     channel: Key,
     ...args: Parameters<
@@ -49,7 +54,6 @@ interface ApiRender extends IpcRenderer {
       ReturnType<(ApiMain.HandleMethods & ApiMain.HandleOnceMethods)[Key]>
     >
   >;
-  
 }
 
 declare global {

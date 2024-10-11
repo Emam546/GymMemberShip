@@ -1,4 +1,4 @@
-import { ComponentRef, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useFitWindow<T extends HTMLElement>(
   additional: Array<React.RefObject<HTMLElement>>,
@@ -7,13 +7,12 @@ export function useFitWindow<T extends HTMLElement>(
   const [size, setSize] = useState({ width: 0, height: 0 });
   const ref = useOnResizeObserve<T>(
     (entries) => {
-      if (!ref.current) return;
       const { height, width } = entries[0].contentRect;
       setSize({ height, width });
       if (height !== size.height && state == "height") {
         window.api.send(
           "setContentHeight",
-          ref.current!.offsetHeight +
+          height +
             additional.reduce((acc, elem) => {
               if (!elem.current) return acc;
               return acc + elem.current.offsetHeight;
@@ -23,7 +22,7 @@ export function useFitWindow<T extends HTMLElement>(
       if (width !== size.width && state == "width") {
         window.api.send(
           "setContentWidth",
-          ref.current!.offsetWidth +
+          width +
             additional.reduce((acc, elem) => {
               if (!elem.current) return acc;
               return acc + elem.current.offsetWidth;
@@ -39,30 +38,32 @@ export function useOnResizeObserve<T extends HTMLElement>(
   funct: ResizeObserverCallback,
   additional: React.DependencyList
 ) {
-  const ref = useRef<T>(null);
+  const [ref, setRef] = useState<T | null>(null);
   useEffect(() => {
-    if (!ref.current) return;
-    let resizeObserver = new ResizeObserver(funct);
-    resizeObserver.observe(ref.current);
+    if (!ref) return;
+    const resizeObserver = new ResizeObserver(funct);
+    resizeObserver.observe(ref);
     return () => resizeObserver.disconnect();
   }, [ref, ...additional]);
-  return ref;
+  return setRef as React.Ref<T>;
 }
-type Ref<T> = React.RefObject<T>;
-export function useMergeRefs<T>(...refs: Ref<T>[]) {
+function isRefObject<T>(ref: React.Ref<T>): ref is React.RefCallback<T> {
+  return typeof ref === "function" || ref instanceof Function;
+}
+export function useMergeRefs<T>(...refs: React.Ref<T>[]) {
   const targetRef = useRef<T>(null);
 
   useEffect(() => {
     refs.forEach((ref) => {
       if (!ref) return;
 
-      if (typeof ref === "function" || ref instanceof Function) {
+      if (isRefObject(ref)) {
         ref(targetRef.current);
       } else if (ref) {
         (ref as React.MutableRefObject<T | null>).current = targetRef.current;
       }
     });
-  }, [refs]);
+  }, [targetRef.current, refs]);
 
   return targetRef;
 }

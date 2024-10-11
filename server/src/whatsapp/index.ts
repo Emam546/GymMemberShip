@@ -3,6 +3,8 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import path from "path";
+import { whatsappReady } from "@serv/command";
+// eslint-disable-next-line node/no-process-env
 const Chrome_PATH = process.env.CHROME_PATH;
 function getChromiumExecPath() {
   return path
@@ -40,7 +42,7 @@ export function connectWhatsapp(timeOut = 5000) {
     whatsappClient.initialize();
     console.log("start connecting to whatsapp");
     whatsappClient.once("ready", () => {
-      console.log("connected to whatsapp");
+      console.log(whatsappReady);
       res(true);
     });
     whatsappClient.once("auth_failure", (err) => {
@@ -54,6 +56,7 @@ export function connectWhatsapp(timeOut = 5000) {
 }
 whatsappClient.on("qr", (qr) => {
   console.log(`QR:${qr}`);
+  // eslint-disable-next-line node/no-process-env
   if (!process.env.ELECTRON_RUN_AS_NODE) qrcode.generate(qr, { small: true });
 });
 whatsappClient.on("authenticated", () => {

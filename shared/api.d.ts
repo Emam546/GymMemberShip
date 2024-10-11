@@ -25,6 +25,7 @@ export namespace ApiMain {
     quitApp(): void;
     center(): void;
     alert(message: string, title?: string): any;
+    confirm(message: string, title?: string): boolean;
   }
   interface OnceMethods {}
   interface HandleMethods {

@@ -2,6 +2,7 @@ import "./ipc";
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  nativeImage,
   shell,
 } from "electron";
 import path from "path";
@@ -24,7 +25,7 @@ export const createUpdateWindow = async (
   };
   const win = new UpdaterWindow(
     {
-      icon: "build/icon.ico",
+      icon: nativeImage.createFromPath("/sources/app/app_icon.png"),
       useContentSize: true,
       show: false,
       autoHideMenuBar: true,

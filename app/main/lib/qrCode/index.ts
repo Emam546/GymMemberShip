@@ -1,36 +1,32 @@
-import "./ipc";
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  nativeImage,
   shell,
 } from "electron";
 import path from "path";
-import { Context } from "@shared/renderer/start";
+import { Context } from "@shared/renderer/qrCode";
 import { convertFunc } from "@app/main/utils/convert";
 import { isDev } from "@app/main/utils";
 export interface Props {
   preloadData: Context;
 }
-export const createStartWindow = async (
+export const createQrCodeWindow = async (
   vars: Props,
   options?: BrowserWindowConstructorOptions
 ): Promise<BrowserWindow> => {
-  const preloadData: Omit<Context, "logoImage"> = {
+  const preloadData: Context = {
     ...vars.preloadData,
   };
   const win = new BrowserWindow({
+    icon: nativeImage.createFromPath("sources/app/app_icon.png"),
     useContentSize: true,
     show: false,
     autoHideMenuBar: true,
-    frame: false,
     resizable: false,
     fullscreenable: false,
-    skipTaskbar: true,
-    transparent: true, // Makes the window background transparent
     alwaysOnTop: true, // Optional, keeps the window on top
     center: true,
-    height: 270,
-    width: 450,
     ...options,
     webPreferences: {
       ...options?.webPreferences,
@@ -47,9 +43,9 @@ export const createStartWindow = async (
   });
   if (isDev) {
     await win.loadURL(
-      `${process.env["ELECTRON_RENDERER_URL"] as string}/start`
+      `${process.env["ELECTRON_RENDERER_URL"] as string}/qrCode`
     );
-  } else await win.loadFile(path.join(__dirname, "../windows/start.html"));
+  } else await win.loadFile(path.join(__dirname, "../windows/qrCode.html"));
   win.show();
   win.moveTop();
   return win;

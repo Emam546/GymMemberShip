@@ -1,8 +1,5 @@
 import "./ipc";
-import {
-  BrowserWindowConstructorOptions,
-  shell,
-} from "electron";
+import { BrowserWindowConstructorOptions, nativeImage, shell } from "electron";
 import path from "path";
 import { convertFunc } from "@app/main/utils/convert";
 
@@ -38,7 +35,7 @@ export const createMainWindow = async (
   const win = new MainWindow({
     ...options,
     ...state,
-    icon: "build/icon.ico",
+    icon: nativeImage.createFromPath("sources/app/app_icon.png"),
     webPreferences: {
       ...state.webPreferences,
       ...options.webPreferences,

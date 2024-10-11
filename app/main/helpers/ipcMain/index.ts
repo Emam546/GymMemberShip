@@ -41,12 +41,12 @@ export const OnMethods: OnMethodsType = {
   setContentHeight: function (event, height: number): void {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;
-    window.setContentSize(window.getSize()[0], height);
+    window.setContentSize(window.getContentSize()[0], height);
   },
   setContentWidth: function (event, width: number): void {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;
-    window.setContentSize(width, window.getSize()[1]);
+    window.setContentSize(width, window.getContentSize()[1]);
   },
   center: function (event): void {
     const window = BrowserWindow.fromWebContents(event.sender);
@@ -69,10 +69,26 @@ export const OnMethods: OnMethodsType = {
   alert(event, message, title) {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;
-    dialog.showMessageBox(window, {
+    dialog.showMessageBoxSync(window, {
       message,
       title: title || "Process",
     });
+    event.returnValue = true;
+  },
+  confirm(event, message, title) {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+    try {
+      const response = dialog.showMessageBoxSync(window, {
+        message,
+        title: title || "Process",
+        buttons: ["Ok", "Cancel"],
+        defaultId: 1,
+      });
+      event.returnValue = response == 0;
+    } catch (error) {
+      event.returnValue = false;
+    }
   },
 };
 export const OnceMethods: OnceMethodsType = {};

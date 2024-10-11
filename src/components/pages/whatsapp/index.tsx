@@ -126,8 +126,8 @@ export function MessageDataUsers({ OnUsers, ...props }: MessageDataUsersProps) {
             console.error(val?.name);
             console.error(err);
           }
-          alert(t("messages.whatsapp.sended", { ns: "translation" }));
         });
+        alert(t("messages.whatsapp.sended", { ns: "translation" }));
       }}
       {...props}
     />

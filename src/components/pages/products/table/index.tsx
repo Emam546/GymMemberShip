@@ -180,7 +180,7 @@ export default function ProductsTable({
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "table:sell:products": {
+      "table:products": {
         td: {
           Deleted: "Deleted";
           "block.label": "Delete";

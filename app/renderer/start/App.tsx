@@ -17,10 +17,10 @@ function App(): JSX.Element {
   useEffect(() => {
     window.api.invoke("getData", "app/start_logo").then((data) => {
       if (!imageRef.current || !data) return;
-      console.log(data);
       imageRef.current.src = data;
     });
   }, [imageRef]);
+
   return (
     <>
       <div ref={ref} className="w-64">
