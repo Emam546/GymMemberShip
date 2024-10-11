@@ -4,6 +4,7 @@ import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import path from "path";
 import { whatsappReady } from "@serv/command";
+import logger from "jet-logger";
 // eslint-disable-next-line node/no-process-env
 const Chrome_PATH = process.env.CHROME_PATH;
 function getChromiumExecPath() {
@@ -39,8 +40,16 @@ export let isConnected = false;
 export function connectWhatsapp(timeOut = 5000) {
   return new Promise<boolean>((res, rej) => {
     if (isConnected) return res(true);
-    whatsappClient.initialize();
-    console.log("start connecting to whatsapp");
+    const f = setInterval(() => {
+      fetch("https://web.whatsapp.com/").then((response) => {
+        if (!response.ok) return;
+        clearInterval(f);
+        console.log("start connecting to whatsapp");
+        whatsappClient.initialize();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      }).catch(err=>{});
+    }, 1000);
+
     whatsappClient.once("ready", () => {
       console.log(whatsappReady);
       res(true);
