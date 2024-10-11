@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const perLoad = 20;
 export default function Page() {
   const { t } = useTranslation("/users");
-  const [filter, setFilter] = useState<DataType>({});
+  const [filter, setFilter] = useState<DataType>({ name: "" });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["users", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
