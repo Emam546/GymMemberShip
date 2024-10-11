@@ -415,7 +415,8 @@
   },
   "/users/add": {
     "title": "المستخدمين",
-    "Users": "المستخدمين"
+    "Create User": "إنشاء مستخدم",
+    "Go To Users": "انتقل إلى المستخدمين"
   },
   "attend:messages": {
     "messages": {

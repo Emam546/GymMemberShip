@@ -45,3 +45,14 @@ export default function Page() {
     </>
   );
 }
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/users/add": {
+        title: "Create User";
+        "Create User": "Create User";
+        "Go To Users": "Go To Users";
+      };
+    }
+  }
+}

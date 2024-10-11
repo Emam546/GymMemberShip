@@ -415,7 +415,8 @@
   },
   "/users/add": {
     "title": "Users",
-    "Users": "Users"
+    "Create User": "Create User",
+    "Go To Users": "Go To Users"
   },
   "attend:messages": {
     "messages": {
