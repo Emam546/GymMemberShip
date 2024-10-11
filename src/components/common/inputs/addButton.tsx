@@ -16,7 +16,7 @@ function Button({ ...props }: LinkProps) {
 export function GoToButton({ label, ...props }: Props) {
   return (
     <Button {...props}>
-      <FontAwesomeIcon icon={faArrowRight} />
+      <FontAwesomeIcon className="tw-rotate-180" icon={faArrowRight} />
       <span>{label}</span>
     </Button>
   );

@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { CallbackError } from "mongoose";
 import Payments from "./payments";
 import Products from "./products";
+
 const schema = new mongoose.Schema<DataBase.Models.ProductPayments>(
   {
     products: [
@@ -16,11 +17,17 @@ const schema = new mongoose.Schema<DataBase.Models.ProductPayments>(
   },
   { minimize: false }
 );
-
-schema.index({ barcode: 1 });
-schema.index({ createdAt: -1 });
-schema.index({ adminId: 1, createdAt: -1 });
-schema.index({ provider_id: 1, provider_type: 1 });
+schema.pre("save", async function (next) {
+  try {
+    await Products.updateMany(
+      { _id: { $in: this.products.map((v) => v.productId) } },
+      { $inc: { num: -1 } }
+    );
+    next();
+  } catch (err) {
+    next(err as CallbackError);
+  }
+});
 export default ((mongoose.models && mongoose.models.productsPayments) ||
   Payments.discriminator<DataBase.Models.ProductPayments>(
     "productsPayments",

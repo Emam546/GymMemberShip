@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-import DeleteDialog from "@src/components/common/AlertDialog";
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { E, TH } from "@src/components/common/table";
 import { DeleteButton } from "@src/components/common/deleteButton";
@@ -9,18 +5,28 @@ import { PaginationManager } from "@src/components/pagination";
 import { TextInput } from "@src/components/common/inputs/Text";
 import { useForm } from "react-hook-form";
 import { useDebounceEffect } from "@src/hooks";
+import { ErrorInputShower } from "@src/components/common/inputs/main";
+import { useState } from "react";
+export type SellProduct = DataBase.WithId<DataBase.Models.Products> & {
+  curNum: number;
+};
 interface ElemProps {
   order: number;
-  product: DataBase.WithId<DataBase.Models.Products>;
+  product: SellProduct;
   onDelete?: () => void;
   onUpdate: (data: FormData) => void;
 }
 export interface FormData {
-  price: number;
-  num: number;
-  name: string;
+  curNum: number;
 }
-type HeadKeys = "order" | "name" | "price" | "amount" | "delete";
+type HeadKeys =
+  | "order"
+  | "name"
+  | "price"
+  | "amount"
+  | "perPrice"
+  | "curAmount"
+  | "delete";
 function Shower({
   product,
   order,
@@ -28,26 +34,26 @@ function Shower({
   onDelete,
   onUpdate,
 }: ElemProps & { headKeys: HeadKeys[] }) {
-  const [open, setOpen] = useState(false);
-  const mutate = useMutation({
-    async mutationFn() {
-      await onDelete?.();
-    },
-  });
-  const { register, handleSubmit, getValues, watch } = useForm<FormData>({
-    values: {
-      name: product.name,
-      num: product.num,
-      price: product.price,
-    },
-  });
-  const { t } = useTranslation("table:admins");
+  const { register, setValue, getValues, watch, formState } = useForm<FormData>(
+    {
+      defaultValues: {
+        curNum: product.curNum,
+      },
+    }
+  );
+  const [state, setState] = useState(false);
+  const { t } = useTranslation("table:products:sell");
   useDebounceEffect(
     () => {
+      const cur = getValues();
+      if (cur.curNum > product.num && !state) {
+        if (confirm(t("td.noStock"))) setState(true);
+        else setValue("curNum", product.num);
+      }
       onUpdate(getValues());
     },
-    1000,
-    [watch("name"), watch("num"), watch("price")]
+    100,
+    [watch("curNum")]
   );
   return (
     <>
@@ -58,50 +64,37 @@ function Shower({
           </td>
         </E>
         <E val="name" heads={headKeys}>
-          <td className="tw-w-full">
-            <TextInput type="text" {...register("name", { required: true })} />
-          </td>
+          <td className="tw-w-full">{product.name}</td>
         </E>
-        <E heads={headKeys} val="price">
+        <E heads={headKeys} val="curAmount">
           <td className="tw-text-center">
             <TextInput
               type="text"
-              {...register("price", { required: true, valueAsNumber: true })}
+              {...register("curNum", {
+                required: true,
+                valueAsNumber: true,
+              })}
             />
+            <ErrorInputShower err={formState.errors.curNum} />
           </td>
         </E>
         <E heads={headKeys} val="amount">
-          <td className="tw-text-center">
-            <TextInput
-              type="text"
-              {...register("num", { required: true, valueAsNumber: true })}
-            />
-          </td>
+          <td className="tw-text-center">{product.num}</td>
+        </E>
+        <E heads={headKeys} val="perPrice">
+          <td className="tw-text-center">{product.price}</td>
+        </E>
+        <E heads={headKeys} val="price">
+          <td className="tw-text-center">{watch("curNum") * product.price}</td>
         </E>
         <E val="delete" heads={headKeys}>
           <td>
             <div className="tw-flex tw-justify-center">
-              <DeleteButton onClick={() => setOpen(true)} />
+              <DeleteButton onClick={() => onDelete?.()} />
             </div>
           </td>
         </E>
       </tr>
-      <DeleteDialog
-        onAccept={async () => {
-          await mutate.mutateAsync();
-          setOpen(false);
-        }}
-        onClose={function () {
-          setOpen(false);
-        }}
-        open={open}
-        data={{
-          title: t("td.delete.title"),
-          desc: t("td.delete.desc"),
-          accept: t("td.delete.accept", { name: product.name }),
-          deny: t("td.delete.deny"),
-        }}
-      />
     </>
   );
 }
@@ -116,7 +109,7 @@ export interface Props {
   onDelete?: (product: ElemProps["product"]) => void;
   onUpdate: (product: ElemProps["product"], data: FormData) => void;
 }
-export default function ProductsTable({
+export default function SellProductsTable({
   page,
   products,
   totalCount,
@@ -126,7 +119,7 @@ export default function ProductsTable({
   perPage,
   onUpdate,
 }: Props) {
-  const { t } = useTranslation("table:products");
+  const { t } = useTranslation("table:products:sell");
   return (
     <PaginationManager
       page={page}
@@ -145,11 +138,17 @@ export default function ProductsTable({
               <E heads={headKeys} val="name">
                 <TH>{t("th.name")}</TH>
               </E>
-              <E heads={headKeys} val="amount">
-                <TH>{t("th.price")}</TH>
+              <E heads={headKeys} val="curAmount">
+                <TH>{t("th.curAmount")}</TH>
               </E>
               <E heads={headKeys} val="amount">
                 <TH>{t("th.amount")}</TH>
+              </E>
+              <E heads={headKeys} val="perPrice">
+                <TH>{t("th.perPrice")}</TH>
+              </E>
+              <E heads={headKeys} val="price">
+                <TH>{t("th.price")}</TH>
               </E>
               <E heads={headKeys} val="delete">
                 <TH>{t("th.delete")}</TH>
@@ -180,23 +179,18 @@ export default function ProductsTable({
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "table:sell:products": {
+      "table:products:sell": {
         td: {
-          Deleted: "Deleted";
-          "block.label": "Delete";
-          delete: {
-            title: "Delete Product";
-            desc: "Once you click Delete, The product will be removed form the database";
-            accept: "Delete {{name}}";
-            deny: "Keep";
-          };
+          noStock: string;
         };
         th: {
           id: "Id";
           name: "Name";
           amount: "number";
+          curAmount: string;
           price: "price";
           delete: "delete";
+          perPrice: number;
         };
         noData: "There is no products so far";
       };

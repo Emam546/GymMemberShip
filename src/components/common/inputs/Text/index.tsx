@@ -9,7 +9,7 @@ export const TextInput = React.forwardRef<
   return (
     <input
       className={classNames(
-        "tw-p-0 tw-m-0 tw-border-none focus:tw-outline focus:tw-outline-2 focus:tw-outline-gray-600 tw-rounded",
+        "tw-p-0 tw-m-0 tw-border-none ltr:tw-pr-3 rtl:tw-pl-3 tw-w-auto focus:tw-outline focus:tw-outline-2 focus:tw-outline-gray-600 tw-rounded",
         className
       )}
       ref={ref}

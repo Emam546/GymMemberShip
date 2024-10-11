@@ -1,4 +1,3 @@
-import "@locales/plan/[id]/subscriptions";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -37,7 +36,7 @@ export default function Page({ doc }: Props) {
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "plans", doc._id, "infinity", filter],
+    queryKey: ["subscriptions", "plans", doc._id, "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
         `/api/admin/plans/${doc._id}/subscriptions`,
@@ -60,7 +59,7 @@ export default function Page({ doc }: Props) {
     },
   });
   const QueryProfit = useQuery({
-    queryKey: ["payments", "plans", doc._id, "total", filter],
+    queryKey: ["subscriptions", "plans", doc._id, "total", filter],
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
@@ -226,9 +225,9 @@ export default function Page({ doc }: Props) {
                   page={0}
                   perPage={payments.length}
                   totalCount={payments.length}
-                  payments={payments.map((payment, i) => ({
+                  subscriptions={payments.map((payment, i) => ({
                     order: i,
-                    payment: {
+                    subscription: {
                       ...payment,
                       userId: payment.userId?._id || "",
                       planId: payment.planId?._id || "",
@@ -247,7 +246,15 @@ export default function Page({ doc }: Props) {
                     "log",
                     "endAt",
                     "admin",
+                    "delete",
                   ]}
+                  onDelete={async (doc) => {
+                    await requester.delete(
+                      `/api/admin/subscriptions/${doc.subscription._id}`
+                    );
+                    alert(t("messages.deleted", { ns: "translation" }));
+                    QueryInfinity.refetch();
+                  }}
                 />
               )}
             </div>
@@ -284,3 +291,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 };
+import i18n from "@src/i18n";
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/plans/[id]/subscriptions": {
+        title: "{{name}} payments";
+        "Plan Payments": "Plan payments";
+        "Total Count": "Total Count";
+        Earnings: "Earnings";
+      };
+    }
+  }
+}

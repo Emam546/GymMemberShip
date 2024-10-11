@@ -1,4 +1,3 @@
-import "@locales/plan/[id]";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import { GoToButton } from "@src/components/common/inputs/addButton";
 import PlanInfoForm from "@src/components/pages/plans/form";
@@ -66,7 +65,7 @@ export default function Page({ doc }: Props) {
           />
 
           <GoToButton
-            label={"Go To Plans'Users"}
+            label={t("Go To Plan Users")}
             href={`/plans/${doc._id}/whatsapp`}
           />
         </IsAdminComp>
@@ -92,3 +91,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 };
+
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/plan/[id]": {
+        "Update Plan Data": "Update Plan Data";
+        Payments: "Payments";
+        "Go To Plans": "Go To Plans";
+        "Go To Users Logs": "Go To User Logs";
+        "Go To Plan Payments": "Go To Plan Payments";
+        "Go To Plan Users": "Go To Plans Users";
+      };
+    }
+  }
+}

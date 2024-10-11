@@ -6,6 +6,8 @@ export namespace ApiRender {
 export namespace Api {
   interface OnMethods {}
   interface OnceMethods {}
-  interface HandleMethods {}
+  interface HandleMethods {
+    getData(src: string): string | null;
+  }
   interface HandleOnceMethods {}
 }

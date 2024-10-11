@@ -106,7 +106,7 @@
     "th": {
       "Id": "Id",
       "User": "User",
-      "paymentLink": "Payment Link",
+      "subscriptionLink": "Payment Link",
       "Logged At": "Logged At",
       "Delete": "Delete",
       "Plan": "Plan",
@@ -125,21 +125,21 @@
     },
     "paragraph": "There is no Logs so far"
   },
-  "payments:deleteForm": {
-    "paragraph": "Once you delete the payment, it cannot be undone. This is permanent.",
+  "subscriptions:deleteForm": {
+    "paragraph": "Once you delete the subscription, it cannot be undone. This is permanent.",
     "delete.button": "Delete Payment",
     "model": {
       "accept": "Delete",
-      "title": "Are you sure you want to delete the payment?",
-      "desc": "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.",
+      "title": "Are you sure you want to delete the subscription?",
+      "desc": "Once you click delete, the subscription and associated data will be permanently deleted and cannot be restored.",
       "deny": "Keep The Payment"
     }
   },
-  "payments:filter": {
+  "subscriptions:filter": {
     "Start at": "Start at",
     "End At": "End at"
   },
-  "payment:form:update": {
+  "subscription:form:update": {
     "User": "User",
     "Plan": "Plan",
     "createdAt": "Created At",
@@ -148,7 +148,7 @@
       "validNumber": "the number is not valid"
     }
   },
-  "table:payments": {
+  "table:subscriptions": {
     "Deleted": "Deleted",
     "Link": "Link",
     "head": {
@@ -166,7 +166,7 @@
       "startedAt": "Started At",
       "remainingMoney": "Remaining Money"
     },
-    "There is no payments": "There is no payments"
+    "There is no subscriptions": "There is no subscriptions"
   },
   "form:add:plan": {
     "Plan Name": "Plan Name",
@@ -197,11 +197,13 @@
     "sell": {
       "label": "Sell"
     },
-    "payments": {
+    "subscriptions": {
       "label": "Payments"
     },
     "whatsapp": {
-      "label": "whatsapp"
+      "label": "Whatsapp",
+      "/users/whatsapp": "Users",
+      "/subscriptions/whatsapp": "Subscriptions"
     },
     "dashboard": {
       "label": "Dashboard"
@@ -248,10 +250,10 @@
     },
     "noData": "There is no trainers so far"
   },
-  "payment:add": {
+  "subscription:add": {
     "Choose Course": "Choose Course",
-    "payment": {
-      "endAt": "This payment should be end at {{val}}"
+    "subscription": {
+      "endAt": "This subscription should be end at {{val}}"
     },
     "paid": {
       "label": "The amount paid",
@@ -318,7 +320,7 @@
   },
   "/admins/[id]": {
     "update.title": "Update Admin Data",
-    "payments.title": "Payments"
+    "subscriptions.title": "Payments"
   },
   "/dashboard": {
     "Recent Transactions": "Recent Transactions",
@@ -332,11 +334,11 @@
     "admin": {
       "name": "Admin Name"
     },
-    "payments": {
+    "subscriptions": {
       "title": "Payments"
     },
     "addPayment": {
-      "title": "Add payment"
+      "title": "Add subscription"
     },
     "user": {
       "title": "Users Info"
@@ -373,7 +375,8 @@
     "Payments": "Payments",
     "Go To Plans": "Go To Plans",
     "Go To Users Logs": "Go To Users Logs",
-    "Go To Plan Payments": "Go To Plan's Payments"
+    "Go To Plan Payments": "Go To Plan's Payments",
+    "Go To Plan Users": "Go To Plan Users"
   },
   "/plans/[id]/subscriptions": {
     "title": "{{name}} Payments",
@@ -416,9 +419,57 @@
   },
   "attend:messages": {
     "messages": {
-      "finished": "the user is already has no remaining days? \n do you want to add more logs>",
+      "finished": "the user is already has no remaining days? \n do you want to add more logs?",
       "userAttendedAlready": "The user has already attended this day  \n do you want to add a one more log again?",
       "logAdded": "a log was added successfully"
     }
+  },
+  "/products": {
+    "title": "Products",
+    "create.title": "Create Product"
+  },
+  "table:products": {
+    "td": {
+      "Deleted": "Deleted",
+      "block.label": "Delete",
+      "delete": {
+        "title": "Delete Product",
+        "desc": "Once you click Delete, The product will be removed form the database",
+        "accept": "Delete {{name}}",
+        "deny": "Keep"
+      }
+    },
+    "th": {
+      "id": "Id",
+      "name": "Name",
+      "amount": "Amount",
+      "price": "Price",
+      "delete": "Delete"
+    },
+    "noData": "There is no products so far"
+  },
+  "table:products:sell": {
+    "td": {
+      "noStock": "The quantity you sell is greater than the quantity in stock.\nDo you want to add it anyway"
+    },
+    "th": {
+      "id": "Id",
+      "name": "Name",
+      "amount": "Amount",
+      "curAmount": "Amount ٍSold",
+      "price": "Price",
+      "delete": "Delete",
+      "perPrice": "Piece Price"
+    },
+    "noData": "There is no products so far"
+  },
+  "form:product": {
+    "name": "Product Name",
+    "num": "the amount",
+    "price": "Price"
+  },
+  "form:message:whatsapp": {
+    "files.label": "Upload Files",
+    "message.label": "Message"
   }
 }

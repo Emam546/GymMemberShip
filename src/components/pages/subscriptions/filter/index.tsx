@@ -16,15 +16,13 @@ import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 
-
-
 export type DefaultData = DataType;
 export default function TimeStartEndSelector({ onData, values }: Props) {
   const { handleSubmit, setValue, getValues, watch } = useForm<DataType>({
     defaultValues: values,
     values,
   });
-  const { t } = useTranslation("payments:filter");
+  const { t } = useTranslation("subscriptions:filter");
   useDebounceEffect(
     () => {
       onData(getValues());
@@ -60,7 +58,7 @@ export default function TimeStartEndSelector({ onData, values }: Props) {
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "payments:filter": {
+      "subscriptions:filter": {
         "Start at": "Start at";
         "End At": "End at";
       };

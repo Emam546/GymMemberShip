@@ -17,9 +17,7 @@ interface Props {
 }
 export default function Page({ products: initProducts }: Props) {
   const [products, setProducts] = useState(initProducts);
-  const auth = useAuth();
-  const login = useLogUser();
-  const { t } = useTranslation("/admins");
+  const { t } = useTranslation("/products");
   const mutate = useMutation({
     async mutationFn(data: unknown) {
       const request = await requester.post<

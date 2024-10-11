@@ -100,7 +100,6 @@ export async function getLogsCount(
     };
   } = { ...match };
   const ID: Record<string, unknown> = {
-    currency: "$paid.type",
   };
   if (result.data?.startAt || result.data?.endAt) {
     matchQuery["createdAt"] = {};

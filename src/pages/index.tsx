@@ -6,27 +6,23 @@ import classNames from "classnames";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ComponentProps, useEffect, useState } from "react";
-import { StyledInput } from "@src/components/common/inputs/styles";
 import { AttendPerson } from "@src/components/pages/logger/form";
 import { useQuery } from "@tanstack/react-query";
 import mongoose from "mongoose";
 import connect from "@serv/db/connect";
 import requester from "@src/utils/axios";
 import { isString } from "@src/utils/types";
-import ErrorShower from "@src/components/common/error";
 import UserInfoForm from "@src/components/pages/logger/user";
 import UserPaymentsTable from "@src/components/pages/logger/subscriptions/table";
 import { useTranslation } from "react-i18next";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CopyText } from "@src/components/common/copy";
 import AddUserPayment from "@src/components/pages/users/addPayment";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import { GetServerSideProps } from "next";
-import i18n from "@src/i18n";
 import { getAllTrainers } from "@serv/routes/admin/trainers";
 import BarcodeSearcher from "@src/components/pages/logger/barcode";
+import { remainingDays } from "@src/utils/payment";
 
 interface Props {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
@@ -127,15 +123,16 @@ export default function Page({ plans, trainers }: Props) {
               <UserInfoForm user={query.data?.user} />
             </MainCard>
             <MainCard containerClassName="tw-flex-1">
-              <CardTitle>{t("payments.title")}</CardTitle>
+              <CardTitle>{t("subscriptions.title")}</CardTitle>
               <UserPaymentsTable
                 perPage={perPage}
                 elems={
                   query.data?.payments
+                    .sort((a, b) => remainingDays(b) - remainingDays(a))
                     .slice(page * perPage, page * perPage + perPage)
                     .map((val, i) => ({
                       order: i + page * perPage,
-                      payment: val,
+                      subscription: val,
                     })) || []
                 }
                 totalCount={query.data?.payments.length || 0}
@@ -143,7 +140,7 @@ export default function Page({ plans, trainers }: Props) {
                   setPage(page);
                 }}
                 onSelect={function (page): void {
-                  setSelected(page.payment._id);
+                  setSelected(page.subscription._id);
                 }}
                 selected={selectedPayment}
                 page={page}
@@ -261,7 +258,7 @@ declare global {
         admin: {
           name: "Admin Name";
         };
-        payments: {
+        subscriptions: {
           title: "Payments";
         };
         addPayment: {

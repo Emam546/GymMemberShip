@@ -60,8 +60,8 @@ export default function PaymentInfoForm({
   const planId = watch("planId");
   const plan = plans.find((val) => val._id == planId);
   const planPrice = plan?.prices[getValues("plan.type")];
-  const { t: t1 } = useTranslation("payment:form:update");
-  const { t: t2 } = useTranslation("payment:add");
+  const { t: t1 } = useTranslation("subscription:form:update");
+  const { t: t2 } = useTranslation("subscription:add");
   const sendBarcode = useSendBarcodeAsImage({
     onSuccess() {
       alert("message was sent successfully");
@@ -250,7 +250,7 @@ export default function PaymentInfoForm({
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "payment:form:update": {
+      "subscription:form:update": {
         User: "User";
         Plan: "Plan";
         createdAt: string;

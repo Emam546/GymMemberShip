@@ -14,11 +14,7 @@ import PrintPaymentsQuery from "@src/components/pages/users/queryPayment/print";
 import FilterUsersData, {
   DataType as FilterUsersDataType,
 } from "@src/components/pages/users/filter/filterUsersData";
-import MessageDataForm, {
-  MessageDataUsers,
-} from "@src/components/pages/whatsapp";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import { hasOwnProperty } from "@src/utils";
+import { MessageDataUsers } from "@src/components/pages/whatsapp";
 import PaymentsDataFilter, {
   DataType as PaymentsDataFilterFilter,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
@@ -40,7 +36,7 @@ export default function Page() {
     active: true,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "query", "infinity", filter],
+    queryKey: ["subscriptions", "query", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<
@@ -74,7 +70,9 @@ export default function Page() {
       </Head>
       <BigCard className="tw-min-h-screen">
         <div className="tw-flex tw-justify-between">
-          <CardTitle>{t("Users")}</CardTitle>
+          <div>
+            <CardTitle>{t("Users")}</CardTitle>
+          </div>
           <div>
             <PrintPaymentsQuery
               query={{
@@ -142,9 +140,9 @@ export default function Page() {
                     perPage={payments.length}
                     page={0}
                     totalCount={payments.length}
-                    payments={payments.map((payment, i) => ({
+                    subscriptions={payments.map((payment, i) => ({
                       order: i,
-                      payment: {
+                      subscription: {
                         ...payment,
                         userId: payment.userId?._id || "",
                         planId: payment.planId?._id || "",

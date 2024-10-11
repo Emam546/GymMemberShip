@@ -22,7 +22,7 @@ export interface Props {
 }
 
 export default function LogsPaymentInfo({ id }: Props) {
-  const queryInfinityKey = ["logs", "payments", id, "infinity"];
+  const queryInfinityKey = ["logs", "subscriptions", id, "infinity"];
   const QueryInfinity = useInfiniteQuery({
     queryKey: queryInfinityKey,
     queryFn: async ({ pageParam = 0, signal }) => {

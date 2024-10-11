@@ -62,7 +62,7 @@ export default function FullLogsInfoGenerator({
         const pages = queryClient.getQueriesData<ElemProps[]>([
           "users",
           id,
-          "payments",
+          "subscriptions",
         ]);
         const doc = elem.log;
         const newPages = pages

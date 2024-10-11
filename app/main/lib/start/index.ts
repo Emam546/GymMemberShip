@@ -1,3 +1,4 @@
+import "./ipc"
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
@@ -10,12 +11,11 @@ import { isDev } from "@app/main/utils";
 export interface Props {
   preloadData: Context;
 }
-
 export const createStartWindow = async (
   vars: Props,
   options?: BrowserWindowConstructorOptions
 ): Promise<BrowserWindow> => {
-  const preloadData: Context = {
+  const preloadData: Omit<Context, "logoImage"> = {
     ...vars.preloadData,
   };
   const win = new BrowserWindow({

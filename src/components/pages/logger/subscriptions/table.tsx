@@ -6,7 +6,7 @@ import Link from "next/link";
 
 interface ElemProps {
   order: number;
-  payment: DataBase.Populate.Model<
+  subscription: DataBase.Populate.Model<
     DataBase.WithId<DataBase.Models.Subscriptions>,
     "planId" | "adminId" | "trainerId"
   >;
@@ -14,16 +14,10 @@ interface ElemProps {
   selected: boolean;
   onClick: () => void;
 }
-function Row({
-  headKeys,
-  order,
-  payment: payment,
-  onClick,
-  selected,
-}: ElemProps) {
-  const startAt = new Date(payment.startAt || payment.createdAt);
+function Row({ headKeys, order, subscription, onClick, selected }: ElemProps) {
+  const startAt = new Date(subscription.startAt || subscription.createdAt);
   const endAt = new Date(
-    startAt.getTime() + payment.plan.num * 24 * 60 * 60 * 1000
+    startAt.getTime() + subscription.plan.num * 24 * 60 * 60 * 1000
   );
   return (
     <tr
@@ -31,25 +25,26 @@ function Row({
         onClick();
       }}
       data-selected={selected}
-      data-remaining={payment.remaining > 0}
+      data-active={remainingDays(subscription) > 0}
+      data-remaining={subscription.remaining > 0}
     >
       <E heads={headKeys} val="id">
         <td>{order + 1}</td>
       </E>
       <E heads={headKeys} val="plan">
         <td>
-          <Link href={`/subscriptions/${payment._id}`}>
-            {payment.planId?.name}
+          <Link href={`/subscriptions/${subscription._id}`}>
+            {subscription.planId?.name}
           </Link>
         </td>
       </E>
       <E heads={headKeys} val="link">
         <td>
-          <Link href={`/subscriptions/${payment._id}`}>Link</Link>
+          <Link href={`/subscriptions/${subscription._id}`}>Link</Link>
         </td>
       </E>
       <E heads={headKeys} val="remainingDays">
-        <td>{remainingDays(payment)}</td>
+        <td>{remainingDays(subscription)}</td>
       </E>
       <E heads={headKeys} val="startAt">
         <td>{formateDate(startAt)}EGP</td>
@@ -70,11 +65,11 @@ export type HeadKeys =
   | "remainingDays"
   | "delete";
 export interface Props {
-  elems: Pick<ElemProps, "payment" | "order">[];
+  elems: Pick<ElemProps, "subscription" | "order">[];
   totalCount: number;
   onDelete?: (elem: ElemProps) => void;
   onSetPage: (page: number) => void;
-  onSelect: (payment: Pick<ElemProps, "payment" | "order">) => void;
+  onSelect: (payment: Pick<ElemProps, "subscription" | "order">) => void;
   page: number;
   selected?: string;
   headKeys: HeadKeys[];
@@ -131,11 +126,11 @@ export default function UserPaymentsTable({
           {elems.map((val) => {
             return (
               <Row
-                key={val.payment._id}
+                key={val.subscription._id}
                 {...val}
                 headKeys={headKeys}
                 onClick={() => onSelect(val)}
-                selected={val.payment._id == selected}
+                selected={val.subscription._id == selected}
               />
             );
           })}

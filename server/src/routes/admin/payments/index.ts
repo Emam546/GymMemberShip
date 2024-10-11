@@ -2,53 +2,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import "@serv/validator/database";
-import Subscriptions from "@serv/models/subscriptions";
+import Payments from "@serv/models/payments";
 import Validator from "validator-checker-js";
-import Users from "@serv/models/users";
-import Plans from "@serv/models/plans";
-import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
-import Trainers from "@serv/models/trainers";
-import QueryCount from "./query";
 import { SortOrder } from "mongoose";
 const router = Router();
-const registerValidator = new Validator({
-  planId: ["required", { existedId: { path: Plans.modelName } }],
-  userId: ["required", { existedId: { path: Users.modelName } }],
-  trainerId: [{ existedId: { path: Trainers.modelName } }],
-  paid: ["integer", "required"],
-  plan: {
-    type: ["string", { in: ["day", "year", "month"] }, "required"],
-    num: ["integer", "required"],
-    ".": ["required"],
-  },
-  startAt: ["isDate", "required"],
-  endAt: ["isDate", "required"],
-  remaining: ["integer", "required"],
-  ".": ["required"],
-});
-router.post("/", async (req, res) => {
-  const result = await registerValidator.asyncPasses(req.body);
-  if (!result.state)
-    return res.status(400).sendFailed("invalid Data", result.errors);
-
-  const plan = new Subscriptions({
-    ...result.data,
-    adminId: req.user?._id,
-  } as DataBase.Models.Subscriptions);
-  const Payment = await plan.save();
-  res.status(200).sendSuccess(Payment);
-});
 const registerQuery = new Validator({
   startAt: ["numeric"],
   endAt: ["numeric"],
   skip: ["numeric"],
   limit: ["numeric"],
-  active: ["string", { in: ["true", "false"] }],
   remaining: ["accepted"],
   ".": ["required"],
 });
-export async function getSubscriptions(
+export async function getPayments(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 },
@@ -60,11 +27,10 @@ export async function getSubscriptions(
   ],
   sort: Record<string, SortOrder> = {}
 ) {
-  const currentDate = new Date();
   const result = registerQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
-  const { skip, limit, startAt, endAt, active, remaining } = result.data;
+  const { skip, limit, startAt, endAt, remaining } = result.data;
   const matchQuery: Record<string, unknown> = {
     ...match,
   };
@@ -74,29 +40,8 @@ export async function getSubscriptions(
       $gte: parseInt(startAt as string) || 0,
     };
   }
-  if (typeof active != "undefined") {
-    if (active == "true") {
-      matchQuery["$and"] = [
-        { endAt: { $gt: currentDate } },
-        {
-          $expr: {
-            $lt: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
-          },
-        },
-      ];
-    } else if (active == "false") {
-      matchQuery["$or"] = [
-        { endAt: { $lte: currentDate } },
-        {
-          $expr: {
-            $gte: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
-          },
-        },
-      ];
-    }
-  }
   if (remaining) matchQuery["remaining"] = { $gt: 0 };
-  const queryMongo = Subscriptions.find(matchQuery)
+  const queryMongo = Payments.find(matchQuery)
     .hint({ ...hint, __t: 1 })
     .skip(parseInt(skip as string) || 0)
     .limit(parseInt(limit as string) || Infinity)
@@ -108,7 +53,7 @@ export async function getSubscriptions(
   return payments;
 }
 router.get("/", async (req, res) => {
-  const payments = await getSubscriptions(req.query);
+  const payments = await getPayments(req.query);
   res.status(200).sendSuccess(payments);
 });
 const registerProfitQuery = new Validator({
@@ -121,42 +66,19 @@ const registerProfitQuery = new Validator({
   remaining: ["accepted"],
   ".": ["required"],
 });
-export async function getSubscriptionsProfit(
+export async function getPaymentsProfit(
   query: unknown,
   match?: any,
   hint: Record<string, unknown> = { createdAt: -1 }
 ) {
-  const currentDate = new Date();
   const result = registerProfitQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalidData", result.errors);
 
   const matchQuery: Record<string, any> = { ...match };
 
-  const { active, remaining } = result.data;
+  const { remaining } = result.data;
   if (remaining) matchQuery["remaining"] = { $gt: 0 };
-
-  if (typeof active != "undefined") {
-    if (active == "true") {
-      matchQuery["$and"] = [
-        { endAt: { $gt: currentDate } },
-        {
-          $expr: {
-            $lt: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
-          },
-        },
-      ];
-    } else if (active == "false") {
-      matchQuery["$or"] = [
-        { endAt: { $lte: currentDate } },
-        {
-          $expr: {
-            $gte: ["$logsCount", "$plan.num"], // Compare logsCount with plan.num
-          },
-        },
-      ];
-    }
-  }
   const ID: Record<string, unknown> = {};
   if (result.data?.startAt || result.data?.endAt) {
     matchQuery["createdAt"] = {};
@@ -174,7 +96,7 @@ export async function getSubscriptionsProfit(
   if (result.data?.month) ID["month"] = { $month: "$createdAt" };
   if (result.data?.day) ID["day"] = { $dayOfMonth: "$createdAt" };
 
-  const payments = await Subscriptions.aggregate([
+  const payments = await Payments.aggregate([
     {
       $match: matchQuery,
     },
@@ -197,9 +119,8 @@ export async function getSubscriptionsProfit(
   return payments as DataBase.Queries.Payments.Profit[];
 }
 router.get("/profit", async (req, res) => {
-  const payments = await getSubscriptionsProfit(req.query);
+  const payments = await getPaymentsProfit(req.query);
   res.status(200).sendSuccess(payments);
 });
-router.use("/query", QueryCount);
-router.use(IdRouter);
+
 export default router;

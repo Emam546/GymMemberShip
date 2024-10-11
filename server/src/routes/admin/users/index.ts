@@ -4,6 +4,7 @@ import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
 import { RootFilterQuery } from "mongoose";
+import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
 const router = Router();
 const registerValidator = new Validator({
   name: ["string"],
@@ -45,10 +46,13 @@ const registerQuery = new Validator({
   limit: ["numeric"],
   ".": ["required"],
 });
-router.get("/", async (req, res) => {
-  const result = registerQuery.passes(req.query);
+export async function getUsers(
+  q: unknown,
+  populate: (keyof DataBase.Models.User)[] = ["adminId"]
+) {
+  const result = registerQuery.passes(q);
   if (!result.state)
-    return res.status(400).sendFailed("invalid Data", result.errors);
+    throw new RouteErrorHasError(400, "invalid Data", result.errors);
   const {
     ageMax,
     ageMin,
@@ -88,14 +92,20 @@ router.get("/", async (req, res) => {
     };
   }
   if (name) query["name"] = { $regex: name, $options: "i" };
-  const results = await Users.find(query)
+  const queryMongo = Users.find(query)
     .hint({
       createdAt: -1,
     })
     .skip(parseInt(skip as string) || 0)
-    .limit(parseInt(limit as string) || Infinity)
-    .populate("adminId");
-  res.status(200).sendSuccess(results);
+    .limit(parseInt(limit as string) || Infinity);
+  const users = await populate.reduce(
+    (query, val) => query.populate(val),
+    queryMongo
+  );
+  return users;
+}
+router.get("/", async (req, res) => {
+  res.status(200).sendSuccess(await getUsers(req.query));
 });
 const registerQueryParam = new Validator({
   ".": ["required"],

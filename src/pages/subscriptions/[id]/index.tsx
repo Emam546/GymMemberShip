@@ -1,4 +1,3 @@
-import "@src/i18n/locales/subscriptions/[id]";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
 import { useState } from "react";
@@ -114,3 +113,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 };
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/subscriptions/[id]": {
+        title: "{{val}} Payment";
+        "Update Payment Data": "Update Payment Data";
+        "User Logs": "User Logs";
+      };
+    }
+  }
+}

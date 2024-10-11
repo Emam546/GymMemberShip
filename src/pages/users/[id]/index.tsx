@@ -78,7 +78,11 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
                 ...data,
                 userId: doc._id,
               });
-              queryClient.invalidateQueries(["payments", "users", doc._id]);
+              queryClient.invalidateQueries([
+                "subscriptions",
+                "users",
+                doc._id,
+              ]);
               alert(t("messages.added", { ns: "translation" }));
             }}
             plans={plans}

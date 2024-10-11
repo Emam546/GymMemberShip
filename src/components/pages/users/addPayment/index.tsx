@@ -40,7 +40,7 @@ export default function AddUserPayment({ plans, onData, trainers }: Props) {
   const planType = watch("plan.type");
   const numberOfDays = watch("plan.num");
   const planId = watch("planId");
-  const { t } = useTranslation("payment:add");
+  const { t } = useTranslation("subscription:add");
   const plan = plans.find((val) => val._id == planId);
   const planPrice = plan?.prices[planType];
   const paidAmount = watch("paid");
@@ -178,7 +178,7 @@ export default function AddUserPayment({ plans, onData, trainers }: Props) {
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "payment:add": {
+      "subscription:add": {
         "Choose Course": "Choose Course";
         payment: {
           endAt: "This payment should be end at {{val}}";
@@ -203,4 +203,3 @@ declare global {
     }
   }
 }
-

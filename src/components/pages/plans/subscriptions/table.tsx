@@ -21,9 +21,9 @@ type S = Routes.ResponseSuccess<
 >;
 function isQueryPayment(
   val: QueryKey
-): val is ["payments", "users", string, number] {
+): val is ["subscriptions", "users", string, number] {
   return (
-    val[0] == "payments" &&
+    val[0] == "subscriptions" &&
     val[1] == "plans" &&
     typeof val[3] == "number" &&
     val.length == 4
@@ -36,13 +36,13 @@ export default function FullPaymentInfoGenerator({
 }: Props) {
   const [page, setPage] = useState(0);
   const mutate = useMutation({
-    async mutationFn(payment: ElemProps["payment"]) {
+    async mutationFn(payment: ElemProps["subscription"]) {
       return await requester.delete(`/api/admin/subscriptions/${payment._id}`);
     },
     onSuccess(_, payment) {
-      queryClient.getQueryData(["payments", "plans", id]);
+      queryClient.getQueryData(["subscriptions", "plans", id]);
       const pages = queryClient.getQueriesData<ElemProps[]>([
-        "payments",
+        "subscriptions",
         "plans",
         id,
       ]);
@@ -52,7 +52,7 @@ export default function FullPaymentInfoGenerator({
           if (!cur) return acc;
           return [...acc, ...cur];
         }, [] as ElemProps[])
-        .filter((val) => val.payment._id != payment._id)
+        .filter((val) => val.subscription._id != payment._id)
         .reduce(
           (acc, cur) => {
             const last = acc.at(-1)!;
@@ -63,16 +63,16 @@ export default function FullPaymentInfoGenerator({
           [[]] as ElemProps[][]
         );
       newPages.forEach((data, page) => {
-        queryClient.setQueryData(["payments", "plans", id, page], data);
+        queryClient.setQueryData(["subscriptions", "plans", id, page], data);
       });
       queryClient.setQueryData(
-        ["payments", "plans", id, "number"],
+        ["subscriptions", "plans", id, "number"],
         Math.max(0, queryNum.data! - 1)
       );
     },
   });
   const query = useQuery({
-    queryKey: ["payments", "plans", id, page],
+    queryKey: ["subscriptions", "plans", id, page],
     queryFn: async () => {
       const request = await requester.get<S>(
         `/api/admin/plans/${id}/subscriptions`,
@@ -86,15 +86,15 @@ export default function FullPaymentInfoGenerator({
       return request.data.data.map((doc, i) => {
         return {
           order: page + i + 1,
-          payment: doc,
+          subscription: doc,
           user: doc.userId,
           adminId: doc.adminId,
-        } as unknown as ElemProps;
+        } as ElemProps;
       });
     },
   });
   const queryNum = useQuery({
-    queryKey: ["payments", "plans", id, "number"],
+    queryKey: ["subscriptions", "plans", id, "number"],
     queryFn: async () => {
       const request = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
@@ -105,13 +105,14 @@ export default function FullPaymentInfoGenerator({
   if (query.isLoading || queryNum.isLoading) return null;
   if (query.isError) return <p>{JSON.stringify(query.error)}</p>;
   if (queryNum.isError) return <p>{JSON.stringify(query.error)}</p>;
+  console.log(query.data);
   return (
     <PaymentInfoGenerator
       perPage={perPage}
       headKeys={headKeys}
       page={page}
-      onDelete={(elem) => mutate.mutateAsync(elem.payment)}
-      payments={query.data}
+      onDelete={(elem) => mutate.mutateAsync(elem.subscription)}
+      subscriptions={query.data}
       setPage={setPage}
       totalCount={queryNum.data}
     />

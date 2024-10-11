@@ -1,4 +1,4 @@
-import { BigCard, MainCard } from "@src/components/card";
+import { BigCard } from "@src/components/card";
 import { GetServerSideProps } from "next";
 import Subscriptions from "@serv/models/subscriptions";
 import Head from "next/head";
@@ -15,15 +15,12 @@ import connect from "@serv/db/connect";
 import UsersTable, {
   Props as UserTableProps,
 } from "@src/components/pages/users/table";
-import Users from "@serv/models/users";
-import Plans from "@serv/models/plans";
-import {
-  getPayments,
-  getPaymentsProfit,
-} from "@serv/routes/admin/subscriptions";
+import { getPaymentsProfit } from "@serv/routes/admin/payments";
 import { getDaysArray, MakeItSerializable } from "@src/utils";
 import { useTranslation } from "react-i18next";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
+import { getSubscriptions } from "@serv/routes/admin/subscriptions";
+import { getUsers } from "@serv/routes/admin/users";
 
 export interface Props {
   earnings: YearsAndMonthEarningsProps;
@@ -48,26 +45,28 @@ export default function Page({ earnings, payments, users, sales }: Props) {
             <div className="row">
               <RecentPayments {...payments} />
               <div className="col-lg-8 d-flex align-items-stretch">
-                <MainCard containerClassName="card" className="card-body">
-                  <h5 className="mb-4 card-title fw-semibold">
-                    {t("Recent Users")}
-                  </h5>
-                  <UsersTable
-                    perPage={users.length}
-                    page={0}
-                    totalCount={users.length}
-                    users={users}
-                    headKeys={[
-                      "createdAt",
-                      "name",
-                      "blocked",
-                      "age/tall/weight",
-                      "plan",
-                      "order",
-                      "admin",
-                    ]}
-                  />
-                </MainCard>
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title fw-semibold">
+                      {t("Recent Users")}
+                    </h5>
+                    <UsersTable
+                      perPage={users.length}
+                      page={0}
+                      totalCount={users.length}
+                      users={users}
+                      headKeys={[
+                        "createdAt",
+                        "name",
+                        "blocked",
+                        "age/tall/weight",
+                        "plan",
+                        "order",
+                        "admin",
+                      ]}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -77,28 +76,30 @@ export default function Page({ earnings, payments, users, sales }: Props) {
   );
 }
 async function getLastUsers() {
-  const results = await Users.find({}).hint({ createdAt: -1 }).limit(5);
+  const results = await getUsers({ limit: 5 });
   return await Promise.all(
     results.map<Promise<UserTableProps["users"][0]>>(async (doc, i) => {
       const payment = await Subscriptions.findOne({
         userId: doc._id,
         __t: "subscription",
-      }).hint({
-        userId: 1,
-        createdAt: -1,
-        __t: 1,
-      });
+      })
+        .hint({
+          userId: 1,
+          createdAt: -1,
+          __t: 1,
+        })
+        .populate("planId");
       if (!payment)
         return {
           order: i + 1,
           user: JSON.parse(JSON.stringify(doc)),
         };
-      const plan = await Plans.findById(payment.planId);
       return {
         order: i + 1,
-        user: JSON.parse(JSON.stringify(doc)),
-        lastPlan: JSON.parse(JSON.stringify(plan)),
-      };
+        user: MakeItSerializable(doc),
+        admin: MakeItSerializable(doc.adminId),
+        lastPlan: MakeItSerializable(payment.planId),
+      } as unknown as any;
     })
   );
 }
@@ -194,7 +195,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const lastMonths = await getLastMonthDays(6);
   const users = await getLastUsers();
   const monthEarnings = await getLastMonthProfit();
-  const lastTransactions = await getPayments({ limit: 5 });
+  const lastTransactions = await getSubscriptions({ limit: 5 });
   ctx.res.setHeader(
     "Cache-Control",
     `public,  s-maxage=${60 * 60}, stale-while-revalidate=${60 * 60 * 2}`

@@ -11,7 +11,7 @@ import i18n from "@src/i18n";
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "payments:deleteForm": {
+      "subscriptions:deleteForm": {
         paragraph: "Once you delete the payment, it cannot be undone. This is permanent.";
         "delete.button": "Delete Payment";
         model: {
@@ -31,11 +31,11 @@ export default function DeletePaymentForm({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { t } = useTranslation("payments:deleteForm");
+  const { t } = useTranslation("subscriptions:deleteForm");
   const deleteAccountMutate = useMutation({
     mutationFn: async () => {
       await requester.delete(`/api/admin/subscriptions/${payment._id}`);
-      queryClient.invalidateQueries(["payments"]);
+      queryClient.invalidateQueries(["subscriptions"]);
       alert(t("messages.added", { ns: "translation" }));
       await router.push(`/users/${payment._id}`);
     },

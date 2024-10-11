@@ -79,8 +79,8 @@ export function AttendPerson({
   useEffect(() => {
     reset();
   }, [payment]);
-  const { t } = useTranslation("payment:form:update");
-  const { t: t2 } = useTranslation("payment:add");
+  const { t } = useTranslation("subscription:form:update");
+  const { t: t2 } = useTranslation("subscription:add");
   const { t: t3 } = useTranslation("form:attend");
   const printBarcode = usePrintBarCode({
     onSuccess(doc) {

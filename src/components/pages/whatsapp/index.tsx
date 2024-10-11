@@ -37,6 +37,7 @@ export default function MessageDataForm({
   const { register, handleSubmit, formState } = useForm<FormData>({
     values: defaultData,
   });
+  const { t } = useTranslation("form:message:whatsapp");
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -59,7 +60,7 @@ export default function MessageDataForm({
       })}
       autoComplete="off"
     >
-      <WrapElem id="formFileMultiple" label="Upload Files">
+      <WrapElem id="formFileMultiple" label={t("files.label")}>
         <input
           className="form-control"
           type="file"
@@ -71,7 +72,7 @@ export default function MessageDataForm({
       <div className="tw-mt-4">
         <TextArea
           id={"desc-input"}
-          title={"Message"}
+          title={t("message.label")}
           {...register("message")}
           className="tw-min-h-[10rem]"
           err={formState.errors.message}
@@ -132,17 +133,13 @@ export function MessageDataUsers({ OnUsers, ...props }: MessageDataUsersProps) {
     />
   );
 }
-// declare global {
-//   namespace I18ResourcesType {
-//     interface Resources {
-//       "form:user": {
-//         "User Name": "User Name";
-//         Phone: "Phone";
-//         Age: "Age";
-//         "Tall in centimeter": "Tall in centimeter";
-//         "Weight in Kg": "Weight in Kg";
-//         "Why did you come": "Why did you come";
-//       };
-//     }
-//   }
-// }
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "form:message:whatsapp": {
+        "files.label": "Upload Files";
+        "message.label": "Upload Messages";
+      };
+    }
+  }
+}

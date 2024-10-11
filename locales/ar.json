@@ -32,7 +32,7 @@
       "delete": {
         "title": "حذف المستخدم",
         "desc": "بمجرد النقر فوق \"حذف\"، سيتم حظر المستخدم من قاعدة البيانات ولن يتمكن من الوصول إلى الخادم",
-        "accept": "امسح {{name}}",
+        "accept": "احذف {{name}}",
         "deny": "يحفظ"
       }
     },
@@ -41,7 +41,7 @@
       "name": "اسم",
       "phone": "هاتف",
       "email": "بريد إلكتروني",
-      "delete": "امسح",
+      "delete": "احذف",
       "type": "الصلاحيات"
     },
     "noData": "لا يوجد مشرفين حتى الآن"
@@ -84,7 +84,7 @@
     "default": "اختر الخطة"
   },
   "dashboard": {
-    "Sales OverView": "نظرة عامة على المبيعات",
+    "Sales OverView": "نظرة عامة على الاشتراكات",
     "Yearly Breakup": "الأرباح السنويه",
     "last year": "العام الماضي",
     "Monthly Earnings": "الأرباح الشهرية",
@@ -125,21 +125,21 @@
     },
     "paragraph": "لا يوجد سجلات حتى الآن"
   },
-  "payments:deleteForm": {
+  "subscriptions:deleteForm": {
     "paragraph": "بمجرد حذف الدفعة، لا يمكن التراجع عنها. ",
     "delete.button": "حذف الدفع",
     "model": {
-      "accept": "امسح",
+      "accept": "احذف",
       "title": "هل أنت متأكد أنك تريد حذف الدفعة؟",
       "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف الدفعة والبيانات المرتبطة بها نهائيًا ولا يمكن استعادتها.",
       "deny": "احتفظ بالدفع"
     }
   },
-  "payments:filter": {
+  "subscriptions:filter": {
     "Start at": "ابدأ في",
     "End At": "تنتهي عند"
   },
-  "payment:form:update": {
+  "subscription:form:update": {
     "User": "المستخدم",
     "Plan": "الخطه",
     "createdAt": "تم الإنشاء في",
@@ -161,7 +161,7 @@
       "End At": "نهاية عند",
       "A/R/T": "المجموع/الباقي/الحضور",
       "Attend": "حضر",
-      "Delete": "امسح",
+      "Delete": "احذف",
       "admin": "المنشي",
       "startedAt": "بدأ في",
       "remainingMoney": "الأموال المتبقية"
@@ -197,11 +197,13 @@
     "sell": {
       "label": "البيع"
     },
-    "payments": {
-      "label": "المبيعات"
+    "subscriptions": {
+      "label": "الاشتراكات"
     },
     "whatsapp": {
-      "label": "واتس اب"
+      "label": "واتس اب",
+      "/users/whatsapp": "المستخدمين",
+      "/subscriptions/whatsapp": "الاشتراكات"
     },
     "dashboard": {
       "label": "لوحة القيادة"
@@ -235,7 +237,7 @@
       "delete": {
         "title": "حذف المدرب",
         "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف المستخدم من قاعدة البيانات",
-        "accept": "امسح {{name}}",
+        "accept": "احذف {{name}}",
         "deny": "يحفظ"
       }
     },
@@ -244,13 +246,13 @@
       "name": "اسم",
       "phone": "هاتف",
       "email": "بريد إلكتروني",
-      "delete": "امسح"
+      "delete": "احذف"
     },
     "noData": "لا يوجد مدربين حتى الآن"
   },
-  "payment:add": {
+  "subscription:add": {
     "Choose Course": "اختر الدورة",
-    "payment": {
+    "subscription": {
       "endAt": "يجب أن تنتهي هذه الدفعة عند {{val}}"
     },
     "paid": {
@@ -273,7 +275,7 @@
     "paragraph": "بمجرد حذف هذا الحساب، لا يمكن التراجع عن هذا الإجراء، فهذا أمر دائم.",
     "Delete Account": "حذف الحساب",
     "model": {
-      "accept": "امسح",
+      "accept": "احذف",
       "title": "هل أنت متأكد أنك تريد حذف هذا الحساب؟",
       "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف هذا الحساب والبيانات المرتبطة به نهائيًا ولا يمكن استعادتهما. ",
       "deny": "احتفظ بالحساب"
@@ -318,7 +320,7 @@
   },
   "/admins/[id]": {
     "update.title": "تحديث بيانات المسؤول",
-    "payments.title": "المدفوعات"
+    "subscriptions.title": "الاشتراكات"
   },
   "/dashboard": {
     "Recent Transactions": "المعاملات الأخيرة",
@@ -332,7 +334,7 @@
     "admin": {
       "name": "اسم المشرف"
     },
-    "payments": {
+    "subscriptions": {
       "title": "الاشتراكات"
     },
     "addPayment": {
@@ -348,8 +350,8 @@
     "Total Count": "العدد الإجمالي"
   },
   "/subscriptions": {
-    "title": "المدفوعات",
-    "Payments": "المدفوعات",
+    "title": "الاشتراكات",
+    "Payments": "الاشتراكات",
     "Earnings": "الأرباح",
     "Total Count": "العدد الإجمالي"
   },
@@ -370,13 +372,14 @@
   },
   "/plan/[id]": {
     "Update Plan Data": "تحديث بيانات الخطة",
-    "Payments": "المدفوعات",
+    "Payments": "الاشتراكات",
     "Go To Plans": "انتقل إلى الخطط",
     "Go To Users Logs": "انتقل إلى سجلات المستخدمين",
-    "Go To Plan Payments": "انتقل إلى مدفوعات الخطة"
+    "Go To Plan Payments": "انتقل إلى مدفوعات الخطة",
+    "Go To Plan Users": "انتقل إلى مستخدمي الخطة"
   },
   "/plans/[id]/subscriptions": {
-    "title": "{{name}} المدفوعات",
+    "title": "{{name}} الاشتراكات",
     "Plan Payments": "مدفوعات الخطة",
     "Total Count": "العدد الإجمالي",
     "Earnings": "الأرباح"
@@ -407,7 +410,7 @@
   },
   "/users/[id]/logs": {
     "Update User Data": "تحديث بيانات المستخدم",
-    "Payments": "المدفوعات",
+    "Payments": "الاشتراكات",
     "Go To Logs": "انتقل إلى السجلات"
   },
   "/users/add": {
@@ -416,9 +419,57 @@
   },
   "attend:messages": {
     "messages": {
-      "finished": "ليس لدى المستخدم أي أيام متبقية؟",
-      "userAttendedAlready": "لقد حضر مستخدم هذا اليوم بالفعل",
+      "finished": "المستخدم ليس لديه أيام متبقية بالفعل؟ \n هل تريد إضافة المزيد من السجلات؟",
+      "userAttendedAlready": "لقد حضر المستخدم هذا اليوم بالفعل \n هل تريد إضافة سجل آخر مرة أخرى؟",
       "logAdded": "تمت إضافة السجل بنجاح"
     }
+  },
+  "/products": {
+    "title": "منتجات",
+    "create.title": "إنشاء المنتج"
+  },
+  "table:products": {
+    "td": {
+      "Deleted": "تم الحذف",
+      "block.label": "احذف",
+      "delete": {
+        "title": "حذف المنتج",
+        "desc": "بمجرد النقر فوق \"حذف\"، ستتم إزالة المنتج من قاعدة البيانات",
+        "accept": "احذف {{name}}",
+        "deny": "يحفظ"
+      }
+    },
+    "th": {
+      "id": "ID",
+      "name": "اسم",
+      "amount": "الكميه",
+      "price": "سعر",
+      "delete": "احذف"
+    },
+    "noData": "لا يوجد منتجات حتى الآن"
+  },
+  "table:products:sell": {
+    "td": {
+      "noStock": "الكمية التي تبيعها أكبر من الكمية الموجودة في المخزون.\n هل تريد إضافتها على أي حال؟"
+    },
+    "th": {
+      "id": "ID",
+      "name": "اسم",
+      "amount": "كمية",
+      "curAmount": "الكميه المباعه",
+      "price": "سعر",
+      "delete": "احذف",
+      "perPrice": "سعر القطعة"
+    },
+    "noData": "لا يوجد منتجات حتى الآن"
+  },
+  "form:product": {
+    "name": "اسم المنتج",
+    "num": "المبلغ",
+    "price": "سعر"
+  },
+  "form:message:whatsapp": {
+    "files.label": "تحميل الملفات",
+    "message.label": "الرساله"
   }
 }

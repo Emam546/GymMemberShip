@@ -48,7 +48,6 @@ export default function Page({ doc: initData }: Props) {
               buttonName={t("buttons.update", { ns: "translation" })}
             />
           </MainCard>
- 
         </BigCard>
       </IsAdminComp>
     </div>
@@ -76,7 +75,7 @@ declare global {
     interface Resources {
       "/admins/[id]": {
         "update.title": "Update Admin Data";
-        "payments.title": "Payments";
+        "subscriptions.title": "Payments";
       };
     }
   }

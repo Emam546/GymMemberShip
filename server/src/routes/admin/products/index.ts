@@ -3,6 +3,7 @@ import { Router } from "express";
 import Products from "@serv/models/products";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
+import PaymentsRouter from "./payments";
 import { RouteErrorHasError } from "@serv/declarations/classes";
 const router = Router();
 const registerValidator = new Validator({
@@ -50,5 +51,6 @@ router.get("/", async (req, res) => {
 //     .populate("adminId");
 //   res.status(200).sendSuccess(results);
 // });
+router.use("/payments", PaymentsRouter);
 router.use(IdRouter);
 export default router;

@@ -16,7 +16,7 @@ import {
 import { useAttend } from "@src/hooks/subscriptions";
 export interface ElemProps {
   order: number;
-  payment: Omit<
+  subscription: Omit<
     DataBase.WithId<DataBase.Models.Subscriptions>,
     "userId" | "planId" | "adminId" | "trainerId"
   >;
@@ -41,7 +41,7 @@ export type HeadKeys =
   | "remainingMoney"
   | "startedAt";
 
-function ShowLogValues({ payment }: { payment: ElemProps["payment"] }) {
+function ShowLogValues({ payment }: { payment: ElemProps["subscription"] }) {
   const TotalDays = payment.plan.num;
   const rDays = remainingDays(payment);
   return (
@@ -59,7 +59,7 @@ function AddLog({
   onAdded,
   ...props
 }: ComponentProps<"button"> & {
-  payment: ElemProps["payment"];
+  payment: ElemProps["subscription"];
   onAdded: () => void;
 }) {
   const mutate = useAttend({
@@ -84,7 +84,7 @@ function AddLog({
 }
 
 function Shower({
-  payment: initPayment,
+  subscription: initPayment,
   user,
   order,
   headKeys,
@@ -212,13 +212,13 @@ function Shower({
 }
 
 export interface PaymentProps extends ExtendedPaginationProps {
-  payments: ElemProps[];
+  subscriptions: ElemProps[];
   totalCount: number;
   headKeys: HeadKeys[];
   onDelete?: (elem: ElemProps) => void;
 }
 export function PaymentInfoGenerator({
-  payments,
+  subscriptions: payments,
   headKeys,
   onDelete,
   ...props
@@ -278,7 +278,7 @@ export function PaymentInfoGenerator({
                 <Shower
                   {...doc}
                   onDelete={() => onDelete?.(doc)}
-                  key={doc.payment._id}
+                  key={doc.subscription._id}
                   headKeys={headKeys}
                 />
               );

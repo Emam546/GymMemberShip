@@ -32,7 +32,7 @@ export default function Page() {
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "users", "query", "infinity", filter],
+    queryKey: ["subscriptions", "users", "query", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<

@@ -180,7 +180,7 @@ export function useSendBarcodeAsImage({
   >,
   "mutationFn"
 >) {
-  const { t } = useTranslation("payment:form:update");
+  const { t } = useTranslation("subscription:form:update");
   const print = useContext(BarCodeContext).setUser;
   return useMutation({
     async mutationFn(params) {
@@ -221,7 +221,7 @@ declare global {
       "barcode:print": {
         data: {
           name: "User Name";
-          type: "payment Type";
+          type: "subscription Type";
           startDate: "Start Date";
           endDate: "End Date";
           trainer: {

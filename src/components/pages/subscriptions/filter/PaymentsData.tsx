@@ -23,7 +23,7 @@ export default function PaymentsDataFilter({ onData, values }: Props) {
       applyActive: true,
     },
   });
-  const { t } = useTranslation("payments:filter");
+  const { t } = useTranslation("subscriptions:filter");
   useDebounceEffect(
     () => {
       const data = getValues();
@@ -63,7 +63,7 @@ export default function PaymentsDataFilter({ onData, values }: Props) {
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "payment:data:form": {
+      "subscription:data:form": {
         isActive: string;
         hasRemaining: string;
       };

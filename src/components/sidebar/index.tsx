@@ -164,15 +164,18 @@ function ManageUsersNavBar() {
         <LinkElem
           icon={GraphIcon.src}
           href="/subscriptions"
-          title={t("payments.label")}
+          title={t("subscriptions.label")}
         />
         <DropLinksElem
           icon={Whatsapp.src}
           hrefs={[
-            { href: "/users/whatsapp", label: "users" },
-            { href: "/subscriptions/whatsapp", label: "subscriptions" },
+            { href: "/users/whatsapp", label: t("whatsapp./users/whatsapp") },
+            {
+              href: "/subscriptions/whatsapp",
+              label: t("whatsapp./subscriptions/whatsapp"),
+            },
           ]}
-          title={"whatsapp"}
+          title={t("whatsapp.label")}
         />
         <LinkElem icon={PlansIcon.src} href="/plans" title={t("plans.label")} />
         <LinkElem
@@ -250,8 +253,12 @@ declare global {
           "/users/search": "Search for User";
         };
         sell: { label: "Sell" };
-        payments: { label: "Payments" };
-        whatsapp: { label: "whatsapp" };
+        subscriptions: { label: "Payments" };
+        whatsapp: {
+          label: "Whatsapp";
+          "/users/whatsapp": "Users";
+          "/subscriptions/whatsapp": "Users";
+        };
         dashboard: { label: "dashboard" };
         trainers: { label: "Trainers" };
         setting: {

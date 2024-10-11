@@ -26,12 +26,13 @@ const registerQuery = new Validator({
   remaining: [{ in: ["true", "false"] }, "string"],
   ".": ["required"],
 });
-export function getAggregateOptions(q: unknown) {
+export function getAggregateOptions(q: unknown, match?: any) {
   const currentDate = new Date();
   const result = registerQuery.passes(q);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
-  const firstQuery: Record<string, any> = {};
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const firstQuery: Record<string, any> = { ...match };
   const { active, remaining, startAt, endAt } = result.data;
   if (typeof active != "undefined") {
     if (active == "true") {

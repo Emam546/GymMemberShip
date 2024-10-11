@@ -3,23 +3,30 @@ import {
   useMergeRefs,
   useOnResizeObserve,
 } from "@renderer/utils/hooks";
-import { ComponentRef, useEffect } from "react";
-import image from "../../../build/icon.png";
+import { ComponentRef, useEffect, useRef } from "react";
 function App(): JSX.Element {
+  const imageRef = useRef<ComponentRef<"img">>(null);
   const ref = useMergeRefs<ComponentRef<"div">>(
+    useFitWindow<ComponentRef<"div">>([], "width"),
     useOnResizeObserve(() => {
       setTimeout(() => {
         window.api.send("center");
       });
-    }, []),
-    useFitWindow<ComponentRef<"div">>([], "width")
+    }, [])
   );
+  useEffect(() => {
+    window.api.invoke("getData", "app/start_logo").then((data) => {
+      if (!imageRef.current || !data) return;
+      console.log(data);
+      imageRef.current.src = data;
+    });
+  }, [imageRef]);
   return (
     <>
       <div ref={ref} className="w-64">
         <div>
           <img
-            src={image}
+            ref={imageRef}
             alt="Image"
             className="w-full pointer-events-none select-none"
           />

@@ -35,7 +35,7 @@ export default function Page() {
     endAt: curDate,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["payments", "infinity", filter],
+    queryKey: ["subscriptions", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
         `/api/admin/subscriptions`,
@@ -58,7 +58,7 @@ export default function Page() {
     },
   });
   const QueryProfit = useQuery({
-    queryKey: ["payments", "total", filter],
+    queryKey: ["subscriptions", "total", filter],
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
@@ -222,9 +222,9 @@ export default function Page() {
                   perPage={payments.length}
                   page={0}
                   totalCount={payments.length}
-                  payments={payments.map((payment, i) => ({
+                  subscriptions={payments.map((payment, i) => ({
                     order: i,
-                    payment: {
+                    subscription: {
                       ...payment,
                       userId: payment.userId?._id || "",
                       planId: payment.planId?._id || "",

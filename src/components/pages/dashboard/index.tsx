@@ -115,10 +115,9 @@ export function YearsAndMonthEarnings({
   );
 }
 export interface RecentPaymentsProps {
-  payments: DataBase.WithId<
-    DataBase.Models.Subscriptions & {
-      userId: DataBase.WithId<DataBase.Models.User>;
-    }
+  payments: DataBase.Populate.Model<
+    DataBase.WithId<DataBase.Models.Subscriptions>,
+    "userId"
   >[];
 }
 function formatTimeToString(date: Date) {
@@ -160,7 +159,7 @@ export function RecentPayments({ payments }: RecentPaymentsProps) {
                   </div>
                   <div className="timeline-desc fs-3 mt-n1">
                     {t("transactions.receivePayment", {
-                      name: val.userId.name,
+                      name: val.userId?.name,
                       price: `${val.paid}EGP`,
                     })}
                   </div>
