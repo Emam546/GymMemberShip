@@ -9,7 +9,7 @@ import "@locales/common";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode, useEffect, useRef } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import MainWrapper from "@src/components/mainWrapper";
@@ -25,7 +25,8 @@ import { ObjectEntries } from "@src/utils";
 import { UserProvider } from "@src/components/UserProvider";
 import { loadAuthData } from "@src/utils/loadAuth";
 import { BarcodePrintProvider } from "@src/components/BarcodePrinter";
-
+import { FrameProvider } from "@src/components/Frame/Frame";
+import ImagesBg from "@src/components/bg";
 config.autoAddCss = false;
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
@@ -39,12 +40,27 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 export function Provider({ children }: { children: ReactNode }) {
+  const ref = useRef(null);
+  const dayWeek = new Date().getDay();
+
+  const image = ImagesBg[dayWeek % ImagesBg.length];
+
   return (
     <ReduxProvider store={store}>
       <QueryClientProvider client={queryClient}>
         {/* <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID!}> */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <BarcodePrintProvider>{children}</BarcodePrintProvider>
+          <FrameProvider>
+            <BarcodePrintProvider>
+              <div
+                className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-contain -tw-z-10"
+                style={{
+                  backgroundImage: `url("${image}")`,
+                }}
+              />
+              {children}
+            </BarcodePrintProvider>
+          </FrameProvider>
         </LocalizationProvider>
         {/* </GoogleOAuthProvider> */}
       </QueryClientProvider>
@@ -72,6 +88,7 @@ const App = function ({ Component, pageProps, translations, user }: AppG) {
       <UserProvider state={user}>
         {/* <ConnectedBar /> */}
         <LoadingBar />
+
         {Component.getLayout ? (
           Component.getLayout(<Component {...pageProps} />)
         ) : (

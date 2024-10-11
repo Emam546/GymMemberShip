@@ -58,6 +58,14 @@ export const OnMethods: OnMethodsType = {
     if (!window) return;
     window.minimize();
   },
+  ToggleWindowMaximizeState: function (
+    event: Electron.CrossProcessExports.IpcMainEvent
+  ): void {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) return;
+    if (window.isMaximized()) window.restore();
+    else window.maximize();
+  },
   hideWindow: function (event): void {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;

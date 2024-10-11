@@ -12,8 +12,8 @@ declare global {
     interface HandleMethods extends Api.HandleMethods {}
     interface HandleOnceMethods extends Api.HandleOnceMethods {}
     namespace Render {
-      interface OnMethods {}
-      interface OnceMethods {}
+      interface OnMethods extends Api.Render.OnMethods {}
+      interface OnceMethods extends Api.Render.OnceMethods {}
     }
   }
 }

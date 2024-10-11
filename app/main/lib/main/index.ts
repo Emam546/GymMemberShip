@@ -1,5 +1,5 @@
 import "./ipc";
-import { BrowserWindowConstructorOptions, nativeImage, shell } from "electron";
+import { BrowserWindowConstructorOptions, globalShortcut, nativeImage, shell } from "electron";
 import path from "path";
 import { convertFunc } from "@app/main/utils/convert";
 
@@ -36,6 +36,7 @@ export const createMainWindow = async (
     ...options,
     ...state,
     icon: nativeImage.createFromPath("sources/app/app_icon.png"),
+    frame: false,
     webPreferences: {
       ...state.webPreferences,
       ...options.webPreferences,
@@ -61,7 +62,14 @@ export const createMainWindow = async (
   });
   win.on("close", saveState);
   await win.loadURL(`http://localhost:${EnvVars.port}`);
-  if (isDev) win.webContents.openDevTools();
+  if (isDev)
+    globalShortcut.register("Ctrl+Shift+I", () => {
+      if (win.webContents.isDevToolsOpened()) {
+        win.webContents.closeDevTools();
+      } else {
+        win.webContents.openDevTools();
+      }
+    });
   win.webContents.on("did-fail-load", () => {
     win.webContents.reloadIgnoringCache();
   });

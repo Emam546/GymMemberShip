@@ -1,0 +1,27 @@
+.frame-drag {
+  -webkit-app-region: drag;
+  button {
+    -webkit-app-region: no-drag;
+  }
+}
+.scrollBar {
+  // direction: ltr;
+
+  &::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the track */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar thumb color */
+    // border-radius: 10px; /* Rounded corners */
+    border: 2px solid transparent; /* Add space around thumb */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Color on hover */
+  }
+}

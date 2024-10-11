@@ -21,6 +21,7 @@ export namespace ApiMain {
     setContentHeight(height: number): void;
     setContentWidth(width: number): void;
     minimizeWindow(): void;
+    ToggleWindowMaximizeState(): void;
     hideWindow(): void;
     quitApp(): void;
     center(): void;
@@ -32,4 +33,10 @@ export namespace ApiMain {
     saveFile(data: Buffer, filename: string): Promise<boolean>;
   }
   interface HandleOnceMethods {}
+  namespace Render {
+    interface OnMethods {
+      onToggleWindowState(state: boolean): void;
+    }
+    interface OnceMethods {}
+  }
 }
