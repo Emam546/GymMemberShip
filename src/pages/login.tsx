@@ -45,7 +45,7 @@ const Login: NextPageWithLayout<Props> = function Login({ admins }) {
   const router = useRouter();
   return (
     <div className="tw-flex align-items-center justify-content-center tw-w-full tw-flex-1 tw-self-stretch">
-      <div className="row justify-content-center w-100">
+      <div className="row justify-content-center w-100 login">
         <div className="col-md-8 col-lg-6 col-xxl-3">
           <div className="mb-0 card tw-bg-black/90">
             <div className="card-body">
