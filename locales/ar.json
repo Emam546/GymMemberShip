@@ -466,7 +466,7 @@
   },
   "form:product": {
     "name": "اسم المنتج",
-    "num": "المبلغ",
+    "num": "الكميه",
     "price": "سعر"
   },
   "form:message:whatsapp": {
