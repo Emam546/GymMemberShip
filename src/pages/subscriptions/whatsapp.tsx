@@ -1,10 +1,10 @@
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
@@ -19,7 +19,7 @@ import PaymentsDataFilter, {
   DataType as PaymentsDataFilterFilter,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
 import SelectRangeForm, {
-  DataType,
+  DataType as SelectRangeFormDataType,
 } from "@src/components/pages/subscriptions/filter/selectRange";
 
 type FormData = TimeStartEndSelectorDataType &
@@ -29,6 +29,10 @@ const perLoad = 20;
 export default function Page() {
   const curDate = new Date();
   const { t } = useTranslation("/users");
+  const [{ start, end }, setStartEnd] = useState<SelectRangeFormDataType>({
+    end: 0,
+    start: 0,
+  });
   const [filter, setFilter] = useState<FormData>({
     startAt: new Date(
       curDate.getFullYear(),
@@ -39,7 +43,7 @@ export default function Page() {
     active: true,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["subscriptions", "query", "infinity", filter],
+    queryKey: ["subscriptions", "query", "infinity", { ...filter, start, end }],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<
@@ -50,9 +54,12 @@ export default function Page() {
         >
       >(`/api/admin/subscriptions/query`, {
         params: {
-          skip: perLoad * pageParam,
-          limit: perLoad,
           ...filter,
+          skip: Math.max(0, perLoad * pageParam + start),
+          limit: Math.max(
+            1,
+            Math.min(perLoad, end - (pageParam * perLoad + start))
+          ),
         },
         signal,
       });
@@ -63,6 +70,25 @@ export default function Page() {
       return undefined;
     },
   });
+  const QueryProfit = useQuery({
+    queryKey: ["subscriptions", "query", "total", filter],
+    queryFn: async ({ signal }) => {
+      const users = await requester.get<
+        Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
+      >(`/api/admin/subscriptions/query/profit`, {
+        params: {
+          ...filter,
+        },
+        signal,
+      });
+      return users.data.data;
+    },
+  });
+  useEffect(() => {
+    if (!QueryProfit.data) return;
+    const count = QueryProfit.data[0]?.paymentCount || 0;
+    setStartEnd({ start, end: count });
+  }, [QueryProfit.data]);
   const payments = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
@@ -114,6 +140,8 @@ export default function Page() {
               >(`/api/admin/subscriptions/query`, {
                 params: {
                   ...filter,
+                  skip: Math.max(0, start),
+                  limit: Math.max(1, end - start),
                 },
               });
               return users.data.data
@@ -124,17 +152,9 @@ export default function Page() {
             }}
             buttonName={t("buttons.send", { ns: "translation" })}
           />
-          <SelectRangeForm
-            onData={function (data: DataType) {
-              // throw new Error("Function not implemented.");
-            }}
-            values={{
-              end: 0,
-              start: 0,
-            }}
-          />
+          <SelectRangeForm onData={setStartEnd} values={{ start, end }} />
         </MainCard>
-        <MainCard >
+        <MainCard>
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
@@ -153,7 +173,7 @@ export default function Page() {
                     page={0}
                     totalCount={payments.length}
                     subscriptions={payments.map((payment, i) => ({
-                      order: i,
+                      order: i + start,
                       subscription: {
                         ...payment,
                         userId: payment.userId?._id || "",

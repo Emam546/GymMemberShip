@@ -1,13 +1,12 @@
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import Head from "next/head";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import { useTranslation } from "react-i18next";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import connect from "@serv/db/connect";
-import { useAuth, useLogUser } from "@src/components/UserProvider";
 import ProductsTable from "@src/components/pages/products/table";
 import { getProducts } from "@serv/routes/admin/products";
 import ProductInfoForm from "@src/components/pages/products/form";

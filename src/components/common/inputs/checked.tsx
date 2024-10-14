@@ -7,21 +7,20 @@ export type StyledCheckProps = React.InputHTMLAttributes<HTMLInputElement> & {
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   err?: FieldError;
 };
-export const StyledCheckedInput = React.forwardRef<
-  HTMLInputElement,
-  StyledCheckProps
->(({ type, ...props }, ref) => {
-  return (
-    <>
-      <input
-        type={type || "checkbox"}
-        className="form-check-input"
-        ref={ref}
-        {...props}
-      />
-    </>
-  );
-});
+const StyledCheckedInput = React.forwardRef<HTMLInputElement, StyledCheckProps>(
+  ({ type, ...props }, ref) => {
+    return (
+      <>
+        <input
+          type={type || "checkbox"}
+          className="form-check-input"
+          ref={ref}
+          {...props}
+        />
+      </>
+    );
+  }
+);
 
 export const RadioInput = React.forwardRef<HTMLInputElement, Props>(
   ({ id, title, err, type, ...props }, ref) => {

@@ -126,6 +126,16 @@ declare global {
           count: number;
         }
       }
+      namespace Users {
+        interface LogsCount {
+          _id: {
+            year?: number;
+            day?: number;
+            month?: number;
+          };
+          count: number;
+        }
+      }
     }
   }
 }

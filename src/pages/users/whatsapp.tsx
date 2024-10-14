@@ -2,10 +2,10 @@ import "@locales/users";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
@@ -16,7 +16,9 @@ import FilterUsersData, {
 } from "@src/components/pages/users/filter/filterUsersData";
 import { MessageDataUsers } from "@src/components/pages/whatsapp";
 import UsersTable from "@src/components/pages/users/table";
-import PrintUserPayments from "@src/components/pages/subscriptions/print";
+import SelectRangeForm, {
+  DataType as SelectRangeFormDataType,
+} from "@src/components/pages/subscriptions/filter/selectRange";
 type FormData = TimeStartEndSelectorDataType & FilterUsersDataType;
 const perLoad = 20;
 
@@ -31,8 +33,12 @@ export default function Page() {
     ),
     endAt: curDate,
   });
+  const [{ start, end }, setStartEnd] = useState<SelectRangeFormDataType>({
+    end: 0,
+    start: 0,
+  });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["subscriptions", "users", "query", "infinity", filter],
+    queryKey: ["users", "infinity", { ...filter, start, end }],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<
@@ -43,8 +49,11 @@ export default function Page() {
         >
       >(`/api/admin/users`, {
         params: {
-          skip: perLoad * pageParam,
-          limit: perLoad,
+          skip: Math.max(0, perLoad * pageParam + start),
+          limit: Math.max(
+            1,
+            Math.min(perLoad, end - (pageParam * perLoad + start))
+          ),
           ...filter,
         },
         signal,
@@ -56,9 +65,29 @@ export default function Page() {
       return undefined;
     },
   });
+  const QueryProfit = useQuery({
+    queryKey: ["users", "total", filter],
+    queryFn: async ({ signal }) => {
+      const users = await requester.get<
+        Routes.ResponseSuccess<DataBase.Queries.Users.LogsCount[]>
+      >(`/api/admin/users/count`, {
+        params: {
+          ...filter,
+        },
+        signal,
+      });
+      return users.data.data;
+    },
+  });
+  useEffect(() => {
+    if (!QueryProfit.data) return;
+    const count = QueryProfit.data[0]?.count || 0;
+    setStartEnd({ start, end: count });
+  }, [QueryProfit.data]);
   const users = QueryInfinity.data?.pages
     .map((page) => page.data)
     .reduce((acc, cur) => [...acc, ...cur], []);
+
   return (
     <div className="tw-flex-1 tw-flex tw-flex-col tw-items-stretch">
       <Head>
@@ -93,6 +122,8 @@ export default function Page() {
               >(`/api/admin/users`, {
                 params: {
                   ...filter,
+                  skip: Math.max(0, start),
+                  limit: Math.max(1, end - start),
                 },
               });
               return users.data.data.map((val) => ({
@@ -102,8 +133,9 @@ export default function Page() {
             }}
             buttonName={t("buttons.send", { ns: "translation" })}
           />
+          <SelectRangeForm onData={setStartEnd} values={{ start, end }} />
         </MainCard>
-        <MainCard >
+        <MainCard>
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}

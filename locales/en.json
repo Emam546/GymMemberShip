@@ -531,5 +531,9 @@
     "applyActive": "Apply",
     "isActive": "Active Payments",
     "hasRemaining": "Has remaining money"
+  },
+  "subscription:selectRange:form": {
+    "start": "Start",
+    "end": "End"
   }
 }

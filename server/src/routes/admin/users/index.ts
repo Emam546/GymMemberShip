@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
 import Users from "@serv/models/users";
@@ -42,15 +43,10 @@ const registerQuery = new Validator({
   tallMax: ["numeric"],
   weightMin: ["numeric"],
   weightMax: ["numeric"],
-  skip: ["numeric"],
-  limit: ["numeric"],
   ".": ["required"],
 });
-export async function getUsers(
-  q: unknown,
-  populate: (keyof DataBase.Models.User)[] = ["adminId"]
-) {
-  const result = registerQuery.passes(q);
+export function getQuery(q: unknown) {
+  const result = registerQuery.passes(registerQuery.validAttr(q));
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
   const {
@@ -60,8 +56,6 @@ export async function getUsers(
     tallMin,
     weightMax,
     weightMin,
-    skip,
-    limit,
     name,
     startAt,
     endAt,
@@ -92,6 +86,23 @@ export async function getUsers(
     };
   }
   if (name) query["name"] = { $regex: name, $options: "i" };
+  return query;
+}
+const registerSkip = new Validator({
+  skip: ["numeric"],
+  limit: ["numeric"],
+  ".": ["required"],
+});
+
+export async function getUsers(
+  q: unknown,
+  populate: (keyof DataBase.Models.User)[] = ["adminId"]
+) {
+  const query = getQuery(q);
+  const result = registerSkip.passes(registerSkip.validAttr(q));
+  if (!result.state)
+    throw new RouteErrorHasError(400, "invalid Data", result.errors);
+  const { limit, skip } = result.data;
   const queryMongo = Users.find(query)
     .hint({
       createdAt: -1,
@@ -106,6 +117,51 @@ export async function getUsers(
 }
 router.get("/", async (req, res) => {
   res.status(200).sendSuccess(await getUsers(req.query));
+});
+const registerCountQuery = new Validator({
+  year: ["accepted"],
+  month: ["accepted"],
+  day: ["accepted"],
+
+  ".": ["required"],
+});
+export async function getUsersCount(
+  query: unknown,
+  match?: any,
+  hint: Record<string, unknown> = { createdAt: -1 }
+) {
+  const matchQuery: Record<string, any> = { ...match, ...getQuery(query) };
+  const ID: Record<string, unknown> = {};
+  const result = registerCountQuery.passes(registerCountQuery.validAttr(query));
+  if (!result.state)
+    throw new RouteErrorHasError(400, "invalid Data", result.errors);
+  if (result.data?.year) ID["year"] = { $year: "$createdAt" };
+  if (result.data?.month) ID["month"] = { $month: "$createdAt" };
+  if (result.data?.day) ID["day"] = { $dayOfMonth: "$createdAt" };
+
+  const payments = await Users.aggregate([
+    {
+      $match: matchQuery,
+    },
+    {
+      $group: {
+        _id: ID,
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: {
+        "_id.year": 1,
+        "_id.month": 1,
+        "_id.day": 1,
+      },
+    },
+  ]).hint(hint);
+
+  return payments as DataBase.Queries.Payments.Profit[];
+}
+router.get("/count", async (req, res) => {
+  res.status(200).sendSuccess(await getUsersCount(req.query));
 });
 const registerQueryParam = new Validator({
   ".": ["required"],

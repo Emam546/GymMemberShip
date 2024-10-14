@@ -531,5 +531,9 @@
     "applyActive": "تتطبيق",
     "isActive": "المدفوعات النشطة",
     "hasRemaining": "لديه مال متبقي؟"
+  },
+  "subscription:selectRange:form": {
+    "start": "البدايه",
+    "end": "النهاية"
   }
 }

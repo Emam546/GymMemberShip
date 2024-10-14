@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
-import { PipelineStage, RootFilterQuery } from "mongoose";
+import { PipelineStage, RootFilterQuery, SortValues } from "mongoose";
 import Payments from "@serv/models/subscriptions";
 import Validator from "validator-checker-js";
-import Users from "@serv/models/users";
-import plans from "@serv/models/plans";
-import admins from "@serv/models/admins";
 import { RouteErrorHasError } from "@serv/declarations/classes";
-
+import {} from "mongoose";
 const router = Router();
 const registerQuery = new Validator({
   sex: ["string", { in: ["male", "female"] }],
@@ -26,9 +23,9 @@ const registerQuery = new Validator({
   remaining: [{ in: ["true", "false"] }, "string"],
   ".": ["required"],
 });
-export function getAggregateOptions(q: unknown, match?: any) {
+function _getAggregateOptions(q: unknown, match?: any) {
   const currentDate = new Date();
-  const result = registerQuery.passes(q);
+  const result = registerQuery.passes(registerQuery.validAttr(q));
   if (!result.state)
     throw new RouteErrorHasError(400, "invalid Data", result.errors);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -132,11 +129,20 @@ export function getAggregateOptions(q: unknown, match?: any) {
       $skip: parseInt(skip as string) || 0,
     },
   ];
-  if (parseInt(limit as string)) {
+  if (!isNaN(parseInt(limit as string))) {
+    const g = parseInt(limit as string);
     aggregate.push({
-      $limit: parseInt(limit as string) || Infinity, // Get the first document
+      $limit: g || 1, // Get the first document
     });
   }
+
+  return aggregate;
+}
+export function getAggregateOptions(
+  ...params: Parameters<typeof _getAggregateOptions>
+) {
+  const aggregate = _getAggregateOptions(...params);
+
   aggregate.push(
     ...[
       {
@@ -174,5 +180,46 @@ router.get("/", async (req, res) => {
   const queryRes = await Payments.aggregate(aggregate);
   return res.status(200).sendSuccess(queryRes);
 });
-
+const registerProfitQuery = new Validator({
+  year: ["accepted"],
+  month: ["accepted"],
+  day: ["accepted"],
+  ".": ["required"],
+});
+export function getAggregateOptionsProfit(
+  ...[q, ...params]: Parameters<typeof getAggregateOptions>
+) {
+  const aggregate = _getAggregateOptions(q, ...params);
+  const ID: Record<string, unknown> = {};
+  const result = registerProfitQuery.passes(registerProfitQuery.validAttr(q));
+  if (!result.state)
+    throw new RouteErrorHasError(400, "invalidData", result.errors);
+  if (result.data?.year) ID["year"] = { $year: "$createdAt" };
+  if (result.data?.month) ID["month"] = { $month: "$createdAt" };
+  if (result.data?.day) ID["day"] = { $dayOfMonth: "$createdAt" };
+  aggregate.push(
+    ...[
+      {
+        $group: {
+          _id: ID,
+          profit: { $sum: "$paid" },
+          paymentCount: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1 as SortValues,
+          "_id.month": 1 as SortValues,
+          "_id.day": 1 as SortValues,
+        } as Record<string, 1>,
+      },
+    ]
+  );
+  return aggregate;
+}
+router.get("/profit", async (req, res) => {
+  const aggregate = getAggregateOptionsProfit(req.query);
+  const queryRes = await Payments.aggregate(aggregate);
+  return res.status(200).sendSuccess(queryRes);
+});
 export default router;

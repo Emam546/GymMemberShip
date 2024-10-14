@@ -23,7 +23,8 @@ export default function SelectRangeForm({ onData, values }: Props) {
     () => {
       const data = getValues();
       onData({
-        ...data,
+        start: data.start || 0,
+        end: data.end || 0,
       });
     },
     1000,

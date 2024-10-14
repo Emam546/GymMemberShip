@@ -4,7 +4,10 @@ import {
   getSubscriptionsProfit,
 } from "@serv/routes/admin/subscriptions";
 import { Document } from "mongoose";
-import { getAggregateOptions } from "@serv/routes/admin/subscriptions/query";
+import {
+  getAggregateOptions,
+  getAggregateOptionsProfit,
+} from "@serv/routes/admin/subscriptions/query";
 import Payments from "@serv/models/subscriptions";
 const router = Router();
 
@@ -21,6 +24,12 @@ router.get("/", async (req, res) => {
 router.get("/query", async (req, res) => {
   const plan = res.locals.plan as Document<DataBase.Models.Plans>;
   const aggregate = getAggregateOptions(req.query, { planId: plan._id });
+  const queryRes = await Payments.aggregate(aggregate);
+  return res.status(200).sendSuccess(queryRes);
+});
+router.get("/query/profit", async (req, res) => {
+  const plan = res.locals.plan as Document<DataBase.Models.Plans>;
+  const aggregate = getAggregateOptionsProfit(req.query, { planId: plan._id });
   const queryRes = await Payments.aggregate(aggregate);
   return res.status(200).sendSuccess(queryRes);
 });
