@@ -190,7 +190,7 @@ export function SalesOverView({ months }: SalesOverViewProps) {
       curDate.getFullYear(),
       curDate.getMonth(),
       curDate.getDay() - 8
-    ).getMonth()
+    ).getMonth() + 1
   );
   const { t } = useTranslation("dashboard");
   return (
