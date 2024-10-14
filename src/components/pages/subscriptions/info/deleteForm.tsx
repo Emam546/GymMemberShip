@@ -6,8 +6,6 @@ import { useRouter } from "next/router";
 import requester from "@src/utils/axios";
 import queryClient from "@src/queryClient";
 import { useTranslation } from "react-i18next";
-import i18n from "@src/i18n";
-
 declare global {
   namespace I18ResourcesType {
     interface Resources {

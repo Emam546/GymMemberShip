@@ -18,6 +18,9 @@ import { MessageDataUsers } from "@src/components/pages/whatsapp";
 import PaymentsDataFilter, {
   DataType as PaymentsDataFilterFilter,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
+import SelectRangeForm, {
+  DataType,
+} from "@src/components/pages/subscriptions/filter/selectRange";
 
 type FormData = TimeStartEndSelectorDataType &
   FilterUsersDataType &
@@ -81,17 +84,17 @@ export default function Page() {
             />
           </div>
         </div>
-        <MainCard className="tw-my-4">
+        <MainCard>
           <TimeStartEndSelector
             values={filter}
             onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
           />
-          <div className="tw-my-5">
+          <div>
             <FilterUsersData
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>
-          <div className="tw-mt-10">
+          <div>
             <PaymentsDataFilter
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
@@ -121,15 +124,24 @@ export default function Page() {
             }}
             buttonName={t("buttons.send", { ns: "translation" })}
           />
+          <SelectRangeForm
+            onData={function (data: DataType) {
+              // throw new Error("Function not implemented.");
+            }}
+            values={{
+              end: 0,
+              start: 0,
+            }}
+          />
         </MainCard>
-        <MainCard className="p-4 tw-mt-3">
+        <MainCard >
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
           <CardTitle>{t("Users")}</CardTitle>
           <div>
-            <MainCard className="p-4 tw-mt-3">
+            <MainCard>
               <ErrorShower
                 loading={QueryInfinity.isLoading}
                 error={QueryInfinity.error}

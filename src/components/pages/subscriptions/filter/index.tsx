@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { useDebounceEffect } from "@src/hooks";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import DatePicker from "@src/components/common/inputs/datePicker";
-
+import i18n from "@src/i18n";
+import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 export interface DataType {
   startAt: Date;
   endAt: Date;
@@ -12,13 +14,13 @@ export interface Props {
   onData: (data: DataType) => Promise<any> | any;
   values: DataType;
 }
-import i18n from "@src/i18n";
-import { useTranslation } from "react-i18next";
-import dayjs from "dayjs";
 
 export type DefaultData = DataType;
-export default function TimeStartEndSelector({ onData, values }: Props) {
-  const { handleSubmit, setValue, getValues, watch } = useForm<DataType>({
+export default function TimeStartEndSelector({
+  onData,
+  values,
+}: Props) {
+  const { setValue, getValues, watch } = useForm<DataType>({
     defaultValues: values,
     values,
   });

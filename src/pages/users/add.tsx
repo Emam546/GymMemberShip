@@ -39,7 +39,7 @@ export default function Page() {
       </BigCard>
       <div className="tw-mt-3">
         <IsAdminComp>
-          <GoToButton label={t("Go To Users")} href={"/users"} />
+          <GoToButton label={t("Go To Users")} href={"/users/search"} />
         </IsAdminComp>
       </div>
     </>

@@ -5,7 +5,7 @@ import "@serv/validator/database";
 import ProductsPayments from "@serv/models/productsPayments";
 import Validator from "validator-checker-js";
 import Users from "@serv/models/users";
-// import IdRouter from "./[id]";
+import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
 import { SortOrder } from "mongoose";
 import Products from "@serv/models/products";
@@ -143,4 +143,5 @@ router.get("/profit", async (req, res) => {
   const payments = await getProductsPaymentsProfit(req.query);
   res.status(200).sendSuccess(payments);
 });
+router.use(IdRouter);
 export default router;

@@ -126,11 +126,21 @@
     "paragraph": "لا يوجد سجلات حتى الآن"
   },
   "subscriptions:deleteForm": {
+    "paragraph": "بمجرد حذف الاشتراك، لا يمكن التراجع عنه. ",
+    "delete.button": "حذف الاشتراك",
+    "model": {
+      "accept": "احذف",
+      "title": "هل أنت متأكد أنك تريد حذف هذا الاشتراك؟",
+      "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف الاشتراك والبيانات المرتبطة به نهائيًا ولا يمكن استعادتهما.",
+      "deny": "احتفظ بالاشتراك"
+    }
+  },
+  "productsPayments:deleteForm": {
     "paragraph": "بمجرد حذف الدفعة، لا يمكن التراجع عنها. ",
     "delete.button": "حذف الدفع",
     "model": {
       "accept": "احذف",
-      "title": "هل أنت متأكد أنك تريد حذف الدفعة؟",
+      "title": "هل أنت متأكد أنك تريد حذف هذه الدفعة؟",
       "desc": "بمجرد النقر فوق \"حذف\"، سيتم حذف الدفعة والبيانات المرتبطة بها نهائيًا ولا يمكن استعادتها.",
       "deny": "احتفظ بالدفع"
     }
@@ -148,7 +158,7 @@
       "validNumber": "الرقم غير صالح"
     }
   },
-  "table:payments": {
+  "table:subscriptions": {
     "Deleted": "محذوف",
     "Link": "رابط",
     "head": {
@@ -167,6 +177,22 @@
       "remainingMoney": "الأموال المتبقية"
     },
     "There is no payments": "لا يوجد أي مدفوعات"
+  },
+  "table:productsPayments": {
+    "Deleted": "تم الحذف",
+    "Link": "الرابط",
+    "head": {
+      "Id": "Id",
+      "User": "مستخدم",
+      "Link": "الرابط",
+      "Paid": "مدفوع",
+      "Created At": "تم الإنشاء في",
+      "End At": "نهاية عند",
+      "Delete": "احذف",
+      "admin": "المنشئ",
+      "remainingMoney": "الأموال المتبقية"
+    },
+    "There is no subscriptions": "لا يوجد مدفوعات"
   },
   "form:add:plan": {
     "Plan Name": "اسم الخطة",
@@ -223,6 +249,9 @@
       "label": "الخطط",
       "/plans": "إدارة الخطط",
       "/plans/add": "أضف خطة"
+    },
+    "products": {
+      "label": "مدفوعات المنتجات"
     }
   },
   "form:trainers": {
@@ -256,7 +285,7 @@
       "endAt": "يجب أن تنتهي هذه الدفعة عند {{val}}"
     },
     "paid": {
-      "label": "المبلغ المدفوع",
+      "label": "المبلغ الاشتراك",
       "required": {
         "currency": "الرجاء تحديد العملة",
         "num": "يرجى ضبط سعر الدورة أو ضبطه على 0"
@@ -270,6 +299,17 @@
       "label": "مدرب",
       "default": "اختر المدرب"
     }
+  },
+  "productPayment:money:form": {
+    "paid": {
+      "label": "المبلغ المدفوع",
+      "required": {
+        "currency": "الرجاء تحديد العملة",
+        "num": "يرجى تحديد سعر الدفع أو ضبطه على 0"
+      },
+      "placeholder": "على سبيل المثال.120"
+    },
+    "remaining": "متبقي"
   },
   "users:deleteForm": {
     "paragraph": "بمجرد حذف هذا الحساب، لا يمكن التراجع عن هذا الإجراء، فهذا أمر دائم.",
@@ -429,6 +469,10 @@
     "title": "منتجات",
     "create.title": "إنشاء المنتج"
   },
+  "/products/payments/[id]": {
+    "title": "دفع المنتج",
+    "create.title": "معلومات الدفع"
+  },
   "table:products": {
     "td": {
       "Deleted": "تم الحذف",
@@ -472,5 +516,20 @@
   "form:message:whatsapp": {
     "files.label": "تحميل الملفات",
     "message.label": "الرساله"
+  },
+  "/products/payments": {
+    "title": "مدفوعات المنتجات",
+    "card.title": "المدفوعات",
+    "Earnings": "الأرباح",
+    "Total Count": "العدد الإجمالي"
+  },
+  "productsPayments:info:form": {
+    "admin": "المسؤل",
+    "createdAt": "تم الإنشاء في"
+  },
+  "subscription:data:form": {
+    "applyActive": "تتطبيق",
+    "isActive": "المدفوعات النشطة",
+    "hasRemaining": "لديه مال متبقي؟"
   }
 }

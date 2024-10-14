@@ -40,11 +40,8 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 export function Provider({ children }: { children: ReactNode }) {
-  const ref = useRef(null);
   const dayWeek = new Date().getDay();
-
   const image = ImagesBg[dayWeek % ImagesBg.length];
-
   return (
     <ReduxProvider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -53,12 +50,13 @@ export function Provider({ children }: { children: ReactNode }) {
           <FrameProvider>
             <BarcodePrintProvider>
               <div
-                className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-contain -tw-z-10"
+                className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-cover tw-bg-center -tw-z-10"
                 style={{
                   backgroundImage: `url("${image}")`,
                 }}
               />
               <LoadingBar>{children}</LoadingBar>
+              
             </BarcodePrintProvider>
           </FrameProvider>
         </LocalizationProvider>

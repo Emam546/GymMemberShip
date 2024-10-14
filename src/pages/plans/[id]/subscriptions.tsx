@@ -5,7 +5,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import TimeStartEndSelector, {
-  DataType,
+  DataType as TimeStartEndSelectorDataType,
 } from "@src/components/pages/subscriptions/filter";
 import { useState } from "react";
 import { PaymentInfoGenerator } from "@src/components/pages/subscriptions/table";
@@ -19,21 +19,26 @@ import connect from "@serv/db/connect";
 import { getPlan } from "@serv/routes/admin/plans/[id]";
 import PrintPlanPayments from "@src/components/pages/plans/subscriptions/print";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
+import queryClient from "@src/queryClient";
+import PaymentsDataFilter, {
+  DataType as PaymentsDataFilterDataType,
+} from "@src/components/pages/subscriptions/filter/PaymentsData";
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Subscriptions>,
   "userId" | "adminId" | "planId" | "trainerId"
 >;
-
+type FormDataType = PaymentsDataFilterDataType & TimeStartEndSelectorDataType;
 export default function Page({ doc }: Props) {
   const curDate = new Date();
-  const [filter, setFilter] = useState<DataType>({
+  const [filter, setFilter] = useState<FormDataType>({
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth(),
       curDate.getDate() - 8
     ),
     endAt: curDate,
+    active: true,
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "plans", doc._id, "infinity", filter],
@@ -53,7 +58,7 @@ export default function Page({ doc }: Props) {
       );
       return { page: pageParam, data: users.data.data };
     },
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.data.length > 0) return lastPage.page + 1;
       return undefined;
     },
@@ -98,7 +103,6 @@ export default function Page({ doc }: Props) {
         day: day.getDate(),
         month: day.getMonth() + 1,
         year: day.getFullYear(),
-        currency: "EGP",
       },
       profit: 0,
       paymentCount: 0,
@@ -128,37 +132,38 @@ export default function Page({ doc }: Props) {
             </div>
           </div>
           <div className="tw-my-4">
-            <TimeStartEndSelector values={filter} onData={setFilter} />
+            <TimeStartEndSelector
+              values={filter}
+              onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+            />
           </div>
           <div>
             <div className="col-lg-12">
-              <div className="card">
-                <div className="card-body">
-                  <div className="tw-flex tw-justify-between tw-gap-x-4">
-                    <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
-                      <div>
-                        <h5 className="card-title mb-9 fw-semibold">
-                          {t("Earnings")}
-                        </h5>
-                        <h4
-                          className="mb-3 fw-semibold rtl:tw-text-end"
-                          dir="ltr"
-                        >
-                          {totalPrice} EGP
-                        </h4>
-                      </div>
-                      <div>
-                        <h5 className="card-title mb-9 fw-semibold">
-                          {t("Total Count")}
-                        </h5>
-                        <h4 className="mb-3 fw-semibold">{totalCount}</h4>
-                      </div>
+              <MainCard>
+                <div className="tw-flex tw-justify-between tw-gap-x-4">
+                  <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
+                    <div>
+                      <h5 className="card-title mb-9 fw-semibold">
+                        {t("Earnings")}
+                      </h5>
+                      <h4
+                        className="mb-3 fw-semibold rtl:tw-text-end"
+                        dir="ltr"
+                      >
+                        {totalPrice} EGP
+                      </h4>
                     </div>
                     <div>
-                      <div className="d-flex justify-content-end">
-                        <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
-                          <i className="ti ti-currency-dollar fs-6" />
-                        </div>
+                      <h5 className="card-title mb-9 fw-semibold">
+                        {t("Total Count")}
+                      </h5>
+                      <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="d-flex justify-content-end">
+                      <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
+                        <i className="ti ti-currency-dollar fs-6" />
                       </div>
                     </div>
                   </div>
@@ -192,10 +197,9 @@ export default function Page({ doc }: Props) {
                       {
                         scaleType: "point",
                         data: data,
-                        valueFormatter(
-                          { _id }: DataBase.Queries.Logs.LogsCount,
-                          context
-                        ) {
+                        valueFormatter({
+                          _id,
+                        }: DataBase.Queries.Logs.LogsCount) {
                           const date = new Date(
                             _id.year!,
                             _id.month!,
@@ -211,10 +215,15 @@ export default function Page({ doc }: Props) {
                     ]}
                   />
                 </div>
-              </div>
+                <div>
+                  <PaymentsDataFilter
+                    onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+                  />
+                </div>
+              </MainCard>
             </div>
           </div>
-          <MainCard className="p-4 tw-mt-3">
+          <MainCard >
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}
@@ -253,6 +262,7 @@ export default function Page({ doc }: Props) {
                       `/api/admin/subscriptions/${doc.subscription._id}`
                     );
                     alert(t("messages.deleted", { ns: "translation" }));
+                    queryClient.invalidateQueries(["subscriptions"]);
                     QueryInfinity.refetch();
                   }}
                 />
@@ -291,7 +301,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     };
   }
 };
-import i18n from "@src/i18n";
 declare global {
   namespace I18ResourcesType {
     interface Resources {

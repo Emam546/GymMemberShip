@@ -48,7 +48,7 @@ export default function FilterUsersData({ onData }: Props) {
     onData(g);
   }
   return (
-    <div>
+    <div className="tw-pb-10">
       <WrapElem label="Age">
         <RangeTracker
           length={ages.length - 1}

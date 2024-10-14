@@ -15,6 +15,7 @@ interface ElemProps {
   product: SellProduct;
   onDelete?: () => void;
   onUpdate: (data: FormData) => void;
+  ignoreWarnings?: boolean;
 }
 export interface FormData {
   curNum: number;
@@ -33,6 +34,7 @@ function Shower({
   headKeys,
   onDelete,
   onUpdate,
+  ignoreWarnings,
 }: ElemProps & { headKeys: HeadKeys[] }) {
   const { register, setValue, getValues, watch, formState } = useForm<FormData>(
     {
@@ -46,10 +48,11 @@ function Shower({
   useDebounceEffect(
     () => {
       const cur = getValues();
-      if (cur.curNum > product.num && !state) {
-        if (confirm(t("td.noStock"))) setState(true);
-        else setValue("curNum", product.num);
-      }
+      if (!ignoreWarnings)
+        if (cur.curNum > product.num && !state) {
+          if (confirm(t("td.noStock"))) setState(true);
+          else setValue("curNum", product.num);
+        }
       onUpdate(getValues());
     },
     100,
@@ -108,6 +111,7 @@ export interface Props {
   headKeys: HeadKeys[];
   onDelete?: (product: ElemProps["product"]) => void;
   onUpdate: (product: ElemProps["product"], data: FormData) => void;
+  ignoreWarnings?: boolean;
 }
 export default function SellProductsTable({
   page,
@@ -118,6 +122,7 @@ export default function SellProductsTable({
   onDelete,
   perPage,
   onUpdate,
+  ignoreWarnings,
 }: Props) {
   const { t } = useTranslation("table:products:sell");
   return (
@@ -166,6 +171,7 @@ export default function SellProductsTable({
                   key={doc.product._id}
                   headKeys={headKeys}
                   onUpdate={async (data) => onUpdate(doc.product, data)}
+                  ignoreWarnings={ignoreWarnings}
                 />
               );
             })}

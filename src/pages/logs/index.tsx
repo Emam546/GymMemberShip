@@ -96,7 +96,6 @@ export default function Page() {
         day: day.getDate(),
         month: day.getMonth() + 1,
         year: day.getFullYear(),
-        currency: "EGP",
       },
       count: 0,
     };
@@ -189,7 +188,7 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <MainCard className="p-4 tw-mt-3">
+          <MainCard >
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}
@@ -224,6 +223,7 @@ export default function Page() {
                   ]}
                   onDelete={async (elem) => {
                     await requester.delete(`/api/admin/logs/${elem.log._id}`);
+                    queryClient.invalidateQueries(["logs"]);
                     queryClient.setQueryData<InfinityQuery<LogDoc>>(
                       queryInfinityKey,
                       (oldData) => {

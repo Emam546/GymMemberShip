@@ -15,15 +15,20 @@ interface FormValues extends DataType {
 export interface Props {
   onData: (data: DataType) => Promise<any> | any;
   values?: DataType;
+  disableActive?: boolean;
 }
 export type DefaultData = DataType;
-export default function PaymentsDataFilter({ onData, values }: Props) {
+export default function PaymentsDataFilter({
+  onData,
+  values,
+  disableActive,
+}: Props) {
   const { register, getValues, watch } = useForm<FormValues>({
     defaultValues: {
       applyActive: true,
     },
   });
-  const { t } = useTranslation("subscriptions:filter");
+  const { t } = useTranslation("subscription:data:form");
   useDebounceEffect(
     () => {
       const data = getValues();
@@ -37,24 +42,27 @@ export default function PaymentsDataFilter({ onData, values }: Props) {
   );
   return (
     <div>
-      <div className="tw-flex tw-gap-4">
-        <CheckInput
-          label={"Apply Active"}
-          id={"apply-active"}
-          defaultChecked
-          {...register("applyActive")}
-        />
-        <CheckInput
-          label={"is Active"}
-          id={"is-active"}
-          disabled={!watch("applyActive")}
-          defaultChecked
-          {...register("active")}
-        />
-      </div>
+      {!disableActive && (
+        <div className="tw-flex tw-gap-4">
+          <CheckInput
+            label={t("applyActive")}
+            id={"apply-active"}
+            defaultChecked
+            {...register("applyActive")}
+          />
+          <CheckInput
+            label={t("isActive")}
+            id={"is-active"}
+            disabled={!watch("applyActive")}
+            defaultChecked
+            {...register("active")}
+          />
+        </div>
+      )}
+
       <CheckInput
         {...register("remaining")}
-        label={"Has remaining money"}
+        label={t("hasRemaining")}
         id={"has-money"}
       />
     </div>
@@ -64,6 +72,7 @@ declare global {
   namespace I18ResourcesType {
     interface Resources {
       "subscription:data:form": {
+        applyActive: string;
         isActive: string;
         hasRemaining: string;
       };

@@ -19,15 +19,19 @@ const schema = new mongoose.Schema<DataBase.Models.ProductPayments>(
 );
 schema.pre("save", async function (next) {
   try {
-    await Products.updateMany(
-      { _id: { $in: this.products.map((v) => v.productId) } },
-      { $inc: { num: -1 } }
+    await Promise.all(
+      this.products.map(async (val) => {
+        await Products.findByIdAndUpdate(val.productId, {
+          $inc: { num: -val.num },
+        });
+      })
     );
     next();
   } catch (err) {
     next(err as CallbackError);
   }
 });
+
 export default ((mongoose.models && mongoose.models.productsPayments) ||
   Payments.discriminator<DataBase.Models.ProductPayments>(
     "productsPayments",

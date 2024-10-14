@@ -170,8 +170,7 @@ async function getLastMonthProfit() {
     return {
       _id: {
         day: day.getDate(),
-        month: day.getMonth() + 1,
-        currency: "EGP",
+        month: day.getMonth() + 1
       },
       paymentCount: 0,
       profit: 0,

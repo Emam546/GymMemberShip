@@ -71,7 +71,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Logs.LogsCount[]>
-      >(`/api/admin/plans/${doc._id}logs/count`, {
+      >(`/api/admin/plans/${doc._id}/logs/count`, {
         params: {
           ...filter,
           day: true,
@@ -104,7 +104,6 @@ const Page: NextPage<Props> = function Page({ doc }) {
         day: day.getDate(),
         month: day.getMonth() + 1,
         year: day.getFullYear(),
-        currency: "EGP",
       },
       count: 0,
     };
@@ -197,7 +196,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
               </div>
             </div>
           </div>
-          <MainCard className="p-4 tw-mt-3">
+          <MainCard >
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}
@@ -230,6 +229,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
                   ]}
                   onDelete={async (doc) => {
                     await requester.delete(`/api/admin/logs/${doc.log._id}`);
+                    queryClient.invalidateQueries(["logs"]);
                     queryClient.setQueryData<InfinityQuery<LogDoc>>(
                       queryInfinityKey,
                       (oldData) => {

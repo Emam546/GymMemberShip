@@ -65,7 +65,7 @@
   },
   "input:datePicker": {
     "endDate": {
-      "paragraph": "The Payment should be ended at {{val}}"
+      "paragraph": "The Subscription should be ended at {{val}}"
     }
   },
   "inputs:planType": {
@@ -106,7 +106,7 @@
     "th": {
       "Id": "Id",
       "User": "User",
-      "subscriptionLink": "Payment Link",
+      "subscriptionLink": "Subscription Link",
       "Logged At": "Logged At",
       "Delete": "Delete",
       "Plan": "Plan",
@@ -127,11 +127,21 @@
   },
   "subscriptions:deleteForm": {
     "paragraph": "Once you delete the subscription, it cannot be undone. This is permanent.",
+    "delete.button": "Delete Subscription",
+    "model": {
+      "accept": "Delete",
+      "title": "Are you sure you want to delete this subscription?",
+      "desc": "Once you click delete, the subscription and associated data will be permanently deleted and cannot be restored.",
+      "deny": "Keep The Subscription"
+    }
+  },
+  "productsPayments:deleteForm": {
+    "paragraph": "Once you delete the payment, it cannot be undone. This is permanent.",
     "delete.button": "Delete Payment",
     "model": {
       "accept": "Delete",
-      "title": "Are you sure you want to delete the subscription?",
-      "desc": "Once you click delete, the subscription and associated data will be permanently deleted and cannot be restored.",
+      "title": "Are you sure you want to delete this payment?",
+      "desc": "Once you click delete, the payment and associated data will be permanently deleted and cannot be restored.",
       "deny": "Keep The Payment"
     }
   },
@@ -168,6 +178,22 @@
     },
     "There is no subscriptions": "There is no subscriptions"
   },
+  "table:productsPayments": {
+    "Deleted": "Deleted",
+    "Link": "Link",
+    "head": {
+      "Id": "Id",
+      "User": "User",
+      "Link": "Link",
+      "Paid": "Paid",
+      "Created At": "Created At",
+      "End At": "End At",
+      "Delete": "Delete",
+      "admin": "Creator",
+      "remainingMoney": "Remaining Money"
+    },
+    "There is no subscriptions": "There is no Payments"
+  },
   "form:add:plan": {
     "Plan Name": "Plan Name",
     "Day Price": "Day Price",
@@ -198,7 +224,7 @@
       "label": "Sell"
     },
     "subscriptions": {
-      "label": "Payments"
+      "label": "Subscriptions"
     },
     "whatsapp": {
       "label": "Whatsapp",
@@ -223,6 +249,9 @@
       "label": "Plans",
       "/plans": "Manage Plans",
       "/plans/add": "Add Plan"
+    },
+    "products": {
+      "label": "Products Payments"
     }
   },
   "form:trainers": {
@@ -270,6 +299,17 @@
       "label": "Trainer",
       "default": "Choose Trainer"
     }
+  },
+  "productPayment:money:form": {
+    "paid": {
+      "label": "The amount paid",
+      "required": {
+        "currency": "Please select a currency",
+        "num": "Please set the payment price or set it to 0"
+      },
+      "placeholder": "eg.120"
+    },
+    "remaining": "Remaining"
   },
   "users:deleteForm": {
     "paragraph": "Once you delete this account, it cannot be undone, This is permanent.",
@@ -320,7 +360,7 @@
   },
   "/admins/[id]": {
     "update.title": "Update Admin Data",
-    "subscriptions.title": "Payments"
+    "subscriptions.title": "Subscriptions"
   },
   "/dashboard": {
     "Recent Transactions": "Recent Transactions",
@@ -335,7 +375,7 @@
       "name": "Admin Name"
     },
     "subscriptions": {
-      "title": "Payments"
+      "title": "Subscriptions"
     },
     "addPayment": {
       "title": "Add subscription"
@@ -350,14 +390,14 @@
     "Total Count": "Total Count"
   },
   "/subscriptions": {
-    "title": "Payments",
-    "Payments": "Payments",
+    "title": "Subscriptions",
+    "Payments": "Subscriptions",
     "Earnings": "Earnings",
     "Total Count": "Total Count"
   },
   "/subscriptions/[id]": {
-    "title": "{{val}} Payment",
-    "Update Payment Data": "Update Payment Data",
+    "title": "{{val}} Subscription",
+    "Update Payment Data": "Update Subscription Data",
     "User Logs": "User Logs"
   },
   "/plan": {
@@ -372,15 +412,15 @@
   },
   "/plan/[id]": {
     "Update Plan Data": "Update Plan Data",
-    "Payments": "Payments",
+    "Payments": "Subscriptions",
     "Go To Plans": "Go To Plans",
     "Go To Users Logs": "Go To Users Logs",
-    "Go To Plan Payments": "Go To Plan's Payments",
+    "Go To Plan Payments": "Go To Plan's Subscriptions",
     "Go To Plan Users": "Go To Plan Users"
   },
   "/plans/[id]/subscriptions": {
-    "title": "{{name}} Payments",
-    "Plan Payments": "Plan Payments",
+    "title": "{{name}} Subscriptions",
+    "Plan Payments": "Plan Subscriptions",
     "Total Count": "Total Count",
     "Earnings": "Earnings"
   },
@@ -410,7 +450,7 @@
   },
   "/users/[id]/logs": {
     "Update User Data": "Update User Data",
-    "Payments": "Payments",
+    "Payments": "Subscriptions",
     "Go To Logs": "Go To Logs"
   },
   "/users/add": {
@@ -428,6 +468,10 @@
   "/products": {
     "title": "Products",
     "create.title": "Create Product"
+  },
+  "/products/payments/[id]": {
+    "title": "Product Payment",
+    "create.title": "Payment Info"
   },
   "table:products": {
     "td": {
@@ -472,5 +516,20 @@
   "form:message:whatsapp": {
     "files.label": "Upload Files",
     "message.label": "Message"
+  },
+  "/products/payments": {
+    "title": "Products Payments",
+    "card.title": "Payments",
+    "Earnings": "Earnings",
+    "Total Count": "Total Count"
+  },
+  "productsPayments:info:form": {
+    "admin": "Admin",
+    "createdAt": "Created At"
+  },
+  "subscription:data:form": {
+    "applyActive": "Apply",
+    "isActive": "Active Payments",
+    "hasRemaining": "Has remaining money"
   }
 }

@@ -68,7 +68,7 @@ export default function Page() {
         <div className="tw-flex tw-justify-between">
           <CardTitle>{t("Users")}</CardTitle>
         </div>
-        <MainCard className="tw-my-4">
+        <MainCard>
           <TimeStartEndSelector
             values={filter}
             onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
@@ -103,14 +103,14 @@ export default function Page() {
             buttonName={t("buttons.send", { ns: "translation" })}
           />
         </MainCard>
-        <MainCard className="p-4 tw-mt-3">
+        <MainCard >
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
           <CardTitle>{t("Users")}</CardTitle>
           <div>
-            <MainCard className="p-4 tw-mt-3">
+            <MainCard>
               <ErrorShower
                 loading={QueryInfinity.isLoading}
                 error={QueryInfinity.error}

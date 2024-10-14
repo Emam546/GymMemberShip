@@ -49,7 +49,7 @@ export default function Page() {
       </Head>
       <BigCard>
         <UsersFilter onData={setFilter} />
-        <MainCard className="p-4 tw-mt-3">
+        <MainCard>
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}

@@ -14,17 +14,30 @@ export interface FormData {
 export interface Props {
   totalPrice: number;
   onData: (data: FormData) => any;
+  values?: FormData;
+  buttonName: React.ReactNode;
+  disableAutoUpdating?: boolean;
 }
 
-export default function MoneyPaidProductForm({ onData, totalPrice }: Props) {
+export default function MoneyPaidProductForm({
+  onData,
+  totalPrice,
+  buttonName,
+  values,
+  disableAutoUpdating,
+}: Props) {
   const { handleSubmit, register, formState, setValue, watch, getValues } =
-    useForm<FormData>();
-  const { t } = useTranslation("subscription:add");
+    useForm<FormData>({
+      values,
+    });
+  const { t } = useTranslation("productPayment:money:form");
 
   useEffect(() => {
+    if (disableAutoUpdating) return;
     setValue("remaining", totalPrice - getValues("paid"));
   }, [watch("paid")]);
   useEffect(() => {
+    if (disableAutoUpdating) return;
     setValue("paid", totalPrice);
   }, [totalPrice]);
   return (
@@ -68,9 +81,23 @@ export default function MoneyPaidProductForm({ onData, totalPrice }: Props) {
       </Grid2>
       <div className="tw-flex tw-justify-end tw-items-end tw-mt-5">
         <PrimaryButton type="submit" disabled={formState.isSubmitting}>
-          {t("buttons.activate", { ns: "translation" })}
+          {buttonName}
         </PrimaryButton>
       </div>
     </form>
   );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "productPayment:money:form": {
+        paid: {
+          label: string;
+          placeholder: string;
+          "required.num": string;
+        };
+        remaining: string;
+      };
+    }
+  }
 }

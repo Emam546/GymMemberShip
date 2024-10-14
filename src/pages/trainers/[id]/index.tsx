@@ -221,7 +221,7 @@ export default function Page({ doc }: Props) {
                 </div>
               </div>
             </div>
-            <MainCard className="p-4 tw-mt-3">
+            <MainCard >
               <ErrorShower
                 loading={QueryInfinity.isLoading}
                 error={QueryInfinity.error}
@@ -256,6 +256,7 @@ export default function Page({ doc }: Props) {
                     onDelete={async (elem) => {
                       await requester.delete(`/api/admin/logs/${elem.log._id}`);
                       alert(t("messages.deleted", { ns: "translation" }));
+                      queryClient.invalidateQueries(["logs"]);
                       queryClient.setQueryData<
                         InfinityQuery<
                           DataBase.Populate.Model<

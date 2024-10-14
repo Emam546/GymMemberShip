@@ -10,39 +10,39 @@ import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
 } from "@src/components/pages/subscriptions/filter";
 import { useState } from "react";
-import { PaymentInfoGenerator } from "@src/components/pages/subscriptions/table";
 import PrintUserPayments from "@src/components/pages/subscriptions/print";
 import { useTranslation } from "react-i18next";
 import { getDaysArray } from "@src/utils";
 import { LineChart } from "@src/components/common/charts";
 
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
+import { ProductsPaymentInfoGenerator } from "@src/components/pages/products/payments/table";
+import queryClient from "@src/queryClient";
 import PaymentsDataFilter, {
-  DataType as PaymentsDataFilterDataType,
+  DataType as PaymentsDataFilterDataFilter,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
 
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
-  DataBase.WithId<DataBase.Models.Subscriptions>,
-  "userId" | "adminId" | "planId" | "trainerId"
+  DataBase.WithId<DataBase.Models.ProductPayments>,
+  "userId" | "adminId"
 >;
-type FormData = PaymentsDataFilterDataType & TimeStartEndSelectorDataType;
+type FilterData = PaymentsDataFilterDataFilter & TimeStartEndSelectorDataType;
 export default function Page() {
   const curDate = new Date();
-  const [filter, setFilter] = useState<FormData>({
+  const [filter, setFilter] = useState<FilterData>({
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth(),
       curDate.getDate() - 8
     ),
     endAt: curDate,
-    active: true,
   });
   const QueryInfinity = useInfiniteQuery({
-    queryKey: ["subscriptions", "infinity", filter],
+    queryKey: ["productsPayments", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
-        `/api/admin/subscriptions`,
+        `/api/admin/products/payments`,
         {
           params: {
             ...filter,
@@ -62,11 +62,11 @@ export default function Page() {
     },
   });
   const QueryProfit = useQuery({
-    queryKey: ["subscriptions", "total", filter],
+    queryKey: ["productsPayments", "total", filter],
     queryFn: async ({ signal }) => {
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
-      >(`/api/admin/subscriptions/profit`, {
+      >(`/api/admin/products/payments/profit`, {
         params: {
           ...filter,
           day: true,
@@ -80,7 +80,7 @@ export default function Page() {
       return users.data.data;
     },
   });
-  const { t, i18n } = useTranslation("/subscriptions");
+  const { t, i18n } = useTranslation("/products/payments");
   const totalPrice =
     QueryProfit.data?.reduce((acc, val) => acc + val.profit, 0) || 0;
   const totalCount =
@@ -117,7 +117,7 @@ export default function Page() {
       <BigCard>
         <RedirectIfNotAdmin>
           <div className="tw-flex tw-justify-between">
-            <CardTitle>{t("Payments")}</CardTitle>
+            <CardTitle>{t("card.title")}</CardTitle>
             <div>
               <PrintUserPayments
                 query={{
@@ -134,79 +134,82 @@ export default function Page() {
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>
-          <MainCard>
-            <div className="tw-flex tw-justify-between tw-gap-x-4">
-              <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
-                <div>
-                  <h5 className="card-title mb-9 fw-semibold">
-                    {t("Earnings")}
-                  </h5>
-                  <h4 className="mb-3 fw-semibold rtl:tw-text-end" dir="ltr">
-                    {totalPrice} EGP
-                  </h4>
+          <div>
+            <MainCard>
+              <div className="tw-flex tw-justify-between tw-gap-x-4">
+                <div className="tw-flex tw-gap-3 tw-flex-wrap tw-max-w-xs tw-flex-1 tw-justify-between">
+                  <div>
+                    <h5 className="card-title mb-9 fw-semibold">
+                      {t("Earnings")}
+                    </h5>
+                    <h4 className="mb-3 fw-semibold rtl:tw-text-end" dir="ltr">
+                      {totalPrice} EGP
+                    </h4>
+                  </div>
+                  <div>
+                    <h5 className="card-title mb-9 fw-semibold">
+                      {t("Total Count")}
+                    </h5>
+                    <h4 className="mb-3 fw-semibold">{totalCount}</h4>
+                  </div>
                 </div>
                 <div>
-                  <h5 className="card-title mb-9 fw-semibold">
-                    {t("Total Count")}
-                  </h5>
-                  <h4 className="mb-3 fw-semibold">{totalCount}</h4>
-                </div>
-              </div>
-              <div>
-                <div className="d-flex justify-content-end">
-                  <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
-                    <i className="ti ti-currency-dollar fs-6" />
+                  <div className="d-flex justify-content-end">
+                    <div className="p-6 text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center">
+                      <i className="ti ti-currency-dollar fs-6" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div dir="ltr">
-              <LineChart
-                loading={QueryProfit.isLoading}
-                height={300}
-                series={[
-                  {
-                    data: data.map((val) => val.profit) || [],
-                    label: t("Earnings"),
-                    area: true,
-                    type: "line",
-                    color: "#49BEFF",
-                    showMark: false,
-                    stack: "total",
-                  },
-                ]}
-                slotProps={{ legend: { hidden: true } }}
-                yAxis={[
-                  {
-                    min: 0,
-                    max: data.reduce(
-                      (acc, { profit }) => (acc > profit ? acc : profit),
-                      10
-                    ),
-                  },
-                ]}
-                xAxis={[
-                  {
-                    scaleType: "point",
-                    data: data,
-                    valueFormatter({ _id }: DataBase.Queries.Logs.LogsCount) {
-                      const date = new Date(_id.year!, _id.month!, _id.day!);
-                      return `${date.toLocaleDateString(i18n.language, {
-                        day: "2-digit",
-                        month: "short",
-                        year: yearEnabled ? "numeric" : undefined,
-                      })}`;
+              <div dir="ltr">
+                <LineChart
+                  loading={QueryProfit.isLoading}
+                  height={300}
+                  series={[
+                    {
+                      data: data.map((val) => val.profit) || [],
+                      label: t("Earnings"),
+                      area: true,
+                      type: "line",
+                      color: "#49BEFF",
+                      showMark: false,
+                      stack: "total",
                     },
-                  },
-                ]}
-              />
-            </div>
-            <div>
-              <PaymentsDataFilter
-                onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
-              />
-            </div>
-          </MainCard>
+                  ]}
+                  slotProps={{ legend: { hidden: true } }}
+                  yAxis={[
+                    {
+                      min: 0,
+                      max: data.reduce(
+                        (acc, { profit }) => (acc > profit ? acc : profit),
+                        10
+                      ),
+                    },
+                  ]}
+                  xAxis={[
+                    {
+                      scaleType: "point",
+                      data: data,
+                      valueFormatter({ _id }: DataBase.Queries.Logs.LogsCount) {
+                        const date = new Date(_id.year!, _id.month!, _id.day!);
+                        return `${date.toLocaleDateString(i18n.language, {
+                          day: "2-digit",
+                          month: "short",
+                          year: yearEnabled ? "numeric" : undefined,
+                        })}`;
+                      },
+                    },
+                  ]}
+                />
+              </div>
+              <div>
+                <PaymentsDataFilter
+                  disableActive
+                  onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+                />
+              </div>
+            </MainCard>
+          </div>
           <MainCard >
             <ErrorShower
               loading={QueryInfinity.isLoading}
@@ -214,32 +217,34 @@ export default function Page() {
             />
             <div>
               {payments && (
-                <PaymentInfoGenerator
+                <ProductsPaymentInfoGenerator
                   perPage={payments.length}
                   page={0}
                   totalCount={payments.length}
-                  subscriptions={payments.map((payment, i) => ({
+                  onDelete={async (elem) => {
+                    await requester.delete(
+                      `/api/admin/products/payments/${elem.payment._id}`
+                    );
+                    queryClient.invalidateQueries(["productsPayments"]);
+                  }}
+                  payments={payments.map((payment, i) => ({
                     order: i,
-                    subscription: {
+                    payment: {
                       ...payment,
                       userId: payment.userId?._id || "",
-                      planId: payment.planId?._id || "",
                       adminId: payment.adminId?._id || "",
                     },
                     admin: payment.adminId,
-                    plan: payment.planId,
                     user: payment.userId,
                   }))}
                   headKeys={[
                     "order",
-                    "user",
-                    "plan",
                     "paid",
                     "link",
                     "remainingMoney",
-                    "log",
-                    "endAt",
                     "admin",
+                    "delete",
+                    "createdAt",
                   ]}
                 />
               )}
@@ -255,4 +260,16 @@ export default function Page() {
       </BigCard>
     </div>
   );
+}
+declare global {
+  namespace I18ResourcesType {
+    interface Resources {
+      "/products/payments": {
+        title: "Payments";
+        "card.title": "Payments";
+        Earnings: "Earnings";
+        "Total Count": "Total Count";
+      };
+    }
+  }
 }

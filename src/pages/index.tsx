@@ -52,7 +52,6 @@ export default function Page({ plans, trainers }: Props) {
   const month = useFormateDate({
     weekday: "long",
   });
-  // const { userId } = router.query as { userId?: string };
   const [userId, setUserId] = useState<string | undefined>(
     router.query.userId as string
   );

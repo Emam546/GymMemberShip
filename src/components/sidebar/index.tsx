@@ -11,7 +11,8 @@ import PlansIcon from "./icons/project-management.png";
 import TrainersIcon from "./icons/personal.png";
 import SettingsIcon from "./icons/settings.png";
 import Whatsapp from "./icons/whatsapp.png";
-import Products from "./icons/shopping-cart.png";
+import SellIcon from "./icons/shopping-cart.png";
+import ProductIcon from "./icons/box.png";
 import logOutIcon from "./icons/switch.png";
 import DashBoardIcon from "./icons/dashboard.png";
 import { SelectLang } from "../common/selectLang";
@@ -156,7 +157,7 @@ function ManageUsersNavBar() {
         title={t("user.label")}
       />
       <LinkElem
-        icon={Products.src}
+        icon={SellIcon.src}
         title={t("sell.label")}
         href="/products/sell"
       />
@@ -182,6 +183,11 @@ function ManageUsersNavBar() {
           icon={TrainersIcon.src}
           href="/trainers"
           title={t("trainers.label")}
+        />
+        <LinkElem
+          icon={ProductIcon.src}
+          href="/products/payments"
+          title={t("products.label")}
         />
         <LinkElem
           icon={DashBoardIcon.src}
@@ -273,6 +279,9 @@ declare global {
           label: "Plans";
           "/plans": "Manage Plans";
           "/plans/add": "Add Plan";
+        };
+        products: {
+          label: "Products";
         };
       };
     }

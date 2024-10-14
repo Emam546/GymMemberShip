@@ -30,13 +30,6 @@ export default function Page({ products: initProducts }: Props) {
       alert(t("messages.added", { ns: "translation" }));
     },
   });
-  const deleteAdmin = useMutation({
-    async mutationFn(data: DataBase.WithId<DataBase.Models.Products>) {
-      await requester.delete<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Products>>
-      >(`/api/admin/products/${data._id}`);
-    },
-  });
 
   return (
     <>
@@ -77,7 +70,11 @@ export default function Page({ products: initProducts }: Props) {
                 });
               }}
               onDelete={async (product) => {
-                await deleteAdmin.mutateAsync(product);
+                await requester.delete<
+                  Routes.ResponseSuccess<
+                    DataBase.WithId<DataBase.Models.Products>
+                  >
+                >(`/api/admin/products/${product._id}`);
                 setProducts((pre) => pre.filter((c) => c._id != product._id));
               }}
               totalCount={products.length}

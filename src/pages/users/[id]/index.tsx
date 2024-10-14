@@ -19,6 +19,7 @@ import queryClient from "@src/queryClient";
 import DeleteAccountForm from "@src/components/pages/users/deleteAccountForm";
 import { useTranslation } from "react-i18next";
 import { CopyText } from "@src/components/common/copy";
+import { MessageDataUsers } from "@src/components/pages/whatsapp";
 
 interface Props {
   doc: DataBase.WithId<DataBase.Models.User>;
@@ -66,6 +67,13 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
         <div className="tw-mb-8">
           <DeleteAccountForm id={doc._id} />
         </div>
+        <MainCard>
+          <CardTitle>Whatsapp</CardTitle>
+          <MessageDataUsers
+            OnUsers={() => [doc]}
+            buttonName={t("buttons.send", { ns: "translation" })}
+          />
+        </MainCard>
         <div className="tw-flex tw-items-center tw-justify-between tw-mb-3">
           <CardTitle>{t("Payments")}</CardTitle>
           <PrintUsersPayments id={doc._id} />
@@ -116,7 +124,11 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   try {
-    const user = await getUser(ctx.params!.id as string);
+    if (!ctx.params?.id)
+      return {
+        notFound: true,
+      };
+    const user = await getUser(ctx.params.id as string);
     const plans = await getAllPlans();
     const trainers = await getAllTrainers();
     return {

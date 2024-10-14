@@ -7,41 +7,43 @@ import { GetServerSideProps } from "next";
 import { useState } from "react";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import connect from "@serv/db/connect";
-import { useAuth, useLogUser } from "@src/components/UserProvider";
-import ProductsTable from "@src/components/pages/products/table";
-import { getProducts } from "@serv/routes/admin/products";
-import ProductInfoForm from "@src/components/pages/products/sell";
-import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import SellProductsTable, {
   SellProduct,
 } from "@src/components/pages/products/sell/table";
 import MoneyPaidProductForm, {
   FormData as MoneyPaidProductFormData,
 } from "@src/components/pages/products/sell/formPrice";
+import { getProductPayment } from "@serv/routes/admin/products/payments/[id]";
+import { MakeItSerializable } from "@src/utils";
+import { getProduct } from "@serv/routes/admin/products/[id]";
+import ProductPaymentInfoForm from "@src/components/pages/products/payments/form";
 interface Props {
-  products: DataBase.WithId<DataBase.Models.Products>[];
+  payment: DataBase.Populate.Model<
+    DataBase.WithId<DataBase.Models.ProductPayments>,
+    "adminId" | "userId"
+  >;
+  sellProducts: (SellProduct | null)[];
 }
-export default function Page({ products: initProducts }: Props) {
-  const [products, setProducts] = useState(initProducts);
-  const [curProducts, setCurProducts] = useState<SellProduct[]>([]);
-  const { t } = useTranslation("/products/sell");
+export default function Page({ payment, sellProducts }: Props) {
+  const [curProducts, setCurProducts] = useState<SellProduct[]>(
+    sellProducts.filter<SellProduct>((val) => val != null)
+  );
+  const { t } = useTranslation("/products/payments/[id]");
   const mutate = useMutation({
     async mutationFn(data: MoneyPaidProductFormData) {
-      const request = await requester.post(`/api/admin/products/payments`, {
-        products: curProducts.map((val) => ({
-          productId: val._id,
-          num: val.curNum,
-        })),
-        ...data,
-      });
+      const request = await requester.post(
+        `/api/admin/products/payments/${payment._id}`,
+        {
+          products: curProducts.map((val) => ({
+            productId: val._id,
+            num: val.curNum,
+          })),
+          ...data,
+        }
+      );
       return request.data.data;
     },
-    async onSuccess() {
-      setCurProducts([]);
-      const products = await requester.get<
-        Routes.ResponseSuccess<DataBase.WithId<DataBase.Models.Products>[]>
-      >("/api/admin/products");
-      setProducts(products.data.data);
+    onSuccess() {
       alert(t("messages.added", { ns: "translation" }));
     },
   });
@@ -57,18 +59,13 @@ export default function Page({ products: initProducts }: Props) {
       <BigCard>
         <CardTitle>{t("create.title")}</CardTitle>
         <MainCard>
-          <ProductInfoForm
-            onData={async (data) => {
-              console.log(data);
-              const product = products.find((v) => v._id == data.productId);
-              if (!product) return;
-              if (curProducts.some((id) => id._id == data.productId))
-                return alert("the product is already added");
-              setCurProducts((pre) => [...pre, { ...product, curNum: 1 }]);
+          <ProductPaymentInfoForm
+            payment={{
+              ...payment,
+              adminId: payment.adminId?._id || "",
+              userId: payment.userId?._id || "",
             }}
-            products={products.filter(
-              (val) => !curProducts.some((id) => id._id == val._id)
-            )}
+            admin={payment.adminId}
           />
         </MainCard>
         <MainCard>
@@ -101,11 +98,13 @@ export default function Page({ products: initProducts }: Props) {
             onDelete={(product) => {
               setCurProducts((pre) => pre.filter((c) => c._id != product._id));
             }}
+            ignoreWarnings={true}
           />
           <div className="tw-mt-4">
             <MoneyPaidProductForm
               buttonName={t("buttons.update", { ns: "translation" })}
               totalPrice={totalPrice}
+              disableAutoUpdating
               onData={async function (data) {
                 if (curProducts.length == 0)
                   return alert("Please add some products to sell");
@@ -119,28 +118,50 @@ export default function Page({ products: initProducts }: Props) {
   );
 }
 
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  await connect(EnvVars.mongo.url);
+
+  try {
+    if (!ctx.params?.id)
+      return {
+        notFound: true,
+      };
+    const payment = await getProductPayment(ctx.params.id as string);
+    return {
+      props: {
+        payment: MakeItSerializable({
+          ...payment.toJSON(),
+          _id: payment._id.toString(),
+        }) as unknown as Props["payment"],
+        sellProducts: await Promise.all(
+          payment.products.map(async (val) => {
+            try {
+              const product = await getProduct(val.productId);
+              return MakeItSerializable({
+                ...product.toJSON(),
+                _id: product._id.toString(),
+                curNum: val.num,
+              });
+            } catch (err) {
+              return null;
+            }
+          })
+        ),
+      },
+    };
+  } catch (err) {
+    return {
+      notFound: true,
+    };
+  }
+};
 declare global {
   namespace I18ResourcesType {
     interface Resources {
-      "/products/sell": {
+      "/products/payments/[id]": {
         title: "Products";
         "create.title": "Create Product";
       };
     }
   }
 }
-
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  await connect(EnvVars.mongo.url);
-  const products = await getProducts();
-  return {
-    props: {
-      products: products.map((product) => {
-        return {
-          ...product.toJSON(),
-          _id: product._id.toString(),
-        };
-      }),
-    },
-  };
-};

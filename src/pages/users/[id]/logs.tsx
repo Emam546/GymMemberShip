@@ -86,7 +86,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
         <title>{t("title", { name: doc.name })}</title>
       </Head>
       <BigCard>
-        <MainCard className="p-4 tw-mt-3">
+        <MainCard>
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
@@ -160,6 +160,7 @@ export default function Page({ doc, logs: logsCount }: Props) {
               ]}
               onDelete={async (doc) => {
                 await requester.delete(`/api/admin/logs/${doc.log._id}`);
+                queryClient.invalidateQueries(["logs"]);
                 queryClient.setQueryData<InfinityQuery<LogDoc>>(
                   queryInfinityKey,
                   (oldData) => {

@@ -88,17 +88,17 @@ export default function Page({}) {
             />
           </div>
         </div>
-        <MainCard className="tw-my-4">
+        <MainCard >
           <TimeStartEndSelector
             values={filter}
             onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
           />
-          <div className="tw-my-5">
+          <div>
             <FilterUsersData
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>
-          <div className="tw-mt-10">
+          <div>
             <PaymentsDataFilter
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
@@ -129,14 +129,14 @@ export default function Page({}) {
             buttonName={t("buttons.send", { ns: "translation" })}
           />
         </MainCard>
-        <MainCard className="p-4 tw-mt-3">
+        <MainCard >
           <ErrorShower
             loading={QueryInfinity.isLoading}
             error={QueryInfinity.error}
           />
           <CardTitle>{t("Users")}</CardTitle>
           <div>
-            <MainCard className="p-4 tw-mt-3">
+            <MainCard >
               <ErrorShower
                 loading={QueryInfinity.isLoading}
                 error={QueryInfinity.error}

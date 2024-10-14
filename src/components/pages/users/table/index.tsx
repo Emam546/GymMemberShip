@@ -44,6 +44,7 @@ function UserShower({
     },
   });
   const { t } = useTranslation("table:users");
+  const { t: t2 } = useTranslation("users:deleteForm");
   return (
     <>
       <tr>
@@ -120,10 +121,10 @@ function UserShower({
         }}
         open={open}
         data={{
-          title: t("td.delete.title"),
-          desc: t("td.delete.desc"),
-          accept: t("td.delete.accept", { name: user.name }),
-          deny: t("td.delete.deny"),
+          title: t2("model.title"),
+          desc: t2("model.desc"),
+          accept: t2("model.accept", { name: user.name }),
+          deny: t2("model.deny"),
         }}
       />
     </>
