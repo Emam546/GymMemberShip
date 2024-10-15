@@ -251,7 +251,9 @@
       "/plans/add": "أضف خطة"
     },
     "products": {
-      "label": "مدفوعات المنتجات"
+      "label": "منتجات",
+      "/products/payments": "المدفوعات",
+      "/products": "اداره"
     }
   },
   "form:trainers": {

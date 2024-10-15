@@ -251,7 +251,9 @@
       "/plans/add": "Add Plan"
     },
     "products": {
-      "label": "Products Payments"
+      "label": "Products",
+      "/products/payments": "Payments",
+      "/products": "Manage"
     }
   },
   "form:trainers": {

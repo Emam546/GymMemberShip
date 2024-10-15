@@ -184,9 +184,18 @@ function ManageUsersNavBar() {
           href="/trainers"
           title={t("trainers.label")}
         />
-        <LinkElem
+        <DropLinksElem
           icon={ProductIcon.src}
-          href="/products/payments"
+          hrefs={[
+            {
+              label: t("products./products"),
+              href: "/products",
+            },
+            {
+              href: "/products/payments",
+              label: t("products./products/payments"),
+            },
+          ]}
           title={t("products.label")}
         />
         <LinkElem
@@ -199,10 +208,7 @@ function ManageUsersNavBar() {
         icon={SettingsIcon.src}
         hrefs={
           user?.type == "admin"
-            ? [
-                { href: "/admins", label: t("setting./admins") },
-                { href: "/products", label: t("setting./products") },
-              ]
+            ? [{ href: "/admins", label: t("setting./admins") }]
             : []
         }
         title={t("setting.label")}
@@ -282,6 +288,8 @@ declare global {
         };
         products: {
           label: "Products";
+          "/products/payments": "payments";
+          "/products": "manage";
         };
       };
     }
