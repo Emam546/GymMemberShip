@@ -90,7 +90,7 @@ export default function DraggableComp({
   return (
     <div
       className={classNames(
-        "tw-absolute ltr:-tw-left-4 rtl:-tw-right-4 tw-touch-none",
+        "tw-absolute ltr:-tw-left-4 rtl:-tw-right-4 tw-touch-none tw-top-1/2 -tw-translate-y-1/2",
         {
           "tw-cursor-grab": !drag,
           "tw-cursor-grabbing": drag,

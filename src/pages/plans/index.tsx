@@ -2,7 +2,7 @@ import "@src/i18n/locales/plan";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { getAllPlans } from "@serv/routes/admin/plans";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
-import AddButton from "@src/components/common/inputs/addButton";
+import GoToAddButton from "@src/components/common/inputs/addButton";
 import PlansInfoGetter from "@src/components/pages/plans/info";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
@@ -50,7 +50,7 @@ export default function Page({ plans: initPlans }: Props) {
           </MainCard>
         </BigCard>
         <div className="tw-py-3">
-          <AddButton label={t("Add Plan")} href="/plans/add" />
+          <GoToAddButton label={t("Add Plan")} href="/plans/add" />
         </div>
       </RedirectIfNotAdmin>
     </div>

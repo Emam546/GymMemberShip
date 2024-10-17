@@ -23,11 +23,7 @@ declare global {
 Validator.register(
   "existedId",
   (value: unknown): value is AvailableRules["existedId"]["path"] => {
-    return (
-      ramda.has("existedId", value) &&
-      ramda.has("path", value.existedId) &&
-      ramda.is(String, value.existedId.path)
-    );
+    return ramda.has("existedId", value) && ramda.has("path", value.existedId);
   },
   async (id, data) => {
     if (!ramda.is(String, id)) return "the id is not a string";

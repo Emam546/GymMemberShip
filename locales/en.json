@@ -254,6 +254,9 @@
       "label": "Products",
       "/products/payments": "Payments",
       "/products": "Manage"
+    },
+    "exercises": {
+      "label": "Exercises"
     }
   },
   "form:trainers": {
@@ -537,5 +540,33 @@
   "subscription:selectRange:form": {
     "start": "Start",
     "end": "End"
+  },
+  "/exercises": {
+    "title": "Exercises",
+    "exercises": "Exercises",
+    "button.add": "Add Plan"
+  },
+  "workouts:info": {
+    "NoData": "There is no Workouts so far please add some Workouts",
+    "hide": "hide",
+    "new": "New Workout",
+    "add": "Add new Workout"
+  },
+  "exercises:info": {
+    "NoData": "There is no Exercises so far please add some plans",
+    "add": "Add a new workOut",
+    "new": "New Exercise"
+  },
+  "exercises:deleteForm": {
+    "title": "Delete Exercise",
+    "desc": "Once you click delete, The Exercise and associated data will be permanently deleted and cannot be restored.",
+    "accept": "Delete {{name}} Exercise",
+    "deny": "Keep"
+  },
+  "workouts:deleteForm": {
+    "title": "Delete Workout",
+    "desc": "Once you click delete, The Workout and associated data will be permanently deleted and cannot be restored.",
+    "accept": "Delete {{name}} Workout",
+    "deny": "Keep"
   }
 }

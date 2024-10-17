@@ -4,7 +4,6 @@ import {
   SalesOverView as SalesOverViewChart,
   Percent,
 } from "@src/components/common/charts";
-import "./locales";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormateDate } from "@src/hooks";

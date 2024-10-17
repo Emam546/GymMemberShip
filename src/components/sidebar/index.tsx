@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ComponentProps, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import i18n from "@src/i18n";
 import { IsAdminComp } from "../wrappers";
 import UserIcon from "./icons/personal-information.png";
 import GraphIcon from "./icons/graph.png";
@@ -15,6 +14,7 @@ import SellIcon from "./icons/shopping-cart.png";
 import ProductIcon from "./icons/box.png";
 import logOutIcon from "./icons/switch.png";
 import DashBoardIcon from "./icons/dashboard.png";
+import ExercisesIcon from "./icons/exercise-routine.png";
 import { SelectLang } from "../common/selectLang";
 import { useAuth, useLogUser } from "../UserProvider";
 interface HeaderNavProps {
@@ -199,6 +199,11 @@ function ManageUsersNavBar() {
           title={t("products.label")}
         />
         <LinkElem
+          icon={ExercisesIcon.src}
+          href="/exercises"
+          title={t("exercises.label")}
+        />
+        <LinkElem
           icon={DashBoardIcon.src}
           href="/dashboard"
           title={t("dashboard.label")}
@@ -285,6 +290,9 @@ declare global {
           label: "Plans";
           "/plans": "Manage Plans";
           "/plans/add": "Add Plan";
+        };
+        exercises: {
+          label: "Exercises";
         };
         products: {
           label: "Products";

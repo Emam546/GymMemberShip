@@ -9,6 +9,7 @@ import AuthRouter from "./admins/login";
 import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import whatsapp from "./whatsapp";
 import products from "./products";
+import exercises from "./exercises";
 const router = Router();
 router.use("/admins/auth/", AuthRouter);
 router.use((req, res, next) => {
@@ -24,4 +25,5 @@ router.use("/admins", AdminsRouter);
 router.use("/trainers", TrainersRouter);
 router.use("/whatsapp", whatsapp);
 router.use("/products", products);
+router.use("/exercises", exercises);
 export default router;

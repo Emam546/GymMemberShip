@@ -1,6 +1,6 @@
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
-import AddButton from "@src/components/common/inputs/addButton";
+import GoToAddButton from "@src/components/common/inputs/addButton";
 import connect from "@serv/db/connect";
 import { GetServerSideProps } from "next";
 import Head from "next/head";

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfoGetter, { CreateElem } from "../../InsertCommonData";
 import { Elem as OrgElem } from "../../InsertCommonData/Elem";
 import Link from "next/link";
@@ -6,7 +6,6 @@ import DeleteDialog from "@src/components/common/AlertDialog";
 import { useMutation } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import { useTranslation } from "react-i18next";
-import i18n from "@src/i18n";
 export type T = DataBase.WithIdOrg<DataBase.Models.Plans>;
 
 const Elem = CreateElem<T>(({ index, props: { data }, ...props }, ref) => {
@@ -58,6 +57,7 @@ export default function PlansInfoGetter({ plans, setPlans }: Props) {
             Elem={Elem}
             data={plans.map((plan) => ({ ...plan, id: plan._id }))}
             onDeleteElem={(elem) => setCurDel(elem)}
+            noDragging
           />
         )}
         {plans.length == 0 && (
@@ -86,4 +86,3 @@ export default function PlansInfoGetter({ plans, setPlans }: Props) {
     </>
   );
 }
-
