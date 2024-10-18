@@ -550,7 +550,7 @@
     "NoData": "There is no Workouts so far please add some Workouts",
     "hide": "hide",
     "new": "New workout",
-    "add": "Add new Workout"
+    "add": "Add new workout"
   },
   "exercises:info": {
     "NoData": "There is no Exercises so far please add some Exercises",
@@ -575,7 +575,7 @@
   },
   "step:info": {
     "NoData": "There is no Steps so far please add some Steps",
-    "add": "Add a new Step",
+    "add": "Add a new step",
     "new": "Step {{index}}",
     "files": {
       "label": "add new File"
