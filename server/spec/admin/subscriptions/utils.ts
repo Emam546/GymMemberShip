@@ -1,13 +1,13 @@
 import agent from "@test/index";
 import { faker } from "@faker-js/faker";
 import { MakeItSerializable } from "@utils/index";
-export function createPayment(
+export function createSubscription(
   planId: string,
   userId: string,
   trainerId?: string
 ): Omit<
   DataBase.Models.Subscriptions,
-  "createdAt"  | "logsCount" | "adminId" | "type"
+  "createdAt" | "logsCount" | "adminId" | "__t"
 > {
   const days = faker.number.int(100);
   const startAt = new Date();
@@ -29,12 +29,13 @@ export function createPayment(
     startAt: startAt,
     remaining: faker.number.int(100),
     trainerId,
+    
   });
 }
-export async function createPaymentRequest(
-  ...a: Parameters<typeof createPayment>
+export async function createSubscriptionRequest(
+  ...a: Parameters<typeof createSubscription>
 ): Promise<DataBase.WithId<DataBase.Models.Subscriptions>> {
-  const payment = createPayment(...a);
+  const payment = createSubscription(...a);
   const res = await agent.post("/api/admin/subscriptions").send(payment);
   return res.body.data;
 }

@@ -29,7 +29,7 @@ declare global {
     }
     namespace Models {
       interface Payments {
-        type: string;
+        __t: string;
         userId?: string;
         createdAt: Date;
         adminId: string;
@@ -93,7 +93,7 @@ declare global {
         name: string;
       }
       interface Subscriptions extends Payments {
-        type: "subscription";
+        __t: "subscription";
         logsCount: number;
         planId: string;
         userId: string;

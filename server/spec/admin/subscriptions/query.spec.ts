@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import agent from "@test/index";
 import { expect } from "chai";
-import { createPayment, createPaymentRequest } from "./utils";
+import { createSubscription, createSubscriptionRequest } from "./utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
 import { createTrainerData, createTrainerRequest } from "../trainers/utils";
@@ -17,7 +17,7 @@ beforeAll(async () => {
 beforeAll(async () => {
   const res = await agent
     .post("/api/admin/subscriptions")
-    .send(createPayment(plan._id, user._id))
+    .send(createSubscription(plan._id, user._id))
     .expect(200);
   payment = res.body.data;
 });
@@ -28,7 +28,7 @@ type Doc = DataBase.Populate.Model<
 describe("GET", () => {
   let payment: DataBase.WithId<DataBase.Models.Subscriptions>;
   beforeAll(async () => {
-    payment = await createPaymentRequest(plan._id, user._id);
+    payment = await createSubscriptionRequest(plan._id, user._id);
   });
   test("Success", async () => {
     const res = await agent.get(`/api/admin/subscriptions/query`);
@@ -64,7 +64,7 @@ describe("GET", () => {
   });
   describe("get inactive payments", () => {
     test("num is 0", async () => {
-      const paymentData = createPayment(plan._id, user._id);
+      const paymentData = createSubscription(plan._id, user._id);
       paymentData.plan.num = 0;
       const resPayment = await agent
         .post("/api/admin/subscriptions")
@@ -91,7 +91,7 @@ describe("GET", () => {
   describe("get by start at", () => {
     test("greater than or equal", async () => {
       const cur = new Date();
-      const paymentData = createPayment(plan._id, user._id);
+      const paymentData = createSubscription(plan._id, user._id);
       const startAt = new Date(
         cur.getFullYear(),
         cur.getMonth() + 2,
@@ -118,7 +118,7 @@ describe("GET", () => {
     });
     test("lower than or equal", async () => {
       const cur = new Date();
-      const paymentData = createPayment(plan._id, user._id);
+      const paymentData = createSubscription(plan._id, user._id);
       const startAt = new Date(
         cur.getFullYear(),
         cur.getMonth() - 2,

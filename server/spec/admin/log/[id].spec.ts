@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { createLog } from "./utils";
 import agent from "@test/index";
 import { expect } from "chai";
-import { createPaymentRequest } from "../subscriptions/utils";
+import { createSubscriptionRequest } from "../subscriptions/utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
 let log: DataBase.WithId<DataBase.Models.Logs>;
@@ -12,7 +12,7 @@ let payment: DataBase.WithId<DataBase.Models.Subscriptions>;
 beforeAll(async () => {
   user = await createUserRequest();
   plan = await createPlanRequest();
-  payment = await createPaymentRequest(plan._id, user._id);
+  payment = await createSubscriptionRequest(plan._id, user._id);
 });
 beforeAll(async () => {
   const res = await agent

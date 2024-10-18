@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import agent from "@test/index";
 import { expect } from "chai";
-import { createPayment } from "./utils";
+import { createSubscription } from "./utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
 import { createTrainerData, createTrainerRequest } from "../trainers/utils";
@@ -17,7 +17,7 @@ beforeAll(async () => {
 beforeAll(async () => {
   const res = await agent
     .post("/api/admin/subscriptions")
-    .send(createPayment(plan._id, user._id))
+    .send(createSubscription(plan._id, user._id))
     .expect(200);
   payment = res.body.data;
 });
@@ -35,7 +35,7 @@ describe("GET", () => {
 });
 describe("POST", () => {
   test("Success", async () => {
-    const newPayment = createPayment(plan._id, user._id);
+    const newPayment = createSubscription(plan._id, user._id);
     const newData: Partial<DataBase.WithId<DataBase.Models.Subscriptions>> = {
       paid: 0,
       plan: {
@@ -50,7 +50,7 @@ describe("POST", () => {
     expect({ ...payment, ...newData }).deep.eq(res.body.data);
   });
   test("WrongId", async () => {
-    const newUser = createPayment(plan._id, user._id);
+    const newUser = createSubscription(plan._id, user._id);
     const res = await agent
       .post(`/api/admin/subscriptions/WrongId`)
       .send({ ...newUser })
@@ -71,7 +71,7 @@ describe("DELETE", () => {
   beforeEach(async () => {
     const res = await agent
       .post("/api/admin/subscriptions")
-      .send(createPayment(plan._id, user._id))
+      .send(createSubscription(plan._id, user._id))
       .expect(200);
     payment = res.body.data;
   });

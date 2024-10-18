@@ -4,7 +4,13 @@ import { getExercise } from "@serv/routes/admin/exercises/[id]";
 const router = Router();
 
 router.use("/:id", async (req, res, next) => {
-  res.locals.exercise = await getExercise(req.params.id);
+  const exercise = (await getExercise(
+    req.params.id
+  )) as unknown as DataBase.Populate.ModelArray<
+    DataBase.Models.Exercises,
+    "workoutIds"
+  >;
+  exercise.workoutIds = exercise.workoutIds.filter((val) => !val?.hide);
   next();
 });
 router.get("/:id", (req, res) => {

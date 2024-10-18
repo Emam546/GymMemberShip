@@ -3,14 +3,14 @@ import { expect } from "chai";
 import { createLog } from "./utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserData, createUserRequest } from "../users/utils";
-import { createPaymentRequest } from "../subscriptions/utils";
+import { createSubscriptionRequest } from "../subscriptions/utils";
 let user: DataBase.WithId<DataBase.Models.User>;
 let plan: DataBase.WithId<DataBase.Models.Plans>;
 let payment: DataBase.WithId<DataBase.Models.Subscriptions>;
 beforeAll(async () => {
   user = await createUserRequest();
   plan = await createPlanRequest();
-  payment = await createPaymentRequest(plan._id, user._id);
+  payment = await createSubscriptionRequest(plan._id, user._id);
 });
 
 describe("GET", () => {

@@ -1,6 +1,6 @@
 import agent from "@test/index";
 import { expect } from "chai";
-import { createPayment, createPaymentRequest } from "./utils";
+import { createSubscription, createSubscriptionRequest } from "./utils";
 import { createPlanRequest } from "../plans/utils";
 import { createUserRequest } from "../users/utils";
 
@@ -12,7 +12,7 @@ beforeAll(async () => {
 });
 describe("POST", () => {
   test("success", async () => {
-    const payment = createPayment(plan._id, user._id);
+    const payment = createSubscription(plan._id, user._id);
     const res = await agent
       .post("/api/admin/subscriptions")
       .send(payment)
@@ -23,7 +23,7 @@ describe("POST", () => {
   });
   describe("Wrong", () => {
     test("Wrong Paid Type", async () => {
-      const payment: any = createPayment(user._id, plan._id);
+      const payment: any = createSubscription(user._id, plan._id);
       payment.paid = undefined;
       const res = await agent
         .post("/api/admin/subscriptions")
@@ -32,7 +32,7 @@ describe("POST", () => {
       expect(res.body.err).has.property("paid");
     });
     test("Wrong UserId Type", async () => {
-      const payment = createPayment(user._id, plan._id);
+      const payment = createSubscription(user._id, plan._id);
       payment.userId = "wrongId";
       const res = await agent
         .post("/api/admin/subscriptions")
@@ -44,7 +44,7 @@ describe("POST", () => {
 });
 describe("GET", () => {
   beforeAll(async () => {
-    const payment = createPayment(plan._id, user._id);
+    const payment = createSubscription(plan._id, user._id);
     await agent.post("/api/admin/subscriptions").send(payment).expect(200);
   });
   test("Success", async () => {
@@ -74,7 +74,7 @@ describe("User Methods", () => {
     user = await createUserRequest();
     const res2 = await agent
       .post("/api/admin/subscriptions")
-      .send(createPayment(plan._id, user._id))
+      .send(createSubscription(plan._id, user._id))
       .expect(200);
     payment = res2.body.data;
   });
@@ -113,7 +113,7 @@ describe("Plan method", () => {
     beforeAll(async () => {
       const res2 = await agent
         .post("/api/admin/subscriptions")
-        .send(createPayment(plan._id, user._id))
+        .send(createSubscription(plan._id, user._id))
         .expect(200);
       payment = res2.body.data;
     });
@@ -139,7 +139,7 @@ describe("Plan method", () => {
       plan = await createPlanRequest();
       const res2 = await agent
         .post("/api/admin/subscriptions")
-        .send(createPayment(plan._id, user._id))
+        .send(createSubscription(plan._id, user._id))
         .expect(200);
       payment = res2.body.data;
     });
@@ -163,7 +163,7 @@ describe("Plan method", () => {
 describe("Get Profit Profit", () => {
   let payment: DataBase.WithId<DataBase.Models.Subscriptions>;
   beforeAll(async () => {
-    payment = await createPaymentRequest(plan._id, user._id);
+    payment = await createSubscriptionRequest(plan._id, user._id);
   });
   test("get All payments profit", async () => {
     const res = await agent.get(`/api/admin/subscriptions/profit`).expect(200);
