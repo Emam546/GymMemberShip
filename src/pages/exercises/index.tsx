@@ -58,11 +58,13 @@ export default function Page({ exercises: initPlans }: Props) {
               exercises={exercises}
               setExercises={setExercises}
             />
-            <AddButton
-              onClick={() => mutate.mutate()}
-              disabled={mutate.isLoading}
-              label={t("button.add")}
-            />
+            <div className="tw-my-3">
+              <AddButton
+                onClick={() => mutate.mutate()}
+                disabled={mutate.isLoading}
+                label={t("button.add")}
+              />
+            </div>
             <ErrorShower error={mutate.error} />
           </MainCard>
         </BigCard>

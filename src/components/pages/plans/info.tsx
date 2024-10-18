@@ -69,7 +69,8 @@ export default function PlansInfoGetter({ plans, setPlans }: Props) {
 
       <DeleteDialog
         onAccept={async () => {
-          await mutate.mutateAsync(curDel!.id);
+          if (!curDel) return;
+          await mutate.mutateAsync(curDel.id);
         }}
         onClose={function () {
           setCurDel(undefined);

@@ -7,8 +7,9 @@ const schema = new mongoose.Schema<DataBase.Models.Workouts>(
     title: { type: String, required: true },
     steps: [
       {
-        files: [{ type: String }],
-        desc: String,
+        files: { type: [{ type: String }], required: true },
+        desc: { type: String, required: true },
+        title: { type: String, required: true },
       },
     ],
     hide: { type: Boolean, default: true },

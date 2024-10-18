@@ -15,7 +15,7 @@ export interface Props<T extends PSchema> {
   Elem: ElemType<T>;
   data: T[];
   noDragging?: boolean;
-  onDeleteElem?: (v: T) => void;
+  onDeleteElem?: (v: T, i: number) => void;
   onResort?: (v: number[]) => void;
 }
 export const CreateElem = function <T>(
@@ -55,7 +55,11 @@ export default function InfoGetter<T extends PSchema>({
           onDelete={(xid) => {
             if (!onDeleteElem) return;
             const val = data.find((v) => v.id == xid);
-            val && onDeleteElem(val);
+            val &&
+              onDeleteElem(
+                val,
+                data.findIndex((v) => v.id == xid)
+              );
           }}
         />
       </div>

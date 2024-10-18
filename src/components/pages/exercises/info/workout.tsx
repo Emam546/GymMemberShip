@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 export type WorkOutElemDoc = DataBase.WithId<DataBase.Models.Workouts> & {
   exerciseId: string;
-
   onData: (v: DataBase.WithId<DataBase.Models.Workouts>) => void;
 };
 export const WorkOutOrgElem = CreateElem<DataBase.WithIdOrg<WorkOutElemDoc>>(

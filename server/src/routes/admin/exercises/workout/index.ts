@@ -11,6 +11,8 @@ const registerValidator = new Validator({
     {
       files: [["string"], "array", ["required"]],
       desc: ["string"],
+      title: ["string"],
+      _id: ["string"],
     },
     "array",
     ["required"],

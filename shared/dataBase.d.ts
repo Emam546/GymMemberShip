@@ -119,6 +119,8 @@ declare global {
         createdAt: Date;
         hide: boolean;
         steps: {
+          _id: string;
+          title: string;
           files: string[];
           desc: string;
         }[];

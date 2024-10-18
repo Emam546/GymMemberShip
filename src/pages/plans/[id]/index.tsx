@@ -76,7 +76,11 @@ export default function Page({ doc }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   await connect(EnvVars.mongo.url);
   try {
-    const plan = await getPlan(ctx.params!.id as string);
+    if (!ctx.params)
+      return {
+        notFound: true,
+      };
+    const plan = await getPlan(ctx.params.id as string);
     return {
       props: {
         doc: MakeItSerializable({

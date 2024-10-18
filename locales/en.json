@@ -549,12 +549,12 @@
   "workouts:info": {
     "NoData": "There is no Workouts so far please add some Workouts",
     "hide": "hide",
-    "new": "New Workout",
+    "new": "New workout",
     "add": "Add new Workout"
   },
   "exercises:info": {
-    "NoData": "There is no Exercises so far please add some plans",
-    "add": "Add a new workOut",
+    "NoData": "There is no Exercises so far please add some Exercises",
+    "add": "Add a new exercise",
     "new": "New Exercise"
   },
   "exercises:deleteForm": {
@@ -567,6 +567,34 @@
     "title": "Delete Workout",
     "desc": "Once you click delete, The Workout and associated data will be permanently deleted and cannot be restored.",
     "accept": "Delete {{name}} Workout",
+    "deny": "Keep"
+  },
+  "/workouts/[id]": {
+    "title": "Workout",
+    "workout": "Workout"
+  },
+  "step:info": {
+    "NoData": "There is no Steps so far please add some Steps",
+    "add": "Add a new Step",
+    "new": "Step {{index}}",
+    "files": {
+      "label": "add new File"
+    },
+    "desc": "Description"
+  },
+  "step:deleteForm": {
+    "title": "Delete Step",
+    "desc": "Once you click delete, The Step and associated data will be permanently deleted and cannot be restored.",
+    "accept": "Delete {{name}}",
+    "deny": "Keep"
+  },
+  "file:info": {
+    "NoData": "There is no Files so far please add some Files"
+  },
+  "file:deleteForm": {
+    "title": "Delete File",
+    "desc": "Once you click delete, The File and associated data will be permanently deleted and cannot be restored.",
+    "accept": "Delete {{name}}",
     "deny": "Keep"
   }
 }

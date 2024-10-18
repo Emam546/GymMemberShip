@@ -19,6 +19,22 @@ export const StyledInput = React.forwardRef<HTMLInputElement, InputProps>(
     );
   }
 );
+export const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <input
+        className={classNames(
+          "form-control placeholder:tw-text-gray-300",
+          className
+        )}
+        type="file"
+        id="formFileMultiple"
+        {...props}
+        ref={ref}
+      />
+    );
+  }
+);
 export type SelectedInputProps = ComponentPropsWithRef<"select">;
 
 export const StyledSelect = React.forwardRef<

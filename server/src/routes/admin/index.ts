@@ -10,6 +10,8 @@ import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import whatsapp from "./whatsapp";
 import products from "./products";
 import exercises from "./exercises";
+import workoutIdRouter from "./exercises/workout";
+import uploadFilesRouter from "./uploadFile";
 const router = Router();
 router.use("/admins/auth/", AuthRouter);
 router.use((req, res, next) => {
@@ -26,4 +28,6 @@ router.use("/trainers", TrainersRouter);
 router.use("/whatsapp", whatsapp);
 router.use("/products", products);
 router.use("/exercises", exercises);
+router.use("/workouts", workoutIdRouter);
+router.use("/uploads", uploadFilesRouter);
 export default router;

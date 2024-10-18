@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import React, { Dispatch, useEffect, useRef } from "react";
 import { useState } from "react";
 import { DependencyList } from "react";
@@ -32,34 +33,25 @@ export function useConnected(): ReturnType<typeof useState<boolean>> {
   }, []);
   return [isOnline, setIsOnline] as ReturnType<typeof useState<boolean>>;
 }
-export function useSyncRefs<TType>(
-  ...refs: (
-    | React.MutableRefObject<TType | null>
-    | ((instance: TType) => void)
-    | null
-  )[]
-) {
-  const cache = React.useRef(refs);
+function isRefObject<T>(ref: React.Ref<T>): ref is React.RefCallback<T> {
+  return typeof ref === "function" || ref instanceof Function;
+}
+export function useSyncRefs<T>(...refs: React.Ref<T>[]) {
+  const targetRef = useRef<T>(null);
 
-  React.useEffect(() => {
-    cache.current = refs;
-  }, [refs]);
+  useEffect(() => {
+    refs.forEach((ref) => {
+      if (!ref) return;
 
-  return React.useCallback(
-    (value: TType) => {
-      for (let ref of cache.current) {
-        if (ref == null) {
-          continue;
-        }
-        if (typeof ref === "function") {
-          ref(value);
-        } else {
-          ref.current = value;
-        }
+      if (isRefObject(ref)) {
+        ref(targetRef.current);
+      } else if (ref) {
+        (ref as React.MutableRefObject<T | null>).current = targetRef.current;
       }
-    },
-    [cache]
-  );
+    });
+  }, [targetRef.current, refs]);
+
+  return targetRef;
 }
 
 export function useNotInitEffect(
@@ -68,7 +60,8 @@ export function useNotInitEffect(
 ) {
   const cur = useRef(deps);
   return useEffect(() => {
-    const state = cur.current!.some((val, i) => val != deps[i]);
+    if (!cur.current) return;
+    const state = cur.current.some((val, i) => val != deps[i]);
     if (state) return effect();
   }, deps);
 }
@@ -78,13 +71,19 @@ export function useDebounceEffect(
   waitTime: number,
   deps?: DependencyList
 ) {
+  const router = useRouter();
   useEffect(() => {
-    const t = setTimeout(() => {
+    const f = () => {
       fn.call(undefined, deps);
-    }, waitTime);
+      router.events.off("routeChangeStart", f);
+      clearTimeout(t);
+    };
+    router.events.on("routeChangeStart", f);
+    const t = setTimeout(f, waitTime);
 
     return () => {
       clearTimeout(t);
+      router.events.off("routeChangeStart", f);
     };
   }, deps);
 }
@@ -119,11 +118,11 @@ export const useDebounceInitialEffect = (
 
 export function useDebounceState<T>(time: number, val?: T) {
   const [curVal, setVal] = useState(val);
-  const [debounce, setdebounce] = useState(val);
+  const [debounce, setDebounce] = useState(val);
   const [state, setState] = useState(false);
   useDebounceEffect(
     () => {
-      setdebounce(curVal);
+      setDebounce(curVal);
       setState(false);
     },
     time,
@@ -132,7 +131,7 @@ export function useDebounceState<T>(time: number, val?: T) {
   useEffect(() => {
     setState(true);
   }, [curVal]);
-  return [debounce, setVal, state, setdebounce] as [
+  return [debounce, setVal, state, setDebounce] as [
     T,
     Dispatch<T>,
     boolean,
@@ -146,7 +145,7 @@ export type ResultLoading<T, Error> =
 export function useLoadingPromise<T, Error = unknown>(
   promise: () => Promise<T>,
   deps?: DependencyList,
-  state: boolean = true
+  state = true
 ): ResultLoading<T, Error> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -163,18 +162,7 @@ export function useLoadingPromise<T, Error = unknown>(
   }, deps);
   return [data, loading, error] as any;
 }
-export function useLoadingPromiseQuery<T, Error = unknown>(
-  promise: () => Promise<T>,
-  keys: any,
-  state: boolean = true
-): ResultLoading<T, Error> {
-  const query = useQuery<T, Error>({
-    queryKey: keys,
-    queryFn: promise,
-    enabled: state,
-  });
-  return [query.data || null, query.isLoading, query.error] as any;
-}
+
 export function useFormateDate(props: Intl.DateTimeFormatOptions) {
   const { i18n } = useTranslation();
   return (date: Date) =>

@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
   res.status(200).sendSuccess(savedUser);
 });
 export async function getAllExercises() {
-  return await Exercises.find({}).sort({ order: -1 }).populate("workoutIds");
+  return await Exercises.find({}).hint({ order: 1 }).populate("workoutIds");
 }
 router.get("/", async (req, res) => {
   const results = await getAllExercises();

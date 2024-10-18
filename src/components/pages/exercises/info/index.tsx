@@ -32,10 +32,26 @@ const ExerciseElem = CreateElem<DataBase.WithIdOrg<ExerciseElemTypeDoc>>(
           title: title,
         });
       },
+      onSuccess() {
+        data.onData({ ...data, title });
+      },
     });
     const deleteMutate = useMutation({
       async mutationFn(id: string) {
         const newWorkouts = workouts.filter((val) => val?._id != id);
+        const workout = workouts.find((val) => val?._id == id);
+        if (!workout) return newWorkouts;
+        await Promise.all(
+          workout.steps.map(async ({ files }) => {
+            await Promise.all(
+              files.map(async (val) => {
+                try {
+                  await requester.delete(`/api/admin/uploads/${val}`);
+                } catch (error) {}
+              })
+            );
+          })
+        );
         await requester.delete(
           `/api/admin/exercises/${data.id}/workouts/${id}`
         );
@@ -183,6 +199,25 @@ export default function ExercisesInfoGetter({
 
   const deleteMutate = useMutation({
     async mutationFn(id: string) {
+      const exercise = exercises.find((val) => val._id == id);
+      if (!exercise) return;
+      await Promise.all(
+        exercise.workoutIds
+          .filter((val) => val != undefined)
+          .map(async ({ steps }) => {
+            await Promise.all(
+              steps.map(async ({ files }) => {
+                await Promise.all(
+                  files.map(async (val) => {
+                    try {
+                      await requester.delete(`/api/admin/uploads/${val}`);
+                    } catch (error) {}
+                  })
+                );
+              })
+            );
+          })
+      );
       await requester.delete(`/api/admin/exercises/${id}`);
     },
     onSuccess(_, id) {
@@ -193,10 +228,12 @@ export default function ExercisesInfoGetter({
   const resortMutate = useMutation({
     async mutationFn(indexes: number[]) {
       return Promise.all(
-        indexes.map(async (i) => {
+        indexes.map(async (i, newI) => {
           const val = exercises[i];
-          exercises[i].order = i;
-          await requester.post(`/api/admin/exercises/${val._id}`, { order: i });
+          val.order = newI;
+          await requester.post(`/api/admin/exercises/${val._id}`, {
+            order: newI,
+          });
           return exercises[i];
         })
       );
@@ -231,7 +268,7 @@ export default function ExercisesInfoGetter({
         )}
         {exercises.length == 0 && <p className="tw-mb-0">{t("NoData")}</p>}
       </>
-
+      <ErrorShower error={resortMutate.error || deleteMutate.error} />
       <DeleteDialog
         onAccept={async () => {
           if (!curDel) return;

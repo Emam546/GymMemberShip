@@ -30,7 +30,11 @@ app.use(cookieParser(EnvVars.cookieProps.secret));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.session());
-app.use(fileUpload());
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
 app.use(parseMultiFormData());
 app.use(passport.initialize());
 // Show routes called in console during development
@@ -49,6 +53,7 @@ app.use("/locales", express.static(folderToHost));
 // Add APIs
 app.use("/api", baseRoute);
 app.use("/images", imagesRoute);
+app.use("/uploads", express.static("./uploads"));
 // Setup error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(((err: Error, _: Request, res: Response, next: NextFunction) => {
