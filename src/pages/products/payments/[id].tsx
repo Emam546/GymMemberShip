@@ -102,6 +102,10 @@ export default function Page({ payment, sellProducts }: Props) {
           />
           <div className="tw-mt-4">
             <MoneyPaidProductForm
+              values={{
+                paid: payment.paid,
+                remaining: payment.remaining,
+              }}
               buttonName={t("buttons.update", { ns: "translation" })}
               totalPrice={totalPrice}
               disableAutoUpdating

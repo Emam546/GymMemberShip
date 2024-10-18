@@ -104,7 +104,7 @@ export default function Page({ products: initProducts }: Props) {
           />
           <div className="tw-mt-4">
             <MoneyPaidProductForm
-              buttonName={t("buttons.update", { ns: "translation" })}
+              buttonName={t("buttons.add", { ns: "translation" })}
               totalPrice={totalPrice}
               onData={async function (data) {
                 if (curProducts.length == 0)
