@@ -2,7 +2,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSyncRefs } from "@src/hooks";
 import classNames from "classnames";
-import { ComponentRef, useEffect, useRef, useState } from "react";
+import { Component, ComponentRef, useEffect, useRef, useState } from "react";
 import DraggableComp from "@src/components/common/drag";
 import React from "react";
 import { PrimaryProps } from "./EleGen";
@@ -28,7 +28,10 @@ export const Elem = React.forwardRef<HTMLDivElement, ElemProps>(
   ) => {
     const [drag, setDrag] = useState(false);
     const [parentDiv, setParentDiv] = useState<HTMLDivElement | null>(null);
-    const allRefs = useSyncRefs(setParentDiv, ref);
+    const allRefs = useSyncRefs(
+      setParentDiv as React.RefCallback<HTMLDivElement>,
+      ref
+    );
     const containerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
       if (!containerRef.current) return;
@@ -124,7 +127,10 @@ export const DropDownElem = React.forwardRef<HTMLDivElement, DraggableItem>(
     const [expand, setExpand] = useState(false);
     const [drag, setDrag] = useState(false);
     const [parentDiv, setParentDiv] = useState<HTMLDivElement | null>(null);
-    const allRefs = useSyncRefs(setParentDiv, ref);
+    const allRefs = useSyncRefs(
+      setParentDiv as React.RefCallback<HTMLDivElement>,
+      ref
+    );
     const containerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
       setExpand(false);

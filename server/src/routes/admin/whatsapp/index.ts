@@ -2,6 +2,7 @@ import Validator from "validator-checker-js";
 import { Router } from "express";
 import { MessageMedia } from "whatsapp-web.js";
 import whatsappClient, { isConnected } from "@serv/whatsapp";
+import { hasOwnProperty } from "@serv/util";
 const router = Router();
 const registerValidator = new Validator({
   number: [{ regExp: /^[1-9]\d{6,14}$/i }, "string", "required"],
@@ -21,12 +22,7 @@ router.use((req, res, next) => {
     return res.status(400).sendFailed("whatsapp is not connected");
   next();
 });
-export function hasOwnProperty<K extends PropertyKey, T>(
-  obj: unknown,
-  key: K
-): obj is Record<K, T> {
-  return Object.prototype.hasOwnProperty.call(obj, key);
-}
+
 
 router.post("/", async (req, res) => {
   if (!req.headers["content-type"]?.startsWith("multipart/form-data"))

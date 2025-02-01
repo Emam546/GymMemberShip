@@ -4,8 +4,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import Validator, { AvailableRules } from "validator-checker-js";
 import { MessagesStore } from "validator-checker-js/dist/Rule";
-import ramda from "ramda";
 import mongoose from "mongoose";
+import { hasOwnProperty } from "@serv/util";
 declare global {
   namespace Validator {
     interface AvailableRules {
@@ -23,10 +23,13 @@ declare global {
 Validator.register(
   "existedId",
   (value: unknown): value is AvailableRules["existedId"]["path"] => {
-    return ramda.has("existedId", value) && ramda.has("path", value.existedId);
+    return (
+      hasOwnProperty(value, "existedId") &&
+      hasOwnProperty(value.existedId, "path")
+    );
   },
   async (id, data) => {
-    if (!ramda.is(String, id)) return "the id is not a string";
+    if (typeof id != "string") return "the id is not a string";
     if (!mongoose.Types.ObjectId.isValid(id)) return "the id is not a string";
 
     const res: Document | null = await mongoose
