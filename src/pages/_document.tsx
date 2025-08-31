@@ -8,10 +8,11 @@ export default function Document() {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/images/app/app_icon" type="image/*" />
         <link
           rel="shortcut icon"
           type="image/png"
-          href="/images/logos/favicon.png"
+          href="/images/app/app_icon"
         />
       </Head>
       <body dir={i18n.language == "ar" ? "rtl" : "ltr"}>
