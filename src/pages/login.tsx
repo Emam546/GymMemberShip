@@ -13,6 +13,7 @@ import requester from "@src/utils/axios";
 import { useLogUser } from "@src/components/UserProvider";
 import ImagesBg from "@src/components/bg";
 import { NextPageWithLayout } from "./_app";
+import Head from "next/head";
 export interface FormValues {
   id: string;
   password: string;
@@ -44,8 +45,11 @@ const Login: NextPageWithLayout<Props> = function Login({ admins }) {
   });
   const router = useRouter();
   return (
-    <div className="tw-flex align-items-center justify-content-center tw-w-full tw-flex-1 tw-self-stretch">
-      <div className="row justify-content-center w-100 login">
+    <>
+      <Head>
+        <title>Login</title>
+      </Head>
+      <div className=" tw-min-h-screen row justify-content-center tw-items-center login">
         <div className="col-md-8 col-lg-6 col-xxl-3">
           <div className="mb-0 card tw-bg-black/90">
             <div className="card-body">
@@ -107,7 +111,7 @@ const Login: NextPageWithLayout<Props> = function Login({ admins }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 Login.getLayout = (page) => {

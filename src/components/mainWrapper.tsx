@@ -51,12 +51,12 @@ function MainApp({ children: children }: { children: React.ReactNode }) {
   return (
     <>
       <div
-        className="tw-flex tw-flex-1 tw-items-stretch tw-justify-stretch tw-flex-col tw-pb-5"
+        className="tw-pb-5"
         ref={mainWrapper}
       >
         <Header />
-        <div className="m-0 body-wrapper tw-flex tw-flex-col tw-w-full tw-px-4 tw-flex-1">
-          <div className="tw-px-4 tw-py-10 container-fluid tw-flex-1 tw-w-full tw-flex tw-flex-col tw-justify-stretch tw-items-stretch tw-bg-white/95">
+        <div className="m-0 body-wrapper">
+          <div className="tw-px-4 tw-py-10 container-fluid tw-bg-white/95">
             {children}
           </div>
         </div>

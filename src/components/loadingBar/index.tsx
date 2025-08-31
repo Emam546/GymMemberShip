@@ -28,7 +28,7 @@ export default function LoadingBar({
   }, []);
   //   if (!loading) return null;
   return (
-    <div className="tw-relative tw-w-full tw-flex-1 tw-self-stretch">
+    <div className="tw-relative">
       {loading && (
         <div
           className={classNames(
@@ -40,7 +40,7 @@ export default function LoadingBar({
         </div>
       )}
 
-      <div className="tw-w-full tw-h-full tw-flex">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }
