@@ -25,7 +25,6 @@ import { ObjectEntries } from "@src/utils";
 import { UserProvider } from "@src/components/UserProvider";
 import { loadAuthData } from "@src/utils/loadAuth";
 import { BarcodePrintProvider } from "@src/components/BarcodePrinter";
-import { FrameProvider } from "@src/components/Frame/Frame";
 import ImagesBg from "@src/components/bg";
 config.autoAddCss = false;
 
@@ -47,7 +46,6 @@ export function Provider({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         {/* <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID!}> */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <FrameProvider>
             <BarcodePrintProvider>
               <div
                 className="tw-w-full tw-h-screen tw-fixed tw-top-0 tw-left-0 tw-bg-cover tw-bg-center -tw-z-10"
@@ -56,9 +54,7 @@ export function Provider({ children }: { children: ReactNode }) {
                 }}
               />
               <LoadingBar>{children}</LoadingBar>
-              
             </BarcodePrintProvider>
-          </FrameProvider>
         </LocalizationProvider>
         {/* </GoogleOAuthProvider> */}
       </QueryClientProvider>
