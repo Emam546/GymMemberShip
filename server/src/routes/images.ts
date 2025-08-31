@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 const router = Router();
 const ImagesPath = "./sources/";
-router.get("/*", (req, res) => {
+router.get("/*", (req, res, next) => {
   const paths = (req.params as { 0: string })[0];
   const dynamicPaths = paths; // Split the path into individual segments
   // Define possible extensions to search for
@@ -22,7 +22,8 @@ router.get("/*", (req, res) => {
       root: process.cwd(),
     });
   } else {
-    res.status(404).send("Image not found");
+    // res.status(404).send("Image not found");
+    next();
   }
 });
 
