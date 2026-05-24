@@ -11,10 +11,10 @@ function getChromiumExecPath() {
   return path
     .join(
       path.resolve(
-        __dirname,
-        "../../../node_modules/whatsapp-web.js/node_modules/puppeteer-core/.local-chromium/win64-1045629/chrome-win"
+        process.cwd(),
+        "node_modules/whatsapp-web.js/node_modules/puppeteer-core/.local-chromium/win64-1045629/chrome-win",
       ),
-      "chrome.exe"
+      "chrome.exe",
     )
     .replace("app.asar", "app.asar.unpacked");
 }
@@ -41,13 +41,14 @@ export function connectWhatsapp(timeOut = 5000) {
   return new Promise<boolean>((res, rej) => {
     if (isConnected) return res(true);
     const f = setInterval(() => {
-      fetch("https://web.whatsapp.com/").then((response) => {
-        if (!response.ok) return;
-        clearInterval(f);
-        console.log("start connecting to whatsapp");
-        whatsappClient.initialize();
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      }).catch(err=>{});
+      fetch("https://web.whatsapp.com/")
+        .then((response) => {
+          if (!response.ok) return;
+          clearInterval(f);
+          console.log("start connecting to whatsapp");
+          whatsappClient.initialize();
+        })
+        .catch((err) => logger.err(err));
     }, 1000);
 
     whatsappClient.once("ready", () => {

@@ -15,7 +15,8 @@
     "build:server": "ts-node build.ts",
     "build:next": "next build",
     "build": "npm run build:server && npm run build:next",
-    "lint": "next lint -c ./src/.eslintrc.json src",
+    "lint": "eslint server app src --ext .ts,.tsx",
+    "lint:src": "tsc --noEmit && eslint -c ./src/.eslintrc.json src",
     "lint:server": "eslint -c ./server/.eslintrc.json --ext  .ts server/src/ ",
     "lint:electron": "eslint -c app/.eslintrc.json --ext .ts app/main/",
     "start": "node ./dist --env=production",
@@ -98,6 +99,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "puppeteer": "^25.0.4",
     "qrcode-terminal": "^0.12.0",
     "qrcode.react": "^4.0.1",
     "react": "18.2.0",
@@ -121,6 +123,7 @@
     "youtube-searches": "^1.0.1"
   },
   "devDependencies": {
+    "@electron-toolkit/eslint-config": "^1.0.2",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@faker-js/faker": "^8.4.1",
     "@types/bcrypt": "^5.0.0",
