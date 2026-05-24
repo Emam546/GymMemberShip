@@ -6,7 +6,7 @@
 
 import dotenv from "dotenv";
 import commandLineArgs from "command-line-args";
-
+import fs from "fs";
 // **NOTE** Do not import any local paths here, or any libraries dependent
 // on environment variables.
 
@@ -33,6 +33,10 @@ const result2 = dotenv.config({
   path: `${String(options.env)}.env`,
 });
 
+const logsDir = path.dirname(process.env.JET_LOGGER_FILEPATH as string);
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
 if (result2.error) {
   throw result2.error;
 }
