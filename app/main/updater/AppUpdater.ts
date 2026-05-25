@@ -6,6 +6,7 @@ import fs from "fs";
 import { Downloader, DownloaderReport } from "nodejs-file-downloader";
 import cproc from "child_process";
 import path from "path";
+import { logger } from "../helpers/logger";
 export interface Data {
   owner: string;
   releaseType: "release" | "draft" | "both";
@@ -157,7 +158,7 @@ export default class AppUpdater extends EventEmitter {
         this.emit("progress", { percentage, chunk, remainingSize });
       },
       onError: (e) => {
-        console.log(e);
+        logger.info(e);
         this.emit("error", e);
       },
     });

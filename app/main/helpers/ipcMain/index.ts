@@ -4,6 +4,7 @@ import { app, BrowserWindow, dialog, ipcMain } from "electron";
 
 import { ApiMain } from "@shared/api";
 import { SaveFile } from "./saveFile";
+import { logger } from "../logger";
 type OnMethodsType = {
   [K in keyof ApiMain.OnMethods]: ConvertToIpCMainFunc<ApiMain.OnMethods[K]>;
 };
@@ -23,9 +24,8 @@ type HandelOnceMethodsType = {
   >;
 };
 export const OnMethods: OnMethodsType = {
-  log(_, ...arg) {
-    // eslint-disable-next-line no-console
-    console.log(...arg);
+  log(_, arg: string) {
+    logger.info(arg);
   },
   setTitle: function (event, name: string): void {
     const window = BrowserWindow.fromWebContents(event.sender);
@@ -59,7 +59,7 @@ export const OnMethods: OnMethodsType = {
     window.minimize();
   },
   ToggleWindowMaximizeState: function (
-    event: Electron.CrossProcessExports.IpcMainEvent
+    event: Electron.CrossProcessExports.IpcMainEvent,
   ): void {
     const window = BrowserWindow.fromWebContents(event.sender);
     if (!window) return;

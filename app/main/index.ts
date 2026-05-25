@@ -8,6 +8,7 @@ import { lunchArgs } from "./helpers/launchHelpers";
 import path from "path";
 import { ExpressServer } from "./express";
 import { createStartWindow } from "./lib/start";
+import { logger } from "./helpers/logger";
 const expressProcess = new ExpressServer();
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
@@ -43,10 +44,10 @@ app.whenReady().then(async () => {
   const win = await createStartWindow({ preloadData: {} });
   const state = await expressProcess.runServer();
   if (!state) return;
-  console.log("start app");
+  logger.info("start app");
   await createWindow(process.argv);
   win.close();
-  console.log("app started");
+  logger.info("app started");
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();

@@ -4,6 +4,7 @@ import { serverStart, whatsappReady } from "@serv/command";
 import path from "path";
 import { getEnv } from "./utils";
 import { createQrCodeWindow } from "./lib/qrCode";
+import { logger } from "./helpers/logger";
 
 const appName = app.getPath("exe");
 
@@ -18,7 +19,7 @@ export class ExpressServer {
   constructor() {}
   async runServer() {
     if (ExpressServer.expressProcess) return false;
-    console.log("start server");
+    logger.info("starting server");
     ExpressServer.expressProcess =
       await new Promise<ChildProcessWithoutNullStreams>((res, rej) => {
         const expressAppProcess = spawn(`${appName}`, command, {
@@ -26,17 +27,21 @@ export class ExpressServer {
             ELECTRON_RUN_AS_NODE: "1",
             dir: app.isPackaged ? app.getAppPath() : "./",
             ...process.env,
+            JET_LOGGER_FILEPATH: path.join(
+              app.getPath("userData"),
+              "server.log",
+            ),
           },
         }).on("error", (e) => {
           rej(e);
         });
         expressAppProcess.stderr.on("data", (e) => {
           const text = utf16Decoder.decode(e);
-          console.error("StdOut Error", text);
+          logger.err(`StdOut Error ${text}`);
         });
         expressAppProcess.stdout.on("data", (data: Buffer) => {
           const text = utf16Decoder.decode(data);
-          console.log(text.replaceAll("\n", ""));
+          logger.info(text.replaceAll("\n", ""));
           const state = text.split("\n").includes(serverStart);
           if (state) res(expressAppProcess);
         });
@@ -44,7 +49,7 @@ export class ExpressServer {
           const text = utf16Decoder.decode(data).replace("\n", "");
           const state = /^QR:/.test(text);
           if (!state) return;
-          console.log("state");
+          logger.info("state");
           const qrCode = text.replace(/^QR:/, "");
           this.runWhatsappWindow(qrCode, expressAppProcess);
         });
@@ -53,7 +58,7 @@ export class ExpressServer {
           app.quit();
         });
         app.once("quit", () => {
-          console.log("server killed");
+          logger.info("server killed");
           rej("server killed");
           if (!expressAppProcess.killed) expressAppProcess.kill();
         });
@@ -64,13 +69,13 @@ export class ExpressServer {
           expressAppProcess.kill();
         });
       });
-    console.log("server started");
+    logger.info("server started");
     return ExpressServer.expressProcess;
   }
   whatsappWin?: BrowserWindow;
   private async runWhatsappWindow(
     qrCode: string,
-    server: ChildProcessWithoutNullStreams
+    server: ChildProcessWithoutNullStreams,
   ) {
     this.whatsappWin?.close();
     this.whatsappWin = await createQrCodeWindow({ preloadData: { qrCode } });

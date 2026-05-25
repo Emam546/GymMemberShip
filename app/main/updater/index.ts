@@ -3,20 +3,21 @@ import { app } from "electron";
 import { createUpdateWindow } from "@app/main/lib/update";
 import AppUpdater from "./AppUpdater";
 import PackageJson from "../../../package.json";
-console.log("Version", PackageJson.version);
+import { logger } from "../helpers/logger";
+logger.info(`Version ${PackageJson.version}`);
 const autoUpdater = new AppUpdater({
   owner: PackageJson.publish.owner,
   releaseType: PackageJson.publish.releaseType as any,
   repo: PackageJson.publish.repo,
 });
 app.whenReady().then(async () => {
-  autoUpdater.on("error", (e) => console.error(e));
+  autoUpdater.on("error", (e) => logger.err(e));
   // if (isProd) autoUpdater.checkForUpdates();
 });
 autoUpdater.once("update-available", (update) => {
-  console.log("update available");
+  logger.info("update available");
   autoUpdater.once("progress", async (info) => {
-    console.log("start downloading");
+    logger.info("start downloading");
     await createUpdateWindow({
       preloadData: {
         curSize: info.chunk.length,
@@ -26,11 +27,11 @@ autoUpdater.once("update-available", (update) => {
     });
   });
   app.once("before-quit", () => {
-    console.log("Download the update");
+    logger.info("Download the update");
     autoUpdater.downloadUpdate(update).then((asset) => {
-      console.log(asset?.name);
+      logger.info(asset?.name);
       autoUpdater.once("updater-downloaded", (report) => {
-        console.log("update finished");
+        logger.info("update finished");
         app.removeAllListeners("before-quit");
         if (!report.filePath) return;
         autoUpdater.quitAndInstall(report.filePath);
