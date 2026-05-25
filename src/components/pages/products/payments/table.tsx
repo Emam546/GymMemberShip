@@ -178,7 +178,7 @@ declare global {
         Deleted: "Deleted";
         Link: "Link";
         head: {
-          Id: "ID";
+          ID: "ID";
           User: "User";
           Plan: "Plan";
           Link: "Link";

@@ -212,7 +212,7 @@ declare global {
           };
         };
         th: {
-          Id: "ID";
+          ID: "ID";
           Name: "Name";
           "Age/Tall/Weight": "Age/Tall/Weight";
           Plan: "Plan";

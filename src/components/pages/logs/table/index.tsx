@@ -214,7 +214,7 @@ declare global {
     interface Resources {
       "table:logs": {
         th: {
-          Id: "ID";
+          ID: "ID";
           User: "User";
           paymentLink: "paymentLink";
           "Logged At": "Logged At";

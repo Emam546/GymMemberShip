@@ -17,7 +17,7 @@ interface ElemProps {
 function Row({ headKeys, order, subscription, onClick, selected }: ElemProps) {
   const startAt = new Date(subscription.startAt || subscription.createdAt);
   const endAt = new Date(
-    startAt.getTime() + subscription.plan.num * 24 * 60 * 60 * 1000
+    startAt.getTime() + subscription.plan.num * 24 * 60 * 60 * 1000,
   );
   return (
     <tr
@@ -97,7 +97,7 @@ export default function UserPaymentsTable({
         <thead>
           <tr>
             <E heads={headKeys} val="id">
-              <th>Id</th>
+              <th>ID</th>
             </E>
             <E heads={headKeys} val="plan">
               <th className="tw-w-full">Plan</th>
