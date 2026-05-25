@@ -193,7 +193,6 @@ export default function UsersTable({
     </PaginationManager>
   );
 }
-import i18n from "@src/i18n";
 import {
   ExtendedPaginationProps,
   PaginationManager,
@@ -221,7 +220,16 @@ declare global {
           Blocked: "Blocked";
           admin: string;
         };
+
         "There is no users so far": "There is no users so far";
+      };
+      "users:blockForm": {
+        model: {
+          accept: "Block";
+          title: "Are you sure you want to delete this account?";
+          desc: "Once you click delete, this account and associated data will be permanently deleted and cannot be restored. Alternatively if you block it, the next time you want to edit or update your data you won't have to start from scratch.";
+          deny: "";
+        };
       };
     }
   }

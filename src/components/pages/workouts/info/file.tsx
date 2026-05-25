@@ -9,10 +9,8 @@ export const FilesElem = CreateElem<DataBase.WithIdOrg<WorkOutElemDoc>>(
   ({ props: { data }, ...props }, ref) => {
     // const { t } = useTranslation("file:info");
     const state = mime.lookup(data.url);
-    console.log(data.url);
     const url = `/uploads/${data.url}`;
     if (!state) return null;
-    console.log(state);
     return (
       <>
         <OrgElem {...props} ref={ref}>

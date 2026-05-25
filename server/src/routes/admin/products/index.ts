@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
 import Products from "@serv/models/products";
 import Validator from "validator-checker-js";

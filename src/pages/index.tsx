@@ -174,6 +174,7 @@ export default function Page({ plans, trainers }: Props) {
                       }
                     : undefined
                 }
+                disabledState
                 onUpdate={async function (data) {
                   if (!currentPayment) return;
                   await requester.post(

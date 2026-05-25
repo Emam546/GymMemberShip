@@ -1,4 +1,4 @@
-import { faArrowRight, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SuccessButton } from "@src/components/button";
 import ErrorShower from "@src/components/common/error";
@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 
 interface Props {
   onSetUserId: (id?: string) => void;
+  defaultValue?: number;
 }
 type Result = DataBase.WithId<
   DataBase.Populate.Model<DataBase.Models.User, "adminId">
@@ -17,16 +18,17 @@ type Result = DataBase.WithId<
 interface FormData {
   search: number;
 }
-export default function BarcodeSearcher({ onSetUserId }: Props) {
-  const { formState, handleSubmit, register, reset, setError } =
-    useForm<FormData>();
+export default function BarcodeSearcher({ onSetUserId, defaultValue }: Props) {
+  const { formState, handleSubmit, register, setError } = useForm<FormData>({
+    defaultValues: { search: defaultValue },
+  });
   const getBarcode = useMutation({
     mutationFn(barcode: number) {
       return requester.get<Routes.ResponseSuccess<Result[]>>(
         "/api/admin/users/barcode",
         {
           params: { barcode: barcode.toString() },
-        }
+        },
       );
     },
   });
@@ -52,7 +54,14 @@ export default function BarcodeSearcher({ onSetUserId }: Props) {
             type="search"
             {...register("search", { valueAsNumber: true })}
             placeholder="Barcode"
-            className="placeholder:tw-text-gray-600 rtl:tw-rounded-l-none ltr:tw-rounded-r-none"
+            onChange={async (e) => {
+              const value = parseInt(e.target.value);
+              if (isNaN(value)) return;
+              const res = await getBarcode.mutateAsync(value);
+              if (res.data.data.length == 0) return onSetUserId(undefined);
+              onSetUserId(res.data.data[0]._id);
+            }}
+            className="placeholder:tw-text-gray-600 rtl:tw-rounded-l-none ltr:tw-rounded-r-none ltr:tw-pr-2.5 rtl:tw-pl-2.5"
           />
         </div>
         <div>

@@ -35,10 +35,12 @@ export default function Page({ doc }: Props) {
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth(),
-      curDate.getDate() - 8
+      curDate.getDate() - 8,
     ),
     endAt: curDate,
     active: true,
+    remaining: true,
+    applyActive: true,
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "plans", doc._id, "infinity", filter],
@@ -54,7 +56,7 @@ export default function Page({ doc }: Props) {
             endAt: filter.endAt.getTime(),
           },
           signal,
-        }
+        },
       );
       return { page: pageParam, data: users.data.data };
     },
@@ -95,7 +97,7 @@ export default function Page({ doc }: Props) {
       (val) =>
         val._id.day == day.getDate() &&
         val._id.month == day.getMonth() + 1 &&
-        val._id.year == day.getFullYear()
+        val._id.year == day.getFullYear(),
     );
     if (res) return res;
     return {
@@ -189,7 +191,7 @@ export default function Page({ doc }: Props) {
                         min: 0,
                         max: data.reduce(
                           (acc, { profit }) => (acc > profit ? acc : profit),
-                          10
+                          10,
                         ),
                       },
                     ]}
@@ -203,7 +205,7 @@ export default function Page({ doc }: Props) {
                           const date = new Date(
                             _id.year!,
                             _id.month!,
-                            _id.day!
+                            _id.day!,
                           );
                           return `${date.toLocaleDateString(i18n.language, {
                             day: "2-digit",
@@ -223,7 +225,7 @@ export default function Page({ doc }: Props) {
               </MainCard>
             </div>
           </div>
-          <MainCard >
+          <MainCard>
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}
@@ -259,7 +261,7 @@ export default function Page({ doc }: Props) {
                   ]}
                   onDelete={async (doc) => {
                     await requester.delete(
-                      `/api/admin/subscriptions/${doc.subscription._id}`
+                      `/api/admin/subscriptions/${doc.subscription._id}`,
                     );
                     alert(t("messages.deleted", { ns: "translation" }));
                     queryClient.invalidateQueries(["subscriptions"]);

@@ -118,7 +118,6 @@ describe("Logs", () => {
         `/api/admin/subscriptions/${payment._id}/logs`
       );
       expect(res.body.data).instanceOf(Array);
-      console.log(res.body.data);
       expect(
         (res.body.data as any[]).some((val: any) => {
           return val.trainerId._id == trainer._id;

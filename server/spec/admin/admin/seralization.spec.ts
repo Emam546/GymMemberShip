@@ -12,7 +12,7 @@ describe("test auth", () => {
     admins = await Admins.find({}).select("+password");
   });
   test("reauthenticate", async () => {
-    console.log(admins);
+
     const admin = admins[0];
     const res = await agent
       .post("/api/admin/admins/auth/login")

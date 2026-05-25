@@ -30,7 +30,7 @@ export default function Page() {
                 await mutate.mutateAsync(data);
                 await router.push("/plans");
               }}
-              buttonName={t("buttons.submit", { ns: "translation" })}
+              buttonName={t("buttons.add", { ns: "translation" })}
             />
           </MainCard>
         </BigCard>

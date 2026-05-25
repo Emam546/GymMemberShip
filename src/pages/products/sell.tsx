@@ -59,7 +59,6 @@ export default function Page({ products: initProducts }: Props) {
         <MainCard>
           <ProductInfoForm
             onData={async (data) => {
-              console.log(data);
               const product = products.find((v) => v._id == data.productId);
               if (!product) return;
               if (curProducts.some((id) => id._id == data.productId))

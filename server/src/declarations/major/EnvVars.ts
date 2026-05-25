@@ -3,6 +3,7 @@ import { SignOptions } from "jsonwebtoken";
 
 export default {
   nodeEnv: process.env.NODE_ENV ?? "",
+  electronAsNode: process.env.ELECTRON_RUN_AS_NODE == "1",
   port: process.env.PORT ?? 0,
   mongo: {
     url: process.env.MONGODB_URL ?? "",

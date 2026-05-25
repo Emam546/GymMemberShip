@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import { getTrainer } from "@serv/routes/admin/trainers/[id]";
 import TrainerInfoForm from "@src/components/pages/trainers/form";
-import i18n from "@src/i18n";
 import { LineChart } from "@src/components/common/charts";
 import ErrorShower from "@src/components/common/error";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
@@ -34,7 +33,7 @@ export default function Page({ doc }: Props) {
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth() - 1,
-      curDate.getDate()
+      curDate.getDate(),
     ),
     endAt: curDate,
   });
@@ -91,13 +90,13 @@ export default function Page({ doc }: Props) {
     .reduce((acc, cur) => [...acc, ...cur], []);
   const data: DataBase.Queries.Logs.LogsCount[] = getDaysArray(
     filter.startAt,
-    filter.endAt
+    filter.endAt,
   ).map((day) => {
     const res = QueryCount.data?.find(
       (val) =>
         val._id.day == day.getDate() &&
         val._id.month == day.getMonth() + 1 &&
-        val._id.year == day.getFullYear()
+        val._id.year == day.getFullYear(),
     );
     if (res) return res;
     return {
@@ -192,7 +191,7 @@ export default function Page({ doc }: Props) {
                           min: 0,
                           max: data.reduce(
                             (acc, { count }) => (acc > count ? acc : count),
-                            10
+                            10,
                           ),
                         },
                       ]}
@@ -206,7 +205,7 @@ export default function Page({ doc }: Props) {
                             const date = new Date(
                               _id.year!,
                               _id.month!,
-                              _id.day!
+                              _id.day!,
                             );
                             return `${date.toLocaleDateString(i18n.language, {
                               day: "2-digit",
@@ -221,7 +220,7 @@ export default function Page({ doc }: Props) {
                 </div>
               </div>
             </div>
-            <MainCard >
+            <MainCard>
               <ErrorShower
                 loading={QueryInfinity.isLoading}
                 error={QueryInfinity.error}
@@ -273,11 +272,11 @@ export default function Page({ doc }: Props) {
                             pages: oldData.pages.map((page) => ({
                               ...page,
                               data: page.data.filter(
-                                (item) => item._id !== elem.log._id
+                                (item) => item._id !== elem.log._id,
                               ),
                             })),
                           };
-                        }
+                        },
                       );
                       QueryCount.refetch();
                     }}

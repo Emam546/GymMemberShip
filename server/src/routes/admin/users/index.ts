@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
 import Users from "@serv/models/users";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
 import { RootFilterQuery } from "mongoose";
-import { RouteError, RouteErrorHasError } from "@serv/declarations/classes";
+import { RouteErrorHasError } from "@serv/declarations/classes";
 const router = Router();
 const registerValidator = new Validator({
   name: ["string"],
@@ -96,7 +95,7 @@ const registerSkip = new Validator({
 
 export async function getUsers(
   q: unknown,
-  populate: (keyof DataBase.Models.User)[] = ["adminId"]
+  populate: (keyof DataBase.Models.User)[] = ["adminId"],
 ) {
   const query = getQuery(q);
   const result = registerSkip.passes(registerSkip.validAttr(q));
@@ -111,7 +110,7 @@ export async function getUsers(
     .limit(parseInt(limit as string) || Infinity);
   const users = await populate.reduce(
     (query, val) => query.populate(val),
-    queryMongo
+    queryMongo,
   );
   return users;
 }
@@ -127,10 +126,10 @@ const registerCountQuery = new Validator({
 });
 export async function getUsersCount(
   query: unknown,
-  match?: any,
-  hint: Record<string, unknown> = { createdAt: -1 }
+  match?: Record<string, unknown>,
+  hint: Record<string, unknown> = { createdAt: -1 },
 ) {
-  const matchQuery: Record<string, any> = { ...match, ...getQuery(query) };
+  const matchQuery: Record<string, unknown> = { ...match, ...getQuery(query) };
   const ID: Record<string, unknown> = {};
   const result = registerCountQuery.passes(registerCountQuery.validAttr(query));
   if (!result.state)

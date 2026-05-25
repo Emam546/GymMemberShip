@@ -2,7 +2,7 @@ import SelectInput, {
   Props as SelectInputProps,
 } from "@src/components/common/inputs/select";
 import Link from "next/link";
-import React, { ComponentRef, useState, useTransition } from "react";
+import React, { ComponentRef } from "react";
 export interface Props extends SelectInputProps {
   plans: DataBase.WithId<DataBase.Models.Plans>[];
   planId?: string;
@@ -31,7 +31,6 @@ const SelectPlan = React.forwardRef<ComponentRef<"select">, Props>(
     );
   }
 );
-import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 declare global {
   namespace I18ResourcesType {

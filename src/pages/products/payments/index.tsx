@@ -34,9 +34,12 @@ export default function Page() {
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth(),
-      curDate.getDate() - 8
+      curDate.getDate() - 8,
     ),
     endAt: curDate,
+    active: true,
+    applyActive: true,
+    remaining: true,
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["productsPayments", "infinity", filter],
@@ -52,7 +55,7 @@ export default function Page() {
             endAt: filter.endAt.getTime(),
           },
           signal,
-        }
+        },
       );
       return { page: pageParam, data: users.data.data };
     },
@@ -93,7 +96,7 @@ export default function Page() {
       (val) =>
         val._id.day == day.getDate() &&
         val._id.month == day.getMonth() + 1 &&
-        val._id.year == day.getFullYear()
+        val._id.year == day.getFullYear(),
     );
     if (res) return res;
     return {
@@ -182,7 +185,7 @@ export default function Page() {
                       min: 0,
                       max: data.reduce(
                         (acc, { profit }) => (acc > profit ? acc : profit),
-                        10
+                        10,
                       ),
                     },
                   ]}
@@ -210,7 +213,7 @@ export default function Page() {
               </div>
             </MainCard>
           </div>
-          <MainCard >
+          <MainCard>
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}
@@ -223,7 +226,7 @@ export default function Page() {
                   totalCount={payments.length}
                   onDelete={async (elem) => {
                     await requester.delete(
-                      `/api/admin/products/payments/${elem.payment._id}`
+                      `/api/admin/products/payments/${elem.payment._id}`,
                     );
                     queryClient.invalidateQueries(["productsPayments"]);
                   }}

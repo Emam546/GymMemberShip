@@ -37,10 +37,12 @@ export default function Page() {
     startAt: new Date(
       curDate.getFullYear(),
       curDate.getMonth(),
-      curDate.getDate() - 8
+      curDate.getDate() - 8,
     ),
     endAt: curDate,
     active: true,
+    applyActive: true,
+    remaining: true,
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "query", "infinity", { ...filter, start, end }],
@@ -58,7 +60,7 @@ export default function Page() {
           skip: Math.max(0, perLoad * pageParam + start),
           limit: Math.max(
             1,
-            Math.min(perLoad, end - (pageParam * perLoad + start))
+            Math.min(perLoad, end - (pageParam * perLoad + start)),
           ),
         },
         signal,
@@ -147,7 +149,7 @@ export default function Page() {
               return users.data.data
                 .map((val) => val.userId)
                 .filter(
-                  (val) => val != undefined
+                  (val) => val != undefined,
                 ) as DataBase.WithId<DataBase.Models.User>[];
             }}
             buttonName={t("buttons.send", { ns: "translation" })}

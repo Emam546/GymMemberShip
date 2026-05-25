@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import mongoose, { CallbackError } from "mongoose";
 import Admins from "./admins";
 import Counter from "./counter";
@@ -25,7 +22,7 @@ const schema = new mongoose.Schema<DataBase.Models.User>(
     provider_type: String,
     providerId: String,
   },
-  { minimize: false }
+  { minimize: false },
 );
 // Pre-save hook to auto-increment userNumber
 schema.pre("save", async function (next) {
@@ -37,7 +34,7 @@ schema.pre("save", async function (next) {
     const counter = await Counter.findOneAndUpdate(
       { name: "user" }, // Assuming you have a single counter for users
       { $inc: { seq: 1 } },
-      { new: true, upsert: true } // Create if it doesn't exist
+      { new: true, upsert: true }, // Create if it doesn't exist
     );
 
     this.barcode = counter.seq;

@@ -6,12 +6,11 @@ import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 import CheckInput from "@src/components/common/checkInput";
 export interface DataType {
-  active?: boolean;
-  remaining?: true;
-}
-interface FormValues extends DataType {
+  active: boolean;
+  remaining: boolean;
   applyActive: boolean;
 }
+type FormValues = DataType;
 export interface Props {
   onData: (data: DataType) => Promise<any> | any;
   values?: DataType;
@@ -24,17 +23,14 @@ export default function PaymentsDataFilter({
   disableActive,
 }: Props) {
   const { register, getValues, watch } = useForm<FormValues>({
-    defaultValues: {
-      applyActive: true,
-    },
+    values,
   });
   const { t } = useTranslation("subscription:data:form");
   useDebounceEffect(
     () => {
       const data = getValues();
       onData({
-        active: data.applyActive ? data.active : undefined,
-        remaining: data.remaining || undefined,
+        ...data,
       });
     },
     1000,

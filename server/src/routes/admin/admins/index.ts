@@ -1,7 +1,6 @@
 import { Router } from "express";
 import Admins from "@serv/models/admins";
 import IdRouter from "./[id]";
-import LoginRouter from "./login";
 import Validator from "validator-checker-js";
 
 const router = Router();

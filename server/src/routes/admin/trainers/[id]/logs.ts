@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import { Document } from "mongoose";
 import { getLogs, getLogsCount } from "@serv/routes/admin/log";

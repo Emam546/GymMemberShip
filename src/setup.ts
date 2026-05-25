@@ -1,4 +1,3 @@
-/* eslint-disable prefer-rest-params */
 import "@serv/validator";
 import { isElectron } from "@utils/electron";
 import translation from "@src/i18n";

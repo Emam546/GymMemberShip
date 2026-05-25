@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Router } from "express";
 import passport from "@serv/passport.config";
 
 const router = Router();
 router.post("/login", (req, res, next) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   passport.authenticate(
     "local",
     {
@@ -12,14 +12,14 @@ router.post("/login", (req, res, next) => {
     (
       err: Error | null,
       user: Express.User | false,
-      message: { message: string }
+      message: { message: string },
     ) => {
       if (err) throw err;
       if (!user) return res.status(403).sendFailed(message.message);
       req.logIn(user, () => {
         res.sendSuccess(user);
       });
-    }
+    },
   )(req, res, next);
 });
 router.get("/check", (req, res) => {

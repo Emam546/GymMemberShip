@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import "@serv/validator/database";
 import Subscriptions from "@serv/models/subscriptions";
@@ -10,7 +9,7 @@ import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
 import Trainers from "@serv/models/trainers";
 import QueryCount from "./query";
-import { SortOrder } from "mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
 const router = Router();
 const registerValidator = new Validator({
   planId: ["required", { existedId: { path: Plans.modelName } }],
@@ -50,7 +49,7 @@ const registerQuery = new Validator({
 });
 export async function getSubscriptions(
   query: unknown,
-  match?: any,
+  match?: Record<string, unknown>,
   hint: Record<string, unknown> = { createdAt: -1 },
   populate: (keyof DataBase.Models.Subscriptions)[] = [
     "planId",
@@ -58,7 +57,7 @@ export async function getSubscriptions(
     "adminId",
     "trainerId",
   ],
-  sort: Record<string, SortOrder> = {}
+  sort: Record<string, SortOrder> = {},
 ) {
   const currentDate = new Date();
   const result = registerQuery.passes(query);
@@ -103,7 +102,7 @@ export async function getSubscriptions(
     .sort(sort);
   const payments = await populate.reduce(
     (query, val) => query.populate(val),
-    queryMongo
+    queryMongo,
   );
   return payments;
 }
@@ -123,15 +122,15 @@ const registerProfitQuery = new Validator({
 });
 export async function getSubscriptionsProfit(
   query: unknown,
-  match?: any,
-  hint: Record<string, unknown> = { createdAt: -1 }
+  match?: Record<string, unknown>,
+  hint: Record<string, unknown> = { createdAt: -1 },
 ) {
   const currentDate = new Date();
   const result = registerProfitQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalidData", result.errors);
 
-  const matchQuery: Record<string, any> = { ...match };
+  const matchQuery: FilterQuery<unknown> = { ...match };
 
   const { active, remaining } = result.data;
   if (remaining) matchQuery["remaining"] = { $gt: 0 };
@@ -162,11 +161,11 @@ export async function getSubscriptionsProfit(
     matchQuery["createdAt"] = {};
     if (result.data.startAt)
       matchQuery["createdAt"]["$gte"] = new Date(
-        parseInt(result.data.startAt as string)
+        parseInt(result.data.startAt as string),
       );
     if (result.data.endAt)
       matchQuery["createdAt"]["$lte"] = new Date(
-        parseInt(result.data.endAt as string)
+        parseInt(result.data.endAt as string),
       );
   }
 

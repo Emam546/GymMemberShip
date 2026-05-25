@@ -14,11 +14,7 @@ export interface Props {
   err?: FieldError;
 }
 
-export default function PlanTypeInput({
-  priceProps,
-  unitProps,
-  err,
-}: Props) {
+export default function PlanTypeInput({ priceProps, unitProps, err }: Props) {
   const { t } = useTranslation("inputs:planType");
   return (
     <div>

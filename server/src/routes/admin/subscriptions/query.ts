@@ -23,7 +23,7 @@ const registerQuery = new Validator({
   remaining: [{ in: ["true", "false"] }, "string"],
   ".": ["required"],
 });
-function _getAggregateOptions(q: unknown, match?: any) {
+function _getAggregateOptions(q: unknown, match?: Record<string, unknown>) {
   const currentDate = new Date();
   const result = registerQuery.passes(registerQuery.validAttr(q));
   if (!result.state)
@@ -156,7 +156,7 @@ export function getAggregateOptions(
       {
         $unwind: "$adminId", // Unwind the user array to treat it as an object
       },
-    ]
+    ],
   );
   return aggregate;
 }
@@ -175,7 +175,7 @@ router.get("/", async (req, res) => {
       {
         $unwind: "$planId", // Unwind the user array to treat it as an object
       },
-    ]
+    ],
   );
   const queryRes = await Payments.aggregate(aggregate);
   return res.status(200).sendSuccess(queryRes);
@@ -213,7 +213,7 @@ export function getAggregateOptionsProfit(
           "_id.day": 1 as SortValues,
         } as Record<string, 1>,
       },
-    ]
+    ],
   );
   return aggregate;
 }

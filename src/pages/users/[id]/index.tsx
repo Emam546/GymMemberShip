@@ -96,7 +96,6 @@ export default function Page({ doc: initData, plans, trainers }: Props) {
             plans={plans}
           />
         </MainCard>
-
         <MainCard>
           <PaymentInfoGenerator
             id={doc._id}

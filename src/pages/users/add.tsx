@@ -33,7 +33,7 @@ export default function Page() {
               const user = await mutate.mutateAsync(data);
               await router.push(`/users/${user._id}`);
             }}
-            buttonName={t("buttons.submit", { ns: "translation" })}
+            buttonName={t("buttons.add", { ns: "translation" })}
           />
         </MainCard>
       </BigCard>

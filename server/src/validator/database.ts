@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-namespace */
+
 import Validator, { AvailableRules } from "validator-checker-js";
 import { MessagesStore } from "validator-checker-js/dist/Rule";
 import mongoose from "mongoose";
 import { hasOwnProperty } from "@serv/util";
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Validator {
     interface AvailableRules {
       existedId: {

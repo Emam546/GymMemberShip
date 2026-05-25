@@ -9,7 +9,6 @@ import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import TimeStartEndSelector, {
   DataType as TimeStartEndSelectorDataType,
 } from "@src/components/pages/subscriptions/filter";
-import { useState } from "react";
 import { PaymentInfoGenerator } from "@src/components/pages/subscriptions/table";
 import PrintUserPayments from "@src/components/pages/subscriptions/print";
 import { useTranslation } from "react-i18next";
@@ -20,23 +19,37 @@ import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import PaymentsDataFilter, {
   DataType as PaymentsDataFilterDataType,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
-
+import { useQueryFilter } from "@src/hooks/useFilterQuery";
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Subscriptions>,
   "userId" | "adminId" | "planId" | "trainerId"
 >;
 type FormData = PaymentsDataFilterDataType & TimeStartEndSelectorDataType;
+
 export default function Page() {
   const curDate = new Date();
-  const [filter, setFilter] = useState<FormData>({
-    startAt: new Date(
-      curDate.getFullYear(),
-      curDate.getMonth(),
-      curDate.getDate() - 8
-    ),
-    endAt: curDate,
-    active: true,
+  const [filter, setFilter] = useQueryFilter<FormData>({
+    defaultValues: {
+      startAt: new Date(
+        curDate.getFullYear(),
+        curDate.getMonth(),
+        curDate.getDate() - 8
+      ),
+      endAt: curDate,
+      active: false,
+      remaining: true,
+      applyActive: true,
+    },
+    parse(key, value) {
+      if (key === "startAt" || key === "endAt") return new Date(value);
+      if (key === "active" || key == "remaining") return value === "true";
+      return value;
+    },
+    serialize: (key, value) => {
+      if (value instanceof Date) return value.toISOString();
+      return String(value);
+    },
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "infinity", filter],
@@ -203,11 +216,12 @@ export default function Page() {
             </div>
             <div>
               <PaymentsDataFilter
+                values={filter}
                 onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
               />
             </div>
           </MainCard>
-          <MainCard >
+          <MainCard>
             <ErrorShower
               loading={QueryInfinity.isLoading}
               error={QueryInfinity.error}

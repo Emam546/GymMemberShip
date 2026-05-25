@@ -32,7 +32,6 @@ describe("GET", () => {
   });
   test("Success", async () => {
     const res = await agent.get(`/api/admin/subscriptions/query`);
-    console.log(res.body);
     expect(res.statusCode).eq(200);
     const data = res.body.data as Doc[];
     expect(data.length).greaterThan(0);
@@ -54,7 +53,6 @@ describe("GET", () => {
     const res = await agent
       .get(`/api/admin/subscriptions/query`)
       .query({ active: "true" });
-    console.log(res.body);
     expect(res.statusCode).eq(200);
     const data = res.body.data as Doc[];
     const doc = data.some((doc) => {
@@ -109,7 +107,6 @@ describe("GET", () => {
       expect(res.statusCode).eq(200);
       expect(data.find((doc) => doc.startAt < startAt)).undefined;
       expect(data.length).greaterThan(0);
-      console.log(resPayment.body, data);
       const doc = data.find((doc) => {
         return doc.userId?._id == resPayment.body.data.userId;
       });

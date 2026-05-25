@@ -23,7 +23,7 @@ export interface DataType extends DataBase.WithId<DataBase.Models.User> {
 export default function UserInfoForm({ user }: Props) {
   const { t } = useTranslation("form:user");
   const { register, formState, control } = useForm<DataType>({
-    values: user,
+    values: user ,
   });
   return (
     <div>
@@ -31,9 +31,9 @@ export default function UserInfoForm({ user }: Props) {
         <div>
           <MainInput
             id={"name-input"}
+            {...register("name")}
             title={t("User Name")}
             disabled
-            value={user?.name}
           />
           <Link href={`/users/${user?._id}`}>{user?.name}</Link>
         </div>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Router } from "express";
 import "@serv/validator/database";
 import Validator from "validator-checker-js";
@@ -39,7 +38,7 @@ const registerGetQuery = new Validator({
 });
 export async function getLogs(
   query: unknown,
-  match?: any,
+  match?: Record<string, unknown>,
   hint: Record<string, unknown> = { createdAt: -1 },
   populate: (keyof DataBase.Models.Logs)[] = [
     "planId",
@@ -47,7 +46,7 @@ export async function getLogs(
     "paymentId",
     "adminId",
     "trainerId",
-  ]
+  ],
 ) {
   const result = registerGetQuery.passes(query);
   if (!result.state)
@@ -69,7 +68,7 @@ export async function getLogs(
 
   const payments = await populate.reduce(
     (query, val) => query.populate(val),
-    MongQuery
+    MongQuery,
   );
   return payments;
 }
@@ -86,8 +85,8 @@ const registerLogDataQuery = new Validator({
 });
 export async function getLogsCount(
   query: unknown,
-  match?: any,
-  hint: Record<string, unknown> = { createdAt: -1 }
+  match?: Record<string, unknown>,
+  hint: Record<string, unknown> = { createdAt: -1 },
 ) {
   const result = registerLogDataQuery.passes(query);
   if (!result.state)
@@ -99,17 +98,16 @@ export async function getLogsCount(
       $lte?: unknown;
     };
   } = { ...match };
-  const ID: Record<string, unknown> = {
-  };
+  const ID: Record<string, unknown> = {};
   if (result.data?.startAt || result.data?.endAt) {
     matchQuery["createdAt"] = {};
     if (result.data.startAt)
       matchQuery["createdAt"]["$gte"] = new Date(
-        parseInt(result.data.startAt as string)
+        parseInt(result.data.startAt as string),
       );
     if (result.data.endAt)
       matchQuery["createdAt"]["$lte"] = new Date(
-        parseInt(result.data.endAt as string)
+        parseInt(result.data.endAt as string),
       );
   }
   if (result.data?.year) ID["year"] = { $year: "$createdAt" };

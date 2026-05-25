@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import DeleteDialog from "@src/components/common/AlertDialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { E, TH } from "@src/components/common/table";
@@ -34,7 +34,7 @@ function Shower({
       await onDelete?.();
     },
   });
-  const { register, handleSubmit, getValues, watch } = useForm<FormData>({
+  const { register, getValues, watch } = useForm<FormData>({
     values: {
       name: product.name,
       num: product.num,
@@ -47,7 +47,7 @@ function Shower({
       onUpdate(getValues());
     },
     1000,
-    [watch("name"), watch("num"), watch("price")]
+    [watch("name"), watch("num"), watch("price")],
   );
   return (
     <>
@@ -111,7 +111,7 @@ export interface Props {
   perPage: number;
   products: Omit<ElemProps, "onUpdate">[];
   totalCount: number;
-  setPage?: (page: number) => any;
+  setPage?: (page: number) => unknown;
   headKeys: HeadKeys[];
   onDelete?: (product: ElemProps["product"]) => void;
   onUpdate: (product: ElemProps["product"], data: FormData) => void;

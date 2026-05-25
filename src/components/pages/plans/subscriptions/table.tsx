@@ -105,7 +105,7 @@ export default function FullPaymentInfoGenerator({
   if (query.isLoading || queryNum.isLoading) return null;
   if (query.isError) return <p>{JSON.stringify(query.error)}</p>;
   if (queryNum.isError) return <p>{JSON.stringify(query.error)}</p>;
-  console.log(query.data);
+
   return (
     <PaymentInfoGenerator
       perPage={perPage}

@@ -16,12 +16,8 @@ export interface Props {
 }
 
 export type DefaultData = DataType;
-export default function TimeStartEndSelector({
-  onData,
-  values,
-}: Props) {
+export default function TimeStartEndSelector({ onData, values }: Props) {
   const { setValue, getValues, watch } = useForm<DataType>({
-    defaultValues: values,
     values,
   });
   const { t } = useTranslation("subscriptions:filter");

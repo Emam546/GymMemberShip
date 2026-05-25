@@ -1,39 +1,12 @@
-/* eslint-disable react/display-name */
-import { duration } from "@mui/material";
-import classNames from "classnames";
-import React, { ComponentRef, ComponentProps } from "react";
+import React from "react";
 import { Range } from "react-range";
-
-import {
-  IRenderTrackParams,
-  IThumbProps,
-  ITrackProps,
-} from "react-range/lib/types";
-
-interface ThumbProps extends Omit<IThumbProps, "ref"> {
-  isDragged: boolean;
-}
-const Thumb = React.forwardRef<ComponentRef<"div">, ThumbProps>(
-  ({ isDragged, ...props }, ref) => {
-    return (
-      <div
-        {...props}
-        ref={ref}
-        className="tw-bg-blue-400 tw-rounded-full tw-h-4 tw-w-4 tw-z-[10000]"
-      ></div>
-    );
-  }
-);
-interface TrackerProps extends ITrackProps {
-  duration: number;
-}
 
 export interface RangeProps {
   length: number;
   start: number;
   end: number;
   values: React.ReactNode[];
-  setValues(start: number, end: number): any;
+  setValues(start: number, end: number): unknown;
 }
 export default function RangeTracker({
   length,

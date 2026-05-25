@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import "@serv/validator/database";
 import ProductsPayments from "@serv/models/productsPayments";
@@ -7,7 +6,7 @@ import Validator from "validator-checker-js";
 import Users from "@serv/models/users";
 import IdRouter from "./[id]";
 import { RouteErrorHasError } from "@serv/declarations/classes";
-import { SortOrder } from "mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
 import Products from "@serv/models/products";
 const router = Router();
 const registerValidator = new Validator({
@@ -46,10 +45,10 @@ const registerQuery = new Validator({
 });
 export async function getProductsPayments(
   query: unknown,
-  match?: any,
+  match?: Record<string, unknown>,
   hint: Record<string, unknown> = { createdAt: -1 },
   populate: (keyof DataBase.Models.ProductPayments)[] = ["userId", "adminId"],
-  sort: Record<string, SortOrder> = {}
+  sort: Record<string, SortOrder> = {},
 ) {
   const result = registerQuery.passes(query);
   if (!result.state)
@@ -72,7 +71,7 @@ export async function getProductsPayments(
     .sort(sort);
   const payments = await populate.reduce(
     (query, val) => query.populate(val),
-    queryMongo
+    queryMongo,
   );
   return payments;
 }
@@ -91,13 +90,13 @@ const registerProfitQuery = new Validator({
 });
 export async function getProductsPaymentsProfit(
   query: unknown,
-  match?: any,
-  hint: Record<string, unknown> = { createdAt: -1 }
+  match?: Record<string, unknown>,
+  hint: Record<string, unknown> = { createdAt: -1 },
 ) {
   const result = registerProfitQuery.passes(query);
   if (!result.state)
     throw new RouteErrorHasError(400, "invalidData", result.errors);
-  const matchQuery: Record<string, any> = { ...match };
+  const matchQuery: FilterQuery<unknown> = { ...match };
   const { remaining } = result.data;
   if (remaining) matchQuery["remaining"] = { $gt: 0 };
   const ID: Record<string, unknown> = {};
@@ -105,11 +104,11 @@ export async function getProductsPaymentsProfit(
     matchQuery["createdAt"] = {};
     if (result.data.startAt)
       matchQuery["createdAt"]["$gte"] = new Date(
-        parseInt(result.data.startAt as string)
+        parseInt(result.data.startAt as string),
       );
     if (result.data.endAt)
       matchQuery["createdAt"]["$lte"] = new Date(
-        parseInt(result.data.endAt as string)
+        parseInt(result.data.endAt as string),
       );
   }
 

@@ -1,12 +1,11 @@
 import DatePicker, {
   EndDatePicker,
 } from "@src/components/common/inputs/datePicker";
-import PrimaryButton, { SuccessButton } from "@src/components/button";
+import PrimaryButton from "@src/components/button";
 import MainInput from "@src/components/common/inputs/main";
 import PlanTypeInput from "@src/components/common/inputs/planType";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import { Grid2 as OrgGrid } from "@src/components/grid";
-import i18n from "@src/i18n";
 import { FieldError, useForm } from "react-hook-form";
 import { ComponentProps, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -44,6 +43,7 @@ export interface Props {
   payment?: Doc;
   trainers: DataBase.WithId<DataBase.Models.Trainers>[];
   onUpdate: (payment: FormData) => void;
+  disabledState?: boolean;
   onIncrement: (payment: Doc) => void;
 }
 export function Grid2({ ...props }: ComponentProps<"div">) {
@@ -61,6 +61,7 @@ export function AttendPerson({
   onUpdate,
   onIncrement,
   trainers,
+  disabledState,
 }: Props) {
   const {
     register,
@@ -104,7 +105,6 @@ export function AttendPerson({
   const TotalDays = watch("plan.num") || 0;
   const rDays = payment ? remainingDays(payment) : 0;
   const attendedDays = payment?.logsCount || 0;
-
   return (
     <>
       <form
@@ -121,11 +121,17 @@ export function AttendPerson({
         })}
       >
         <PlanTypeInput
-          priceProps={register("plan.num", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          unitProps={register("plan.type", { required: true })}
+          priceProps={{
+            disabled: disabledState,
+            ...register("plan.num", {
+              required: true,
+              valueAsNumber: true,
+            }),
+          }}
+          unitProps={{
+            disabled: disabledState,
+            ...register("plan.type", { required: true }),
+          }}
           err={
             (formState.errors.plan?.num ||
               formState.errors.plan?.type) as FieldError
@@ -157,6 +163,7 @@ export function AttendPerson({
               onChange={(val) => {
                 if (val) setValue("startAt", val);
               }}
+              disabled={disabledState}
             />
           </WrapElem>
           <WrapElem label={t2("endAt")}>
@@ -167,6 +174,7 @@ export function AttendPerson({
                 setValue("endAt", val);
               }}
               numberOfDays={watch("plan.num")}
+              disabled={disabledState}
             />
           </WrapElem>
 
@@ -175,15 +183,19 @@ export function AttendPerson({
             priceProps={{
               ...register("paid", { valueAsNumber: true }),
               type: "number",
+              disabled: disabledState,
             }}
             price={paidType(
               watch("plan"),
-              payment?.planId?.prices[watch("plan.type")]
+              payment?.planId?.prices[watch("plan.type")],
             )}
           />
           <BudgetInput
             label={t2("remaining")}
-            priceProps={register("remaining", { valueAsNumber: true })}
+            priceProps={{
+              ...register("remaining", { valueAsNumber: true }),
+              disabled: disabledState,
+            }}
             err={formState.errors.remaining}
           />
         </Grid2>
@@ -226,6 +238,7 @@ export function AttendPerson({
             <PrimaryButton disabled={formState.isLoading} type="submit">
               {t("buttons.update", { ns: "translation" })}
             </PrimaryButton>
+
             <PrintButton
               fn={async () => {
                 if (!payment) return alert(t("message.noPayment"));
@@ -267,12 +280,11 @@ export function AttendPerson({
             />
           </div>
           <div>
-            <SuccessButton
+            <PrimaryButton
               type="button"
               disabled={formState.isLoading}
               onClick={() => {
                 if (!payment) return alert(t("message.noPayment"));
-
                 const trainerId = getValues("trainerId");
                 if (trainerId)
                   attend.mutate({
@@ -283,7 +295,7 @@ export function AttendPerson({
               }}
             >
               {t("buttons.attend", { ns: "translation" })}
-            </SuccessButton>
+            </PrimaryButton>
           </div>
         </div>
       </form>

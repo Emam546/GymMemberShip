@@ -34,7 +34,7 @@ export default function Page({ plans: initPlans }: Props) {
           <title>{t("title")}</title>
         </Head>
         <BigCard>
-          <CardTitle>{t("Add Plan")}</CardTitle>
+          {/* <CardTitle>{t("Add Plan")}</CardTitle>
           <MainCard>
             <PlansInfoForm
               onData={async (data) => {
@@ -43,7 +43,7 @@ export default function Page({ plans: initPlans }: Props) {
               }}
               buttonName={t("buttons.add", { ns: "translation" })}
             />
-          </MainCard>
+          </MainCard> */}
           <CardTitle>{t("Plans")}</CardTitle>
           <MainCard>
             <PlansInfoGetter plans={plans} setPlans={setPlans} />

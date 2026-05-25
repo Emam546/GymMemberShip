@@ -7,7 +7,6 @@ import requester from "@src/utils/axios";
 import { useTranslation } from "react-i18next";
 import AdminInfoForm from "@src/components/pages/admins/form";
 import { GetServerSideProps } from "next";
-import i18n from "@src/i18n";
 import AdminsTable from "@src/components/pages/admins/table";
 import { useState } from "react";
 import { getAdmins } from "@serv/routes/admin/admins";
@@ -54,7 +53,7 @@ export default function Page({ admins: initAdmins }: Props) {
           <MainCard>
             <AdminInfoForm
               onData={async (data) => {
-                const user = await mutate.mutateAsync(data);
+                await mutate.mutateAsync(data);
               }}
               buttonName={t("buttons.add", { ns: "translation" })}
             />
@@ -95,7 +94,7 @@ declare global {
   }
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   await connect(EnvVars.mongo.url);
 
   const admins = await getAdmins();
