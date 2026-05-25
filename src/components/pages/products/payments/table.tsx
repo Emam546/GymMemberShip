@@ -128,7 +128,7 @@ export function ProductsPaymentInfoGenerator({
           <thead className="text-dark fs-4">
             <tr>
               <E heads={headKeys} val="order">
-                <TH>{t("head.Id")}</TH>
+                <TH>{t("head.ID")}</TH>
               </E>
               <E heads={headKeys} val="user">
                 <TH>{t("head.User")}</TH>
@@ -178,7 +178,7 @@ declare global {
         Deleted: "Deleted";
         Link: "Link";
         head: {
-          Id: "Id";
+          Id: "ID";
           User: "User";
           Plan: "Plan";
           Link: "Link";

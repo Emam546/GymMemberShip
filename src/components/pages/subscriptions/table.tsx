@@ -75,7 +75,7 @@ function AddLog({
       {...props}
       className={classNames(
         "tw-border-none focus-within:tw-outline-none tw-bg-blue-500 tw-text-blue-100 tw-w-5 tw-h-5 tw-flex tw-items-center tw-justify-center tw-rounded tw-leading-[0]",
-        className
+        className,
       )}
     >
       <FontAwesomeIcon fontSize="1rem" icon={faPlus} />
@@ -96,7 +96,7 @@ function Shower({
   const [payment, setPayment] = useState(initPayment);
   const endAt = new Date(
     new Date(payment.createdAt).getTime() +
-      payment.plan.num * 1000 * 24 * 60 * 60
+      payment.plan.num * 1000 * 24 * 60 * 60,
   );
   const { t } = useTranslation("table:subscriptions");
   const { t: t2 } = useTranslation("subscriptions:deleteForm");
@@ -232,7 +232,7 @@ export function PaymentInfoGenerator({
           <thead className="text-dark fs-4">
             <tr>
               <E heads={headKeys} val="order">
-                <TH>{t("head.Id")}</TH>
+                <TH>{t("head.ID")}</TH>
               </E>
               <E heads={headKeys} val="user">
                 <TH>{t("head.User")}</TH>
@@ -297,7 +297,7 @@ declare global {
         Deleted: "Deleted";
         Link: "Link";
         head: {
-          Id: "Id";
+          Id: "ID";
           User: "User";
           Plan: "Plan";
           Link: "Link";

@@ -159,7 +159,7 @@ export default function UsersTable({
           <thead className="text-dark fs-4">
             <tr>
               <E heads={headKeys} val="order">
-                <TH>{t("th.Id")}</TH>
+                <TH>{t("th.ID")}</TH>
               </E>
               <E heads={headKeys} val="name">
                 <TH>{t("th.Name")}</TH>
@@ -212,7 +212,7 @@ declare global {
           };
         };
         th: {
-          Id: "Id";
+          Id: "ID";
           Name: "Name";
           "Age/Tall/Weight": "Age/Tall/Weight";
           Plan: "Plan";

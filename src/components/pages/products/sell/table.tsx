@@ -41,7 +41,7 @@ function Shower({
       defaultValues: {
         curNum: product.curNum,
       },
-    }
+    },
   );
   const [state, setState] = useState(false);
   const { t } = useTranslation("table:products:sell");
@@ -56,7 +56,7 @@ function Shower({
       onUpdate(getValues());
     },
     100,
-    [watch("curNum")]
+    [watch("curNum")],
   );
   return (
     <>
@@ -190,7 +190,7 @@ declare global {
           noStock: string;
         };
         th: {
-          id: "Id";
+          id: "ID";
           name: "Name";
           amount: "number";
           curAmount: string;

@@ -104,7 +104,7 @@
   },
   "table:logs": {
     "th": {
-      "Id": "Id",
+      "ID": "ID",
       "User": "User",
       "subscriptionLink": "Subscription Link",
       "Logged At": "Logged At",
@@ -162,7 +162,7 @@
     "Deleted": "Deleted",
     "Link": "Link",
     "head": {
-      "Id": "Id",
+      "ID": "ID",
       "User": "User",
       "Plan": "Plan",
       "Link": "Link",
@@ -182,7 +182,7 @@
     "Deleted": "Deleted",
     "Link": "Link",
     "head": {
-      "Id": "Id",
+      "ID": "ID",
       "User": "User",
       "Link": "Link",
       "Paid": "Paid",
@@ -276,7 +276,7 @@
       }
     },
     "th": {
-      "id": "Id",
+      "id": "ID",
       "name": "Name",
       "phone": "Phone",
       "email": "email",
@@ -357,7 +357,7 @@
       }
     },
     "th": {
-      "Id": "Id",
+      "ID": "ID",
       "Name": "Name",
       "admin": "Creator",
       "Age/Tall/Weight": "Age/Tall/Weight",
@@ -500,7 +500,7 @@
       }
     },
     "th": {
-      "id": "Id",
+      "id": "ID",
       "name": "Name",
       "amount": "Amount",
       "price": "Price",
@@ -513,7 +513,7 @@
       "noStock": "The quantity you sell is greater than the quantity in stock.\nDo you want to add it anyway"
     },
     "th": {
-      "id": "Id",
+      "id": "ID",
       "name": "Name",
       "amount": "Amount",
       "curAmount": "Amount ٍSold",

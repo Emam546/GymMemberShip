@@ -159,7 +159,7 @@ export function LogInfoGenerator({
           <thead className="text-dark fs-4">
             <tr>
               <E heads={headKeys} val="order">
-                <TH>{t("th.Id")}</TH>
+                <TH>{t("th.ID")}</TH>
               </E>
               <E heads={headKeys} val="user">
                 <TH>{t("th.User")}</TH>
@@ -214,7 +214,7 @@ declare global {
     interface Resources {
       "table:logs": {
         th: {
-          Id: "Id";
+          Id: "ID";
           User: "User";
           paymentLink: "paymentLink";
           "Logged At": "Logged At";

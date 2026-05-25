@@ -22,7 +22,7 @@ export default function PrintPlanPayments({
         >(`/api/admin/plans/${id}`);
         const payments = await requester.get<Routes.ResponseSuccess<Doc[]>>(
           `/api/admin/plans/${id}/subscriptions`,
-          { params: query }
+          { params: query },
         );
         const plan = res.data.data;
 
@@ -30,7 +30,7 @@ export default function PrintPlanPayments({
           payments.data.data.map<Promise<string[]>>(async (doc, i) => {
             const endAt = new Date(
               new Date(doc.createdAt).getTime() +
-                doc.plan.num * 1000 * 24 * 60 * 60
+                doc.plan.num * 1000 * 24 * 60 * 60,
             );
             return [
               (i + 1).toString(),
@@ -39,12 +39,12 @@ export default function PrintPlanPayments({
               formateDate(new Date(doc.createdAt)),
               formateDate(new Date(endAt)),
             ];
-          })
+          }),
         );
 
         const doc = createTableDoc(
-          [["Id", "User", "Paid Price", "CreatedAt", "EndAt"]],
-          body
+          [["ID", "User", "Paid Price", "CreatedAt", "EndAt"]],
+          body,
         );
         await printJsDoc(doc, `${plan.name}-payments.pdf`);
       }}

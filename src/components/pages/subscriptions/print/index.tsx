@@ -13,12 +13,12 @@ export default function PrintUserPayments({ query }: { query: unknown }) {
       fn={async () => {
         const payments = await requester.get<Routes.ResponseSuccess<Payment[]>>(
           `/api/admin/subscriptions`,
-          { params: query }
+          { params: query },
         );
         const body = payments.data.data.map<string[]>((doc, i) => {
           const endAt = new Date(
             new Date(doc.createdAt).getTime() +
-              doc.plan.num * 1000 * 24 * 60 * 60
+              doc.plan.num * 1000 * 24 * 60 * 60,
           );
           return [
             (i + 1).toString(),
@@ -31,8 +31,8 @@ export default function PrintUserPayments({ query }: { query: unknown }) {
         });
 
         const doc = createTableDoc(
-          [["Id", "User", "Plan", "Paid Price", "CreatedAt", "End At"]],
-          body
+          [["ID", "User", "Plan", "Paid Price", "CreatedAt", "End At"]],
+          body,
         );
         await printJsDoc(doc, `${new Date().getTime()}-payments.pdf`);
       }}

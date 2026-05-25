@@ -165,7 +165,7 @@ declare global {
           };
         };
         th: {
-          id: "Id";
+          id: "ID";
           name: "Name";
           phone: "Phone";
           email: "email";

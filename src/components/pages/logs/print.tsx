@@ -16,7 +16,7 @@ export default function PrintLogs({ query }: Data) {
       fn={async () => {
         const payments = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
           `/api/admin/logs`,
-          { params: query }
+          { params: query },
         );
         const body = payments.data.data.map<string[]>((doc, i) => {
           return [
@@ -27,7 +27,7 @@ export default function PrintLogs({ query }: Data) {
           ];
         });
 
-        const doc = createTableDoc([["Id", "User", "Plan", "CreatedAt"]], body);
+        const doc = createTableDoc([["ID", "User", "Plan", "CreatedAt"]], body);
         await printJsDoc(doc, `${new Date().getTime()}-payments.pdf`);
       }}
     />

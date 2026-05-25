@@ -23,7 +23,7 @@ export default function PrintUserPayments({ id }: { id: string }) {
         const body = payments.data.data.map<string[]>((doc, i) => {
           const endAt = new Date(
             new Date(doc.createdAt).getTime() +
-              doc.plan.num * 1000 * 24 * 60 * 60
+              doc.plan.num * 1000 * 24 * 60 * 60,
           );
           return [
             (i + 1).toString(),
@@ -35,8 +35,8 @@ export default function PrintUserPayments({ id }: { id: string }) {
         });
 
         const doc = createTableDoc(
-          [["Id", "Plan", "Paid Price", "CreatedAt", "End At"]],
-          body
+          [["ID", "Plan", "Paid Price", "CreatedAt", "End At"]],
+          body,
         );
         await printJsDoc(doc, `${user.name}-payments.pdf`);
       }}

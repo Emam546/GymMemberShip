@@ -192,7 +192,7 @@ declare global {
           };
         };
         th: {
-          id: "Id";
+          id: "ID";
           name: "Name";
           amount: "number";
           price: "price";
