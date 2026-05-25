@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import Head from "next/head";
@@ -45,11 +46,14 @@ export default function Page({ doc }: Props) {
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "plans", doc._id, "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
+      const data: Partial<FormDataType> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
         `/api/admin/plans/${doc._id}/subscriptions`,
         {
           params: {
-            ...filter,
+            ...data,
             skip: perLoad * pageParam,
             limit: perLoad,
             startAt: filter.startAt.getTime(),
@@ -68,11 +72,14 @@ export default function Page({ doc }: Props) {
   const QueryProfit = useQuery({
     queryKey: ["subscriptions", "plans", doc._id, "total", filter],
     queryFn: async ({ signal }) => {
+      const data: Partial<FormDataType> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
       >(`/api/admin/plans/${doc._id}/subscriptions/profit`, {
         params: {
-          ...filter,
+          ...data,
           day: true,
           year: true,
           month: true,

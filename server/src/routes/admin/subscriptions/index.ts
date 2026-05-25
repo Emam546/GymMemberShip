@@ -44,7 +44,7 @@ const registerQuery = new Validator({
   skip: ["numeric"],
   limit: ["numeric"],
   active: ["string", { in: ["true", "false"] }],
-  remaining: ["accepted"],
+  remaining: [],
   ".": ["required"],
 });
 export async function getSubscriptions(
@@ -94,7 +94,7 @@ export async function getSubscriptions(
       ];
     }
   }
-  if (remaining) matchQuery["remaining"] = { $gt: 0 };
+  if (remaining == "true") matchQuery["remaining"] = { $gt: 0 };
   const queryMongo = Subscriptions.find(matchQuery)
     .hint({ ...hint, __t: 1 })
     .skip(parseInt(skip as string) || 0)
@@ -117,7 +117,7 @@ const registerProfitQuery = new Validator({
   month: ["accepted"],
   day: ["accepted"],
   active: ["string", { in: ["true", "false"] }],
-  remaining: ["accepted"],
+  remaining: [],
   ".": ["required"],
 });
 export async function getSubscriptionsProfit(
@@ -133,7 +133,7 @@ export async function getSubscriptionsProfit(
   const matchQuery: FilterQuery<unknown> = { ...match };
 
   const { active, remaining } = result.data;
-  if (remaining) matchQuery["remaining"] = { $gt: 0 };
+  if (remaining == "true") matchQuery["remaining"] = { $gt: 0 };
 
   if (typeof active != "undefined") {
     if (active == "true") {

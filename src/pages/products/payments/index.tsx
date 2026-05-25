@@ -18,16 +18,14 @@ import { LineChart } from "@src/components/common/charts";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import { ProductsPaymentInfoGenerator } from "@src/components/pages/products/payments/table";
 import queryClient from "@src/queryClient";
-import PaymentsDataFilter, {
-  DataType as PaymentsDataFilterDataFilter,
-} from "@src/components/pages/subscriptions/filter/PaymentsData";
+import PaymentsDataFilter from "@src/components/pages/subscriptions/filter/PaymentsData";
 
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.ProductPayments>,
   "userId" | "adminId"
 >;
-type FilterData = PaymentsDataFilterDataFilter & TimeStartEndSelectorDataType;
+type FilterData = { remaining: boolean } & TimeStartEndSelectorDataType;
 export default function Page() {
   const curDate = new Date();
   const [filter, setFilter] = useState<FilterData>({
@@ -37,18 +35,17 @@ export default function Page() {
       curDate.getDate() - 8,
     ),
     endAt: curDate,
-    active: true,
-    applyActive: true,
     remaining: true,
   });
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["productsPayments", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
+      const data: Partial<FilterData> = { ...filter };
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
         `/api/admin/products/payments`,
         {
           params: {
-            ...filter,
+            ...data,
             skip: perLoad * pageParam,
             limit: perLoad,
             startAt: filter.startAt.getTime(),

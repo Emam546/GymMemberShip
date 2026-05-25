@@ -47,6 +47,9 @@ export default function Page() {
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "query", "infinity", { ...filter, start, end }],
     queryFn: async ({ pageParam = 0, signal }) => {
+      const data: Partial<FormData> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<
         Routes.ResponseSuccess<
           DataBase.Populate.Model<
@@ -56,7 +59,7 @@ export default function Page() {
         >
       >(`/api/admin/subscriptions/query`, {
         params: {
-          ...filter,
+          ...data,
           skip: Math.max(0, perLoad * pageParam + start),
           limit: Math.max(
             1,
@@ -75,11 +78,14 @@ export default function Page() {
   const QueryProfit = useQuery({
     queryKey: ["subscriptions", "query", "total", filter],
     queryFn: async ({ signal }) => {
+      const data: Partial<FormData> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
       >(`/api/admin/subscriptions/query/profit`, {
         params: {
-          ...filter,
+          ...data,
         },
         signal,
       });

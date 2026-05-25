@@ -1,18 +1,16 @@
-import { Grid2 } from "@src/components/grid";
 import { useForm } from "react-hook-form";
 import { useDebounceEffect } from "@src/hooks";
 
-import i18n from "@src/i18n";
 import { useTranslation } from "react-i18next";
 import CheckInput from "@src/components/common/checkInput";
 export interface DataType {
-  active: boolean;
+  active?: boolean;
   remaining: boolean;
   applyActive: boolean;
 }
 type FormValues = DataType;
 export interface Props {
-  onData: (data: DataType) => Promise<any> | any;
+  onData: (data: DataType) => Promise<unknown> | unknown;
   values?: DataType;
   disableActive?: boolean;
 }
@@ -34,7 +32,7 @@ export default function PaymentsDataFilter({
       });
     },
     1000,
-    [JSON.stringify(watch())]
+    [JSON.stringify(watch())],
   );
   return (
     <div>

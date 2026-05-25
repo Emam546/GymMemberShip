@@ -54,11 +54,14 @@ export default function Page() {
   const QueryInfinity = useInfiniteQuery({
     queryKey: ["subscriptions", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
+      const data: Partial<FormData> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<Routes.ResponseSuccess<Payment[]>>(
         `/api/admin/subscriptions`,
         {
           params: {
-            ...filter,
+            ...data,
             skip: perLoad * pageParam,
             limit: perLoad,
             startAt: filter.startAt.getTime(),
@@ -77,11 +80,14 @@ export default function Page() {
   const QueryProfit = useQuery({
     queryKey: ["subscriptions", "total", filter],
     queryFn: async ({ signal }) => {
+      const data: Partial<FormData> = { ...filter };
+      if (!data.applyActive) delete data.active;
+      delete data.applyActive;
       const users = await requester.get<
         Routes.ResponseSuccess<DataBase.Queries.Payments.Profit[]>
       >(`/api/admin/subscriptions/profit`, {
         params: {
-          ...filter,
+          ...data,
           day: true,
           year: true,
           month: true,

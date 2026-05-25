@@ -11,7 +11,7 @@ const registerQuery = new Validator({
   endAt: ["numeric"],
   skip: ["numeric"],
   limit: ["numeric"],
-  remaining: ["accepted"],
+  remaining: [],
   ".": ["required"],
 });
 export async function getPayments(
@@ -39,7 +39,7 @@ export async function getPayments(
       $gte: parseInt(startAt as string) || 0,
     };
   }
-  if (remaining) matchQuery["remaining"] = { $gt: 0 };
+  if (remaining=="true") matchQuery["remaining"] = { $gt: 0 };
   const queryMongo = Payments.find(matchQuery)
     .hint({ ...hint, __t: 1 })
     .skip(parseInt(skip as string) || 0)
@@ -62,7 +62,7 @@ const registerProfitQuery = new Validator({
   month: ["accepted"],
   day: ["accepted"],
   active: ["string", { in: ["true", "false"] }],
-  remaining: ["accepted"],
+  remaining: [],
   ".": ["required"],
 });
 export async function getPaymentsProfit(
@@ -77,7 +77,7 @@ export async function getPaymentsProfit(
   const matchQuery: FilterQuery<unknown> = { ...match };
 
   const { remaining } = result.data;
-  if (remaining) matchQuery["remaining"] = { $gt: 0 };
+  if (remaining=="true") matchQuery["remaining"] = { $gt: 0 };
   const ID: Record<string, unknown> = {};
   if (result.data?.startAt || result.data?.endAt) {
     matchQuery["createdAt"] = {};

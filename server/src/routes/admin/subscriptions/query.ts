@@ -57,7 +57,7 @@ function _getAggregateOptions(q: unknown, match?: Record<string, unknown>) {
     if (startAt) firstQuery["startAt"]["$gte"] = new Date(startAt as string);
     if (endAt) firstQuery["startAt"]["$lte"] = new Date(endAt as string);
   }
-  if (remaining) firstQuery["remaining"] = { $gt: 0 };
+  if (remaining == "true") firstQuery["remaining"] = { $gt: 0 };
 
   const query: RootFilterQuery<DataBase.Models.User> = {};
   const {
