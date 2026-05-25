@@ -23,7 +23,6 @@ router.use((req, res, next) => {
   next();
 });
 
-
 router.post("/", async (req, res) => {
   if (!req.headers["content-type"]?.startsWith("multipart/form-data"))
     return res.status(400).sendFailed("invalid Content Type");
@@ -35,7 +34,7 @@ router.post("/", async (req, res) => {
   for (let i = 0; i < result.data.messages.length; i++) {
     const element = (result.data.messages as Message[])[i];
     if (hasOwnProperty(element, "message")) {
-      await whatsappClient.sendMessage(chatId, element.message);
+      await whatsappClient?.sendMessage(chatId, element.message);
       continue;
     }
     const file = req.files?.[element.file.toString()];
@@ -50,10 +49,10 @@ router.post("/", async (req, res) => {
     const data = new MessageMedia(
       file.mimetype,
       file.data.toString("base64"),
-      file.name
+      file.name,
     );
 
-    await whatsappClient.sendMessage(chatId, data);
+    await whatsappClient?.sendMessage(chatId, data);
   }
   res.status(200).sendSuccess(true);
 });

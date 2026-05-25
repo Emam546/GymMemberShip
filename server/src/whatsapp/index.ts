@@ -1,81 +1,92 @@
-/* eslint-disable no-console */
-// eslint-disable-next-line node/no-process-env
 import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import path from "path";
 import { whatsappReady } from "@serv/command";
 import logger from "jet-logger";
+import puppeteer from "puppeteer";
+import EnvVars from "@serv/declarations/major/EnvVars";
 // eslint-disable-next-line node/no-process-env
 const Chrome_PATH = process.env.CHROME_PATH;
-function getChromiumExecPath() {
+async function getChromiumExecPath() {
   return path
-    .join(
-      path.resolve(
-        process.cwd(),
-        "node_modules/whatsapp-web.js/node_modules/puppeteer-core/.local-chromium/win64-1045629/chrome-win",
-      ),
-      "chrome.exe",
-    )
+    .join(await puppeteer.executablePath())
     .replace("app.asar", "app.asar.unpacked");
 }
-const whatsappClient = new Client({
-  authStrategy: new LocalAuth(),
-  puppeteer: {
-    executablePath: Chrome_PATH ?? getChromiumExecPath(),
-    headless: true,
-    defaultViewport: null,
-    args: [
-      "--fast-start",
-      "--disable-extensions",
-      "--no-sandbox",
-      "--disable-gpu",
-      "--remote-debugging-port=9222",
-      "--headless",
-      "--start-maximized",
-    ],
-    ignoreHTTPSErrors: true,
-  },
-});
+let whatsappClient: Client | null = null;
 export let isConnected = false;
-export function connectWhatsapp(timeOut = 5000) {
-  return new Promise<boolean>((res, rej) => {
+export async function connectWhatsapp(timeOut = 5000) {
+  logger.info("connecting");
+  const client = new Client({
+    authStrategy: new LocalAuth({
+      clientId: "main",
+    }),
+    puppeteer: {
+      executablePath: Chrome_PATH ?? (await getChromiumExecPath()),
+      headless: true,
+      defaultViewport: null,
+      args: [
+        "--fast-start",
+        "--disable-extensions",
+        "--no-sandbox",
+        "--disable-gpu",
+        "--remote-debugging-port=9222",
+        "--headless",
+        "--start-maximized",
+      ],
+      ignoreHTTPSErrors: true,
+    },
+  });
+  process.on("SIGINT", async () => {
+    try {
+      await client?.destroy();
+    } catch {
+      /* empty */
+    }
+  });
+  const res = await new Promise<boolean>((res, rej) => {
     if (isConnected) return res(true);
-    const f = setInterval(() => {
-      fetch("https://web.whatsapp.com/")
-        .then((response) => {
-          if (!response.ok) return;
-          clearInterval(f);
-          console.log("start connecting to whatsapp");
-          whatsappClient.initialize();
-        })
-        .catch((err) => logger.err(err));
-    }, 1000);
-
-    whatsappClient.once("ready", () => {
+    const func = async () => {
+      try {
+        const response = await fetch("https://web.whatsapp.com/");
+        if (!response.ok) return;
+        logger.info("start connecting to whatsapp");
+        await client.initialize();
+      } catch (error) {
+        logger.err(error);
+        setTimeout(func, timeOut);
+      }
+    };
+    func();
+    client.once("ready", () => {
+      // eslint-disable-next-line no-console
       console.log(whatsappReady);
       res(true);
     });
-    whatsappClient.once("auth_failure", (err) => {
-      console.log(err);
+    client.once("auth_failure", (err) => {
+      logger.err(err);
       rej(err);
     });
     setTimeout(() => {
+      logger.warn("whatsapp timeout");
       res(false);
     }, timeOut);
   });
+  if (!res) return false;
+  client.on("qr", (qr) => {
+    // eslint-disable-next-line no-console
+    console.log(`QR:${qr}`);
+    if (!EnvVars.electronAsNode) qrcode.generate(qr, { small: true });
+  });
+  client.on("authenticated", () => {
+    isConnected = true;
+  });
+  client.on("disconnected", (reason) => {
+    logger.info(`Client was disconnected: ${reason}`);
+    isConnected = false;
+  });
+  whatsappClient = client;
+  return true;
 }
-whatsappClient.on("qr", (qr) => {
-  console.log(`QR:${qr}`);
-  // eslint-disable-next-line node/no-process-env
-  if (!process.env.ELECTRON_RUN_AS_NODE) qrcode.generate(qr, { small: true });
-});
-whatsappClient.on("authenticated", () => {
-  isConnected = true;
-});
-whatsappClient.on("disconnected", (reason) => {
-  console.log("Client was disconnected:", reason);
-  isConnected = false;
-});
 
 export default whatsappClient;
 // Start the client

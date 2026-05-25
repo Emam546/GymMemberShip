@@ -6,20 +6,19 @@ import server from "./server";
 import next from "next";
 import { serverStart } from "./command";
 import connect from "./db/connect";
-import { InitDataBase } from "./db/init";
+import { InitDataBase as PreStartDataBase } from "./db/init";
 import { connectWhatsapp } from "./whatsapp";
 // **** Start server **** //
 const dev = EnvVars.nodeEnv == "development";
 const app = next({ dev, dir: EnvVars.dir });
-// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-logger.info(`NEXT PATH ${EnvVars.dir}`);
+logger.info(`NEXT PATH ${EnvVars.dir || "undefined"}`);
 const handle = app.getRequestHandler();
 // **** Start server **** //
 logger.info(`${EnvVars.nodeEnv}`);
 connect(EnvVars.mongo.url).then(async () => {
-  await InitDataBase();
+  await PreStartDataBase();
   await connectWhatsapp(EnvVars.whatsapp.timeout);
-  app
+  await app
     .prepare()
     .then(() => {
       server.get("*", (req, res) => {
@@ -33,13 +32,10 @@ connect(EnvVars.mongo.url).then(async () => {
         logger.info(msg);
       });
     })
-    .catch((ex) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      logger.err(ex.stack);
-      // eslint-disable-next-line no-process-exit
-      process.exit(1);
-    });
+    .catch(logger.err);
+
   function shutDown() {
+    logger.info("shut down");
     app.close();
   }
   process.on("SIGTERM", shutDown);

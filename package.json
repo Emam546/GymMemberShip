@@ -17,7 +17,7 @@
     "build": "npm run build:server && npm run build:next",
     "lint": "eslint server app src --ext .ts,.tsx",
     "lint:src": "tsc --noEmit && eslint -c ./src/.eslintrc.json src",
-    "lint:server": "eslint -c ./server/.eslintrc.json --ext  .ts server/src/ ",
+    "lint:server": "tsc --noEmit -p ./tsconfig.server.json &&eslint -c ./server/.eslintrc.json --ext  .ts server/src/ ",
     "lint:electron": "eslint -c app/.eslintrc.json --ext .ts app/main/",
     "start": "node ./dist --env=production",
     "dev": "nodemon",
@@ -118,7 +118,7 @@
     "simplebar-react": "^3.2.4",
     "uuid": "^9.0.1",
     "validator-checker-js": "^1.2.3",
-    "whatsapp-web.js": "^1.26.0",
+    "whatsapp-web.js": "^1.34.7",
     "youtube-playlists-js": "^1.0.3",
     "youtube-searches": "^1.0.1"
   },
