@@ -4,14 +4,13 @@ import { createExercise, createExerciseRequest } from "./utils";
 
 describe("POST", () => {
   test("success", async () => {
-    const payment = createExercise();
-    const res = await agent
-      .post("/api/admin/exercises")
-      .send(payment)
-      .expect(200);
+    const exercise = createExercise();
+    const res = await agent.post("/api/admin/exercises").send(exercise);
+
     const resPayment = res.body.data;
+    expect(res.statusCode).eq(200);
     expect(resPayment._id).not.eq(undefined);
-    expect(resPayment).deep.includes(payment);
+    expect(resPayment).deep.includes(exercise);
   });
   describe("Wrong", () => {
     test("Wrong order type", async () => {

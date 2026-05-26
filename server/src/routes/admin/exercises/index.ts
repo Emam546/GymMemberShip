@@ -2,10 +2,12 @@ import { Router } from "express";
 import Validator from "validator-checker-js";
 import IdRouter from "./[id]";
 import Exercises from "@serv/models/exercise";
+import workout from "@serv/models/workout";
 const router = Router();
 const registerValidator = new Validator({
   title: ["string", "required"],
   order: ["integer"],
+  workoutIds: [[{ existedId: { path: workout.modelName } }, "string"], "array"],
   ".": ["required"],
 });
 router.post("/", async (req, res) => {
