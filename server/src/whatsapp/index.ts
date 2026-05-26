@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import path from "path";
@@ -8,7 +12,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 const Chrome_PATH = process.env.CHROME_PATH;
 async function getChromiumExecPath() {
   // eslint-disable-next-line node/no-unsupported-features/es-syntax
-  const puppeteer = await eval('import("puppeteer")');
+  const puppeteer: any = await eval('import("puppeteer")');
   return path
     .join(await puppeteer.executablePath())
     .replace("app.asar", "app.asar.unpacked");
@@ -44,6 +48,7 @@ export async function connectWhatsapp(timeOut = 5000) {
   });
   client.on("authenticated", () => {
     isConnected = true;
+    whatsappClient = client;
   });
   client.on("disconnected", (reason) => {
     logger.info(`Client was disconnected: ${reason}`);
@@ -86,7 +91,6 @@ export async function connectWhatsapp(timeOut = 5000) {
   });
   if (!res) return false;
 
-  whatsappClient = client;
   return true;
 }
 
