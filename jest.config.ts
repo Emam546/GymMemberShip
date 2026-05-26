@@ -12,6 +12,7 @@ const config: Config = {
   testMatch: ["**/?(*.)+(spec|test).+(ts|js)"],
   testEnvironment: "node",
   preset: "ts-jest",
+  maxWorkers: 1,
   moduleFileExtensions: ["ts", "tsx", "js", "json", "css"],
   moduleNameMapper: {
     ...pathsToModuleNameMapper(
@@ -24,7 +25,7 @@ const config: Config = {
       },
       {
         prefix: "<rootDir>/",
-      }
+      },
     ),
   },
 };
