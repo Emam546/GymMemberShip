@@ -8,7 +8,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 const Chrome_PATH = process.env.CHROME_PATH;
 async function getChromiumExecPath() {
   // eslint-disable-next-line node/no-unsupported-features/es-syntax
-  const puppeteer = await import("puppeteer");
+  const puppeteer = await eval('import("puppeteer")');
   return path
     .join(await puppeteer.executablePath())
     .replace("app.asar", "app.asar.unpacked");
@@ -36,6 +36,18 @@ export async function connectWhatsapp(timeOut = 5000) {
       ],
       ignoreHTTPSErrors: true,
     },
+  });
+  client.on("qr", (qr) => {
+    // eslint-disable-next-line no-console
+    console.log(`QR:${qr}`);
+    if (!EnvVars.electronAsNode) qrcode.generate(qr, { small: true });
+  });
+  client.on("authenticated", () => {
+    isConnected = true;
+  });
+  client.on("disconnected", (reason) => {
+    logger.info(`Client was disconnected: ${reason}`);
+    isConnected = false;
   });
   process.on("SIGINT", async () => {
     try {
@@ -73,18 +85,7 @@ export async function connectWhatsapp(timeOut = 5000) {
     }, timeOut);
   });
   if (!res) return false;
-  client.on("qr", (qr) => {
-    // eslint-disable-next-line no-console
-    console.log(`QR:${qr}`);
-    if (!EnvVars.electronAsNode) qrcode.generate(qr, { small: true });
-  });
-  client.on("authenticated", () => {
-    isConnected = true;
-  });
-  client.on("disconnected", (reason) => {
-    logger.info(`Client was disconnected: ${reason}`);
-    isConnected = false;
-  });
+
   whatsappClient = client;
   return true;
 }
