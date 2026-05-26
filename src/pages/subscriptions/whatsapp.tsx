@@ -131,6 +131,7 @@ export default function Page() {
           </div>
           <div>
             <PaymentsDataFilter
+              values={filter}
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>

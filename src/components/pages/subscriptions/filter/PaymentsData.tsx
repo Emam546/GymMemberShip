@@ -26,13 +26,14 @@ export default function PaymentsDataFilter({
   const { t } = useTranslation("subscription:data:form");
   useDebounceEffect(
     () => {
+      console.log("update");
       const data = getValues();
       onData({
         ...data,
       });
     },
     1000,
-    [JSON.stringify(watch())],
+    [watch("applyActive"), watch("active")],
   );
   return (
     <div>

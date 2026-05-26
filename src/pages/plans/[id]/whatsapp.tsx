@@ -23,6 +23,7 @@ import SelectRangeForm, {
   DataType as SelectRangeFormDataType,
 } from "@src/components/pages/subscriptions/filter/selectRange";
 import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
+import { useQueryFilter } from "@src/hooks/useFilterQuery";
 
 type FormData = TimeStartEndSelectorDataType &
   FilterUsersDataType &
@@ -37,16 +38,28 @@ export default function Page({}) {
     end: 0,
     start: 0,
   });
-  const [filter, setFilter] = useState<FormData>({
-    startAt: new Date(
-      curDate.getFullYear(),
-      curDate.getMonth(),
-      curDate.getDate() - 8,
-    ),
-    endAt: curDate,
-    active: true,
-    remaining: true,
-    applyActive: true,
+  const [filter, setFilter] = useQueryFilter<FormData>({
+    defaultValues: {
+      startAt: new Date(
+        curDate.getFullYear(),
+        curDate.getMonth(),
+        curDate.getDate() - 8,
+      ),
+      endAt: curDate,
+      active: true,
+      remaining: true,
+      applyActive: true,
+    },
+    parse(key, value) {
+      if (key === "startAt" || key === "endAt") return new Date(value);
+      if (key === "active" || key == "applyActive" || key == "remaining")
+        return value === "true";
+      return value;
+    },
+    serialize: (key, value) => {
+      if (value instanceof Date) return value.toISOString();
+      return String(value);
+    },
   });
   const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["subscriptions", "plans", id, "query", "infinity", filter],
@@ -133,6 +146,7 @@ export default function Page({}) {
           </div>
           <div>
             <PaymentsDataFilter
+              values={filter}
               onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
             />
           </div>

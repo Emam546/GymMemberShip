@@ -206,6 +206,7 @@ export default function Page() {
               <div>
                 <PaymentsDataFilter
                   disableActive
+                  values={filter}
                   onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
                 />
               </div>

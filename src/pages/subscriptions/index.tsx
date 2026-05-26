@@ -44,7 +44,8 @@ export default function Page() {
     },
     parse(key, value) {
       if (key === "startAt" || key === "endAt") return new Date(value);
-      if (key === "active" || key == "remaining") return value === "true";
+      if (key === "active" || key == "applyActive" || key == "remaining")
+        return value === "true";
       return value;
     },
     serialize: (key, value) => {
@@ -224,7 +225,7 @@ export default function Page() {
             <div>
               <PaymentsDataFilter
                 values={filter}
-                onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+                onData={(data) => setFilter({ ...filter, ...data })}
               />
             </div>
           </MainCard>

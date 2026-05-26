@@ -24,6 +24,9 @@ import queryClient from "@src/queryClient";
 import PaymentsDataFilter, {
   DataType as PaymentsDataFilterDataType,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
+import { useQueryFilter } from "@src/hooks/useFilterQuery";
+
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Subscriptions>,
@@ -32,18 +35,29 @@ type Payment = DataBase.Populate.Model<
 type FormDataType = PaymentsDataFilterDataType & TimeStartEndSelectorDataType;
 export default function Page({ doc }: Props) {
   const curDate = new Date();
-  const [filter, setFilter] = useState<FormDataType>({
-    startAt: new Date(
-      curDate.getFullYear(),
-      curDate.getMonth(),
-      curDate.getDate() - 8,
-    ),
-    endAt: curDate,
-    active: true,
-    remaining: true,
-    applyActive: true,
+  const [filter, setFilter] = useQueryFilter<FormDataType>({
+    defaultValues: {
+      startAt: new Date(
+        curDate.getFullYear(),
+        curDate.getMonth(),
+        curDate.getDate() - 8,
+      ),
+      endAt: curDate,
+      active: true,
+      remaining: true,
+      applyActive: true,
+    },
+    parse(key, value) {
+      if (key === "startAt" || key === "endAt") return new Date(value);
+      if (key === "active" || key == "remaining") return value === "true";
+      return value;
+    },
+    serialize: (key, value) => {
+      if (value instanceof Date) return value.toISOString();
+      return String(value);
+    },
   });
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["subscriptions", "plans", doc._id, "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const data: Partial<FormDataType> = { ...filter };
@@ -226,7 +240,8 @@ export default function Page({ doc }: Props) {
                 </div>
                 <div>
                   <PaymentsDataFilter
-                    onData={(data) => setFilter((pre) => ({ ...pre, ...data }))}
+                    values={filter}
+                    onData={(data) => setFilter({ ...filter, ...data })}
                   />
                 </div>
               </MainCard>

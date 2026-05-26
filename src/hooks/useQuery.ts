@@ -6,6 +6,7 @@ export const useInfinityQueryAdvanced = function useInfinityQueryAdvanced(
   const [placeholder, setPlaceholder] = useState<any>();
   const query = useInfiniteQuery({
     ...params[0],
+
     placeholderData: placeholder,
   });
   useEffect(() => {
