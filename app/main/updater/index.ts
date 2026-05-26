@@ -3,6 +3,7 @@ import { createUpdateWindow } from "@app/main/lib/update";
 import AppUpdater from "./AppUpdater";
 import PackageJson from "../../../package.json";
 import { logger } from "../helpers/logger";
+import { MainWindow } from "../lib/main/window";
 logger.info(`Version ${PackageJson.version}`);
 const autoUpdater = new AppUpdater({
   owner: PackageJson.publish.owner,
@@ -24,12 +25,20 @@ autoUpdater.once("update-available", (update) => {
   notification.show();
   notification.on("click", async () => {
     logger.info("User accepted update");
-    await autoUpdater.downloadUpdate(update);
+    app.once("before-quit", () => {
+      logger.info("Download the update");
+      autoUpdater.downloadUpdate(update).then((asset) => {
+        logger.info(asset?.name);
+      });
+    });
   });
-  autoUpdater.once("updater-downloaded", (savedFilePath) => {
+  autoUpdater.once("updater-downloaded", (report) => {
     logger.info("update finished");
-    autoUpdater.quitAndInstall(savedFilePath);
+    app.removeAllListeners("before-quit");
+    if (!report.filePath) return;
+    autoUpdater.quitAndInstall(report.filePath);
   });
+
   autoUpdater.once("metadata", async (metadata) => {
     logger.info("start downloading");
     MainWindow.Window?.hide();
