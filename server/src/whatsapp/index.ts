@@ -3,11 +3,12 @@ import qrcode from "qrcode-terminal";
 import path from "path";
 import { whatsappReady } from "@serv/command";
 import logger from "jet-logger";
-import puppeteer from "puppeteer";
 import EnvVars from "@serv/declarations/major/EnvVars";
 // eslint-disable-next-line node/no-process-env
 const Chrome_PATH = process.env.CHROME_PATH;
 async function getChromiumExecPath() {
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax
+  const puppeteer = await import("puppeteer");
   return path
     .join(await puppeteer.executablePath())
     .replace("app.asar", "app.asar.unpacked");
