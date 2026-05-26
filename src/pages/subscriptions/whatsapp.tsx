@@ -21,6 +21,7 @@ import PaymentsDataFilter, {
 import SelectRangeForm, {
   DataType as SelectRangeFormDataType,
 } from "@src/components/pages/subscriptions/filter/selectRange";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
 
 type FormData = TimeStartEndSelectorDataType &
   FilterUsersDataType &
@@ -44,7 +45,7 @@ export default function Page() {
     applyActive: true,
     remaining: true,
   });
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["subscriptions", "query", "infinity", { ...filter, start, end }],
     queryFn: async ({ pageParam = 0, signal }) => {
       const data: Partial<FormData> = { ...filter };

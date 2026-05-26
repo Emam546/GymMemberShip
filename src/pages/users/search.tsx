@@ -3,18 +3,18 @@ import { BigCard, CardTitle, MainCard } from "@src/components/card";
 import ErrorShower from "@src/components/common/error";
 import UsersTable from "@src/components/pages/users/table";
 import Head from "next/head";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import requester from "@src/utils/axios";
 import TriggerOnVisible from "@src/components/common/triggerOnVisble";
 import UsersFilter, { DataType } from "@src/components/pages/users/filter";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
 
 const perLoad = 20;
 export default function Page() {
   const { t } = useTranslation("/users");
   const [filter, setFilter] = useState<DataType>({ name: "" });
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["users", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<

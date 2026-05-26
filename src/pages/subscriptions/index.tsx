@@ -20,6 +20,7 @@ import PaymentsDataFilter, {
   DataType as PaymentsDataFilterDataType,
 } from "@src/components/pages/subscriptions/filter/PaymentsData";
 import { useQueryFilter } from "@src/hooks/useFilterQuery";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
   DataBase.WithId<DataBase.Models.Subscriptions>,
@@ -34,7 +35,7 @@ export default function Page() {
       startAt: new Date(
         curDate.getFullYear(),
         curDate.getMonth(),
-        curDate.getDate() - 8
+        curDate.getDate() - 8,
       ),
       endAt: curDate,
       active: false,
@@ -51,7 +52,7 @@ export default function Page() {
       return String(value);
     },
   });
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["subscriptions", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const data: Partial<FormData> = { ...filter };
@@ -68,7 +69,7 @@ export default function Page() {
             endAt: filter.endAt.getTime(),
           },
           signal,
-        }
+        },
       );
       return { page: pageParam, data: users.data.data };
     },
@@ -112,7 +113,7 @@ export default function Page() {
       (val) =>
         val._id.day == day.getDate() &&
         val._id.month == day.getMonth() + 1 &&
-        val._id.year == day.getFullYear()
+        val._id.year == day.getFullYear(),
     );
     if (res) return res;
     return {
@@ -200,7 +201,7 @@ export default function Page() {
                     min: 0,
                     max: data.reduce(
                       (acc, { profit }) => (acc > profit ? acc : profit),
-                      10
+                      10,
                     ),
                   },
                 ]}

@@ -19,6 +19,7 @@ import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import { ProductsPaymentInfoGenerator } from "@src/components/pages/products/payments/table";
 import queryClient from "@src/queryClient";
 import PaymentsDataFilter from "@src/components/pages/subscriptions/filter/PaymentsData";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
 
 const perLoad = 20;
 type Payment = DataBase.Populate.Model<
@@ -37,7 +38,7 @@ export default function Page() {
     endAt: curDate,
     remaining: true,
   });
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: ["productsPayments", "infinity", filter],
     queryFn: async ({ pageParam = 0, signal }) => {
       const data: Partial<FilterData> = { ...filter };

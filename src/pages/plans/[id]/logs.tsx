@@ -22,6 +22,8 @@ import { GetServerSideProps, NextPage } from "next";
 import PrintPlanLogs from "@src/components/pages/plans/logs/print";
 import { RedirectIfNotAdmin } from "@src/components/wrappers/redirect";
 import queryClient from "@src/queryClient";
+import { useInfinityQueryAdvanced } from "@src/hooks/useQuery";
+
 const perLoad = 20;
 interface Props {
   doc: DataBase.WithId<DataBase.Models.Plans>;
@@ -42,7 +44,7 @@ const Page: NextPage<Props> = function Page({ doc }) {
   });
   const diffTime = filter.endAt.getTime() - filter.startAt.getTime();
   const queryInfinityKey = ["logs", "plans", doc._id, "infinity", filter];
-  const QueryInfinity = useInfiniteQuery({
+  const QueryInfinity = useInfinityQueryAdvanced({
     queryKey: queryInfinityKey,
     queryFn: async ({ pageParam = 0, signal }) => {
       const users = await requester.get<Routes.ResponseSuccess<LogDoc[]>>(
