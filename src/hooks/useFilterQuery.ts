@@ -14,7 +14,7 @@ type Options<T> = {
 };
 
 export function useQueryFilter<T extends Record<string, any>>(
-  options: Options<T>
+  options: Options<T>,
 ): [T, Dispatch<SetStateAction<T>>] {
   const { defaultValues, parse, serialize } = options;
   const searchParams = useSearchParams();
@@ -39,17 +39,22 @@ export function useQueryFilter<T extends Record<string, any>>(
   // Sync filter to URL
   const updateFilter = useCallback(
     (newValues: Partial<T>) => {
-      const updated = { ...filter, ...newValues };
-      setFilter(updated);
+      setFilter((pre) => {
+        const updated =
+          typeof newValues === "function"
+            ? (newValues as (prev: T) => T)(pre)
+            : { ...pre, ...newValues };
 
-      const params = new URLSearchParams();
-      Object.entries(updated).forEach(([key, val]) => {
-        const str = serialize ? serialize(key as keyof T, val) : String(val);
-        params.set(key, str);
+        const params = new URLSearchParams();
+        Object.entries(updated).forEach(([key, val]) => {
+          const str = serialize ? serialize(key as keyof T, val) : String(val);
+          params.set(key, str);
+        });
+        router.replace(`?${params.toString()}`, { scroll: false });
+        return updated;
       });
-      router.replace(`?${params.toString()}`, { scroll: false });
     },
-    [filter, router, serialize]
+    [filter, serialize],
   );
 
   return [filter, updateFilter as Dispatch<SetStateAction<T>>];
