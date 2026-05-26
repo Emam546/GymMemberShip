@@ -6,7 +6,7 @@ import CheckInput from "@src/components/common/checkInput";
 export interface DataType {
   active?: boolean;
   remaining: boolean;
-  applyActive: boolean;
+  applyActive?: boolean;
 }
 type FormValues = DataType;
 export interface Props {
