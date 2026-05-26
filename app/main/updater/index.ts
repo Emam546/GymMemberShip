@@ -1,5 +1,4 @@
-import { app } from "electron";
-// import { autoUpdater } from "electron-updater";
+import { app, Notification } from "electron";
 import { createUpdateWindow } from "@app/main/lib/update";
 import AppUpdater from "./AppUpdater";
 import PackageJson from "../../../package.json";
@@ -15,31 +14,32 @@ app.whenReady().then(async () => {
   // if (isProd) autoUpdater.checkForUpdates();
 });
 autoUpdater.once("update-available", (update) => {
-  logger.info("update available");
-  autoUpdater.once("progress", async (info) => {
+  logger.info(`update available ${update.tag_name}`);
+  logger.info("Downloading the update");
+  const notification = new Notification({
+    title: "Update Available",
+    body: `Version ${update.tag_name} is available. Click to download.`,
+  });
+
+  notification.show();
+  notification.on("click", async () => {
+    logger.info("User accepted update");
+    await autoUpdater.downloadUpdate(update);
+  });
+  autoUpdater.once("updater-downloaded", (savedFilePath) => {
+    logger.info("update finished");
+    autoUpdater.quitAndInstall(savedFilePath);
+  });
+  autoUpdater.once("metadata", async (metadata) => {
     logger.info("start downloading");
+    MainWindow.Window?.hide();
     await createUpdateWindow({
       preloadData: {
-        curSize: info.chunk.length,
-        fileSize: info.remainingSize + info.chunk.length,
+        curSize: 0,
+        fileSize: metadata.size,
       },
       autoUpdater: autoUpdater,
     });
-  });
-  app.once("before-quit", () => {
-    logger.info("Download the update");
-    autoUpdater.downloadUpdate(update).then((asset) => {
-      logger.info(asset?.name);
-      autoUpdater.once("updater-downloaded", (report) => {
-        logger.info("update finished");
-        app.removeAllListeners("before-quit");
-        if (!report.filePath) return;
-        autoUpdater.quitAndInstall(report.filePath);
-      });
-    });
-  });
-  app.on("before-quit", (e) => {
-    e.preventDefault();
   });
 });
 export default autoUpdater;
